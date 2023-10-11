@@ -8,8 +8,7 @@ import { dataColours, TONNES_THRESHOLD } from './dashUtils';
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
-import { getCarbon, getTags, emissionsPerImpressions, getSumColumn, getBreakdownByWithCount, getCompressedBreakdownWithCount, filterByCount, splitTizenOS } from './emissionscalcTs';
-import { isPer1000 } from './GreenMetrics';
+import { getCarbon, getTags, emissionsPerImpressions, getSumColumn, getBreakdownByWithCount, getCompressedBreakdownWithCount, filterByCount, splitTizenOS, isPer1000 } from './emissionscalcTs';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
 import {CO2e, NOEMISSIONS, GreenCard, GreenCardAbout, ModeButton} from './GreenDashUtils';

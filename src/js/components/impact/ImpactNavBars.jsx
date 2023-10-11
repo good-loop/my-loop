@@ -14,7 +14,6 @@ import Roles from '../../base/Roles';
 import { encURI, is, isMobile, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
-import { isPer1000 } from '../pages/greendash/GreenMetrics';
 import { ShareDash } from '../pages/greendash/GreenNavBar';
 const A = C.A;
 

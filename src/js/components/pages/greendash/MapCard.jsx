@@ -5,8 +5,7 @@ import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
 import { dataColours} from './dashUtils';
 import { GreenCard, downloadIcon } from './GreenDashUtils';
-import { getCarbon, emissionsPerImpressions } from './emissionscalcTs';
-import { isPer1000 } from './GreenMetrics';
+import { getCarbon, emissionsPerImpressions, isPer1000 } from './emissionscalcTs';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import CSS from '../../../../style/green-map-card.less';
 

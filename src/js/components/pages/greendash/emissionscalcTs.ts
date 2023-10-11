@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-/**
- * Rewrite functions from emissionscalc.js into typescript.
- */
-
 import _, { remove } from 'lodash';
 import md5 from 'md5';
 import Campaign from '../../../base/data/Campaign';
@@ -68,6 +64,11 @@ export type BaseFiltersFailed = {
 	message?: string;
 };
 
+export const isPer1000 = (): boolean => {
+	const emissionsMode = DataStore.getUrlValue('emode');
+	return emissionsMode === 'per1000';
+};
+
 /**
  * Supposedly return a BaseFilters. But when there are exceptions, return a alert or loading message. Catch the message wtih <Alert /> or <Misc.Loading /> div.
  * Usage examples see GreenMetrics2 in ./GreenMetrics.jsx
@@ -100,7 +101,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 	if (filterType === C.TYPES.Advertiser) {
 		// get the campaigns
 		let sq = SearchQuery.setProp(null, 'vertiser', filterId);
-		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query, ids: null, sort: null, start: null, end: null });
+		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query });
 		if (!pvAllCampaigns.resolved) {
 			failedObject = { type: 'loading', message: 'Fetching brand campaigns...' };
 			return failedObject;
@@ -317,7 +318,7 @@ export const getTags = (buckets: GreenBuckets): PromiseValue | null => {
 
 	// ??does PUB_OR_DRAFT work properly for `ids`??
 
-	let pvTags = getDataList({ type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT, ids, q: null, sort: null, start: null, end: null });
+	let pvTags = getDataList({ type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT });
 
 	return pvTags;
 };
@@ -339,7 +340,7 @@ export const getCampaigns = (buckets: GreenBuckets) => {
 				}
 			});
 			let cids = Object.keys(cidSet);
-			let pvcs = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUB_OR_DRAFT, ids: cids, q: null, sort: null, start: null, end: null });
+			let pvcs = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUB_OR_DRAFT, ids: cids });
 			// TODO have PromiseValue.then() unwrap nested PromiseValue
 			return pvcs;
 		},

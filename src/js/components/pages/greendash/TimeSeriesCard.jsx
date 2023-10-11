@@ -8,9 +8,9 @@ import { dateStr, printDateShort, printPeriod } from '../../../base/utils/date-u
 import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import { CO2e, GreenCard, GreenCardAbout, Mass, NOEMISSIONS } from './GreenDashUtils';
-import { isPer1000 } from './GreenMetrics';
 import { TONNES_THRESHOLD } from './dashUtils';
-import { emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
+import { emissionsPerImpressions, getBreakdownByWithCount, isPer1000 } from './emissionscalcTs';
+import { assert } from '../../../base/utils/assert';
 
 
 const icons = {
@@ -69,7 +69,8 @@ const co2ImpactSpecs = {
 
 /** Render the "That's 99,999 kettles/miles/flights" bubble */
 const CO2Impact = ({ kg, mode }) => {
-	if (mode === 'base') return (
+	if (mode === 'base') {
+		return (
 		<div className="impact-container">
 			<div className="big-number">
 				<Mass kg={kg} />
@@ -78,7 +79,8 @@ const CO2Impact = ({ kg, mode }) => {
 				</div>
 			</div>
 		</div>
-	);
+		);
+	}
 
 	assert(co2ImpactSpecs[mode], `Can't render CO2-equivalent for mode "${mode}" - no conversion factor/description/etc written`);
 	const { factor, desc, icon, src, srcDesc } = co2ImpactSpecs[mode];
@@ -131,7 +133,7 @@ const TotalSubcard = ({ period, aggCO2, per1000 }) => {
 						const title = [srcDesc, src && "Reference: "+src].filter(x => x).join("\r\n");
 						return <div className={className} onClick={onClick} key={key} title={title} >
 							{icon}
-						</div>
+						</div>;
 					})}
 				</div>
 			)}
