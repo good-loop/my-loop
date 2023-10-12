@@ -1,20 +1,18 @@
-import _ from "lodash";
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from "react";
-import PromiseValue from "../../../base/promise-value";
-
 import { ButtonGroup } from "reactstrap";
+import C from "../../../C";
+import Misc from "../../../base/components/Misc";
 import NewChartWidget from "../../../base/components/NewChartWidget";
-import { getId, getName } from "../../../base/data/DataClass";
 import KStatus from "../../../base/data/KStatus";
 import { getDataList } from "../../../base/plumbing/Crud";
 import DataStore from "../../../base/plumbing/DataStore";
-import SearchQuery from "../../../base/searchquery";
-import C from "../../../C";
+import PromiseValue from "../../../base/promise-value";
+import { getPeriodQuarter, isoDate, printPeriod } from "../../../base/utils/date-utils";
+import printer from "../../../base/utils/printer";
 import { GreenCard, GreenCardAbout, ModeButton } from "./GreenDashUtils";
-import { dataColours, TONNES_THRESHOLD } from "./dashUtils";
-import { isoDate, getPeriodQuarter, printPeriod } from "../../../base/utils/date-utils";
-import { getCompressedBreakdownWithCount, getCarbon, emissionsPerImpressions, getSumColumn, isPer1000, BaseFilters } from "./emissionscalcTs";
-import { printer } from "../../../base/utils/printer";
+import { TONNES_THRESHOLD, dataColours } from "./dashUtils";
+import { BaseFilters, GreenBuckets, emissionsPerImpressions, getCarbon, getCompressedBreakdownWithCount, getSumColumn, isPer1000 } from "./emissionscalcTs";
 
 /**
  *
@@ -226,36 +224,102 @@ const CampaignCard = ({ baseFilters }) => {
 
 /**
  * @param {Object} obj
- * @param {BaseFilters} obj.baseFilters
+ * @param {GreenBuckets} obj.buckets
  * @returns {JSX.Element}
  */
-const BenchmarksCard = ({ baseFilters }) => {
-	return <></>;
+const BenchmarksCard = ({ buckets }) => {
+	if (!buckets || !buckets.length || !isPer1000()) {
+		return <Misc.Loading />;
+	}
+
+	// Benchmarks must be in per1000 Mode
+	buckets = emissionsPerImpressions(buckets);
+
+	// buckets to datasets
+	const labels = buckets.map((val) => capitalizeFirstLetter(val.key));
+	const values = buckets.map((val) => val.co2);
+
+	const data = {
+		labels: labels,
+		datasets: [
+			{
+				label: "Your Emissions",
+				data: values,
+				backgroundColor: "rgba(135, 206, 250, 0.6)", // Light Blue
+			},
+			{
+				label: "Agency Benchmark",
+				// TODO Where could I get agency Benchmarks?
+				data: [0.5, 0.5, 0.5],
+				backgroundColor: "rgba(112, 128, 144, 0.6)", // Slate Gray
+			},
+		],
+	};
+
+	const chartProps = {
+		data: data,
+		options: {
+			indexAxis: "x",
+			scales: { y: { ticks: { callback: (v) => v + " " + "kg", precision: 2 } } },
+			plugins: {
+				// legend: { display: false },
+				tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} kg CO2pm` } },
+			},
+		},
+	};
+
+	return <NewChartWidget type="bar" {...chartProps} />;
+};
+
+/**
+ * @param {string} str
+ * @return {string}
+ */
+const capitalizeFirstLetter = (str) => {
+	if (!str || typeof str !== "string") {
+		return "";
+	}
+	const lower = str.toLowerCase();
+	return lower.charAt(0).toUpperCase() + lower.slice(1);
 };
 
 /**
  * @param {Object} obj
- * @param {string} obj.mode 
+ * @param {string} obj.mode
+ * @param {GreenBuckets} obj.buckets
  * @param {BaseFilters} obj.props
  * @returns {JSX.Element}
  */
-const SwitchCard = ({mode, props}) => {
+const SwitchCard = ({ mode, buckets, props }) => {
 	switch (mode) {
 		case "quarter":
 			return <QuartersCard {...props} />;
 		case "campaign":
 			return <CampaignCard {...props} />;
 		case "benchmarks":
-			return <BenchmarksCard {...props} />;
+			return <BenchmarksCard buckets={buckets} />;
 		default:
 			return <QuartersCard {...props} />;
 	}
 };
 
-const CompareCard = ({ ...props }) => {
+const CompareCard = ({ dataValue, ...props }) => {
 	const [mode, setMode] = useState("quarter");
+
+	const per1000 = isPer1000();
+
+	useEffect(() => {
+		// Pop out of benchmarks
+		if (!per1000 && mode === "benchmarks") {
+			setMode("quarter");
+		}
+	}, [mode, per1000]);
+
 	// TODO don't offer campaign biew if we're focuding on one campaign
 	const campaignModeDisabled = !!DataStore.getUrlValue("campaign");
+
+	/** @type {GreenBuckets | null} */
+	const formatBuckets = dataValue?.by_format?.buckets;
 
 	return (
 		<GreenCard title="How do your ad emissions compare?" className="carbon-compare">
@@ -267,12 +331,12 @@ const CompareCard = ({ ...props }) => {
 					<ModeButton name="campaign" mode={mode} setMode={setMode} disabled={campaignModeDisabled}>
 						Campaign
 					</ModeButton>
-					<ModeButton name="benchmarks" mode={mode} setMode={setMode} disabled={!isPer1000()}>
+					<ModeButton name="benchmarks" mode={mode} setMode={setMode} disabled={!per1000}>
 						Benchmarks
 					</ModeButton>
 				</ButtonGroup>
 			</div>
-			<SwitchCard mode={mode} props={{...props}} />
+			<SwitchCard mode={mode} buckets={formatBuckets} props={{ ...props }} />
 			<GreenCardAbout>
 				<p>Explanation of quarterly and per-campaign emissions comparisons</p>
 			</GreenCardAbout>

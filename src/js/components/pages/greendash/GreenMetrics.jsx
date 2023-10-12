@@ -142,6 +142,15 @@ const GreenMetrics2 = () => {
 		pvCampaigns = pvCampaigns.value;
 	}
 
+	// NB: breakdown: "emissions":"sum" is a hack that the backend turns into count(aka impressions) + co2 + co2-bits
+
+	/** Moved from BreakdownCard to share buckets to other cards */
+	const pvBreakdownDataValue = getCarbon({
+		...baseFilters,
+		breakdown: ['os{"countco2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}', 'format{"countco2":"sum"}'],
+	});
+	const breakdownDataValue = pvBreakdownDataValue.value?.sampling || pvBreakdownDataValue.value;
+
 	return (
 		<>
 			<OverviewWidget period={period} data={pvChartTotalValue?.by_total.buckets} prob={samplingProb} />
@@ -164,10 +173,10 @@ const GreenMetrics2 = () => {
 			</Row>
 			<Row className='card-row'>
 				<Col xs='12' xl='4' className='flex-column'>
-					<CompareCard {...commonProps} />
+					<CompareCard dataValue={breakdownDataValue} {...commonProps} />
 				</Col>
 				<Col xs='12' xl='4' className='flex-column'>
-					<BreakdownCard {...commonProps} />
+					<BreakdownCard dataValue={breakdownDataValue} {...commonProps} />
 				</Col>
 				<Col xs='12' xl='4' className='flex-column'>
 					{false && <TimeOfDayCard {...commonProps} />}
