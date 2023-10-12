@@ -84,53 +84,14 @@ const pieOptions = (totalCO2, minimumPercentLabeled) => ({
 
 const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) => {
 	if (!yessy(data)) return NOEMISSIONS;
-	console.log('data', data);
 	const [pieChartProps, setPieChartProps] = useState();
 	const [barChartProps, setBarChartProps] = useState();
 
 	useEffect(() => {
-		const pvTags = getTags(data);
-		console.log('pvTags', pvTags);
-		const tags = List.hits(pvTags.value) || [];
-
-		// map tagIDs to formats
-		const tagFormats = tags.reduce((acc, tag) => {
-			acc[tag.id] = tag.format;
+		const formatToCarbon = data.reduce((acc, row) => {
+			acc[row.key] = row.co2;
 			return acc;
 		}, {});
-
-		// map tagIDs to co2
-		const tagEm = data.reduce((acc, row) => {
-			acc[row.key] = { co2: row.co2, count: row.count };
-			return acc;
-		}, {});
-
-		// group tagIDs by format & sum their co2
-		let formatToCarbon = Object.keys(tagFormats).reduce((mapping, id) => {
-			const format = tagFormats[id] || 'Unset';
-			if (mapping.hasOwnProperty(format)) {
-				mapping[format] = {
-					co2: mapping[format].co2 + tagEm[id].co2,
-					count: mapping[format].count + tagEm[id].count,
-					occurs: mapping[format].occurs + 1,
-				};
-			} else {
-				mapping[format] = { co2: tagEm[id].co2, count: tagEm[id].count, occurs: 1 };
-			}
-			return mapping;
-		}, {});
-
-		formatToCarbon = filterByCount(formatToCarbon);
-
-		const formatToCarbonSum = {};
-		Object.entries(formatToCarbon).forEach(([k, v]) => {
-			formatToCarbonSum[k] = v.co2;
-		});
-
-		const formatToCarbonAverage = {};
-		Object.entries(formatToCarbon).forEach(([k, v]) => {
-			formatToCarbonAverage[k] = v.co2 / v.occurs;
-		});
 
 		// begin defining chart
 		let unit = 'kg';
@@ -146,12 +107,12 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 
 		setPieChartProps({
 			data: {
-				labels: Object.keys(formatToCarbonSum),
+				labels: Object.keys(formatToCarbon),
 				datasets: [
 					{
 						label: 'Kg CO2',
 						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-						data: Object.values(formatToCarbonSum),
+						data: Object.values(formatToCarbon),
 					},
 				],
 			},
@@ -160,12 +121,12 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 
 		setBarChartProps({
 			data: {
-				labels: Object.keys(formatToCarbonAverage),
+				labels: Object.keys(formatToCarbon),
 				datasets: [
 					{
 						label: 'Kg CO2',
 						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-						data: Object.values(formatToCarbonAverage),
+						data: Object.values(formatToCarbon),
 					},
 				],
 			},
@@ -434,7 +395,7 @@ const BreakdownCard = ({ baseFilters }) => {
 
 	const [mode, setMode] = useState('tech');
 
-	const datakey = { device: "by_os", tag: "by_adid", domain: "by_domain", format: "by_adid" }[mode];
+	const datakey = { device: "by_os", tag: "by_adid", domain: "by_domain", format: "by_format" }[mode];
 	let techData = techValue.by_total?.buckets;
 	let data;
 	if (datakey === "by_os") {
