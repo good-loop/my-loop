@@ -349,12 +349,16 @@ const CompareCard = ({ dataValue, ...props }) => {
 		if (!per1000) return null;
 
 		const countryData = await getCarbon({ ...props.baseFilters, breakdown: ['country{"count":"sum"}'] }).promise;
+
+		/** A map of country and it's impressions count. Filtered out countries that have insufficient impressions. */
 		const countryMap = getCountryMapFiltered(countryData.by_country?.buckets, countryData.allCount);
 
 		const urlParams = getUrlVars();
-		/** TODO: Upgrade to last quarter later */
+		/** Benchmarks period. TODO: Upgrade to last quarter later */
 		const period = getPeriodFromUrlParams({ ...urlParams, period: "last-month" });
 
+		/** Average co2pm of the countries it ran on.
+		 * @type {Object[]} */
 		const countryCo2pm = await Promise.all(
 			Object.keys(countryMap).map(async (countryCode) => {
 				const formatData = await getCarbon({ q: `country:${countryCode}`, start: period.start.toISOString(), end: period.end.toISOString(), breakdown: ['format{"co2pm":"avg"}'] }).promise;
@@ -370,7 +374,8 @@ const CompareCard = ({ dataValue, ...props }) => {
 
 		let filteredTotalImpressions = 0;
 
-		/** @type {Object} */
+		/** Average co2pm converted to one Object for easy access
+		 * @type {Object} */
 		const countryCo2pmMap = countryCo2pm.reduce((acc, val) => {
 			filteredTotalImpressions += countryMap[val.country];
 			acc[val.country] = { ...val, count: countryMap[val.country] };
@@ -378,6 +383,7 @@ const CompareCard = ({ dataValue, ...props }) => {
 			return acc;
 		}, {});
 
+		// Calcuated co2pm benchmarks for each foramts weighed by the proportion of the impressions of each country
 		const benchmarksResult = Object.entries(countryCo2pmMap).reduce((acc, [country, value]) => {
 			// eslint-disable-next-line no-undef
 			const dataOfCountry = Object.entries({ ...value }).reduce((accFormat, [format, co2pm]) => {
