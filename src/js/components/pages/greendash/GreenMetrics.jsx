@@ -12,7 +12,7 @@ import printer from '../../../base/utils/printer';
 import { getPeriodFromUrlParams, printPeriod } from '../../../base/utils/date-utils';
 
 import { GreenCard } from './GreenDashUtils';
-import { getBasefilters, getCampaigns, getCarbon, getSumColumn } from './emissionscalcTs';
+import { getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from './emissionscalcTs';
 
 import BreakdownCard from './BreakdownCard';
 import CompareCard from './CompareCard';
@@ -26,11 +26,6 @@ import Login from '../../../base/youagain';
 
 import PropControl from '../../../base/components/PropControl';
 import { getUrlVars } from '../../../base/utils/miscutils';
-
-export const isPer1000 = () => {
-	const emissionsMode = DataStore.getUrlValue('emode');
-	return emissionsMode === 'per1000';
-};
 
 /**
  * @param {Object} obj

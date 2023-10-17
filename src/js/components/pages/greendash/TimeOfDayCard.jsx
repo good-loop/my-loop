@@ -7,8 +7,7 @@ import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { dataColours, TONNES_THRESHOLD } from './dashUtils';
 import { NOEMISSIONS, GreenCard} from './GreenDashUtils';
-import { getCarbon, emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
-import { isPer1000 } from './GreenMetrics';
+import { getCarbon, emissionsPerImpressions, getBreakdownByWithCount, isPer1000 } from './emissionscalcTs';
 
 const TimeOfDayCard = (props) => {
 	return <GreenCard title="When are your ad carbon emissions highest?" className="carbon-time-of-day">

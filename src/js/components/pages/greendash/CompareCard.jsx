@@ -13,9 +13,8 @@ import C from '../../../C';
 import {GreenCard, GreenCardAbout, ModeButton} from './GreenDashUtils';
 import { dataColours, TONNES_THRESHOLD } from './dashUtils';
 import { isoDate, getPeriodQuarter, printPeriod } from '../../../base/utils/date-utils';
-import { getCompressedBreakdownWithCount, getCarbon, emissionsPerImpressions, getSumColumn } from './emissionscalcTs';
+import { getCompressedBreakdownWithCount, getCarbon, emissionsPerImpressions, getSumColumn, isPer1000 } from './emissionscalcTs';
 
-import { isPer1000 } from './GreenMetrics';
 import { assert } from '../../../base/utils/assert';
 
 
