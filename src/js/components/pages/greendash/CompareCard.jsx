@@ -1,17 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ButtonGroup } from "reactstrap";
 import C from "../../../C";
 import Misc from "../../../base/components/Misc";
 import NewChartWidget from "../../../base/components/NewChartWidget";
 import KStatus from "../../../base/data/KStatus";
-import { getDataList } from "../../../base/plumbing/Crud";
+import { getDataList, restId } from "../../../base/plumbing/Crud";
 import DataStore from "../../../base/plumbing/DataStore";
 import PromiseValue from "../../../base/promise-value";
-import { getPeriodQuarter, isoDate, printPeriod } from "../../../base/utils/date-utils";
+import { getPeriodQuarter, isoDate, printPeriod, getPeriodFromUrlParams } from "../../../base/utils/date-utils";
 import printer from "../../../base/utils/printer";
 import { GreenCard, GreenCardAbout, ModeButton } from "./GreenDashUtils";
 import { TONNES_THRESHOLD, dataColours } from "./dashUtils";
+import { getUrlVars } from "../../../base/utils/miscutils";
 import { BaseFilters, GreenBuckets, emissionsPerImpressions, getCarbon, getCompressedBreakdownWithCount, getSumColumn, isPer1000 } from "./emissionscalcTs";
 
 /**
@@ -227,11 +228,10 @@ const CampaignCard = ({ baseFilters }) => {
  * @param {GreenBuckets} obj.buckets
  * @returns {JSX.Element}
  */
-const BenchmarksCard = ({ buckets }) => {
-	if (!buckets || !buckets.length || !isPer1000()) {
+const BenchmarksCard = ({ buckets, benchmarksData }) => {
+	if (!isPer1000() || !buckets || !buckets.length || !benchmarksData) {
 		return <Misc.Loading />;
 	}
-
 	// Benchmarks must be in per1000 Mode
 	buckets = emissionsPerImpressions(buckets);
 
@@ -248,9 +248,8 @@ const BenchmarksCard = ({ buckets }) => {
 				backgroundColor: "rgba(135, 206, 250, 0.6)", // Light Blue
 			},
 			{
-				label: "Agency Benchmark",
-				// TODO Where could I get agency Benchmarks?
-				data: [0.5, 0.5, 0.5],
+				label: "Benchmarks",
+				data: Object.values(benchmarksData),
 				backgroundColor: "rgba(112, 128, 144, 0.6)", // Slate Gray
 			},
 		],
@@ -263,7 +262,17 @@ const BenchmarksCard = ({ buckets }) => {
 			scales: { y: { ticks: { callback: (v) => v + " " + "kg", precision: 2 } } },
 			plugins: {
 				// legend: { display: false },
-				tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} kg CO2pm` } },
+				tooltip: {
+					callbacks: {
+						label: (ctx) => `${printer.prettyNumber(ctx.raw)} kg CO2pm`,
+						footer: (tooltipItems) => {
+							if (tooltipItems[0].dataset.label === "Benchmarks") {
+								return "Benchmarks update every month";
+							}
+							return null;
+						},
+					},
+				},
 			},
 		},
 	};
@@ -284,6 +293,33 @@ const capitalizeFirstLetter = (str) => {
 };
 
 /**
+ * Get the map of impressions per Country. Filter out data that have less than 0.1% of total impressions.
+ * @param {GreenBuckets | null} buckets
+ * @param {Number | null} allCount
+ * @returns {Object.<string, number> | null}
+ */
+const getCountryMapFiltered = (buckets, allCount, filterThreshold = 0.001) => {
+	if (!buckets || !allCount) return null;
+
+	const threshold = filterThreshold * allCount;
+
+	const countryMap = buckets.reduce((acc, val) => {
+		if (val.count < threshold) {
+			return acc;
+		}
+
+		if (!Object.prototype.hasOwnProperty.call(acc, val.key)) {
+			acc[val.key] = val.count;
+		} else {
+			acc[val.key] += val.count;
+		}
+		return acc;
+	}, {});
+
+	return countryMap;
+};
+
+/**
  * @param {Object} obj
  * @param {string} obj.mode
  * @param {GreenBuckets} obj.buckets
@@ -297,7 +333,7 @@ const SwitchCard = ({ mode, buckets, props }) => {
 		case "campaign":
 			return <CampaignCard {...props} />;
 		case "benchmarks":
-			return <BenchmarksCard buckets={buckets} />;
+			return <BenchmarksCard buckets={buckets} benchmarksData={props?.benchmarksData} />;
 		default:
 			return <QuartersCard {...props} />;
 	}
@@ -305,8 +341,61 @@ const SwitchCard = ({ mode, buckets, props }) => {
 
 const CompareCard = ({ dataValue, ...props }) => {
 	const [mode, setMode] = useState("quarter");
+	const [benchmarksData, setBenchmarksData] = useState();
 
 	const per1000 = isPer1000();
+
+	const BenchmarksDataPv = useMemo(async () => {
+		if (!per1000) return null;
+
+		const countryData = await getCarbon({ ...props.baseFilters, breakdown: ['country{"count":"sum"}'] }).promise;
+		const countryMap = getCountryMapFiltered(countryData.by_country?.buckets, countryData.allCount);
+
+		const urlParams = getUrlVars();
+		/** TODO: Upgrade to last quarter later */
+		const period = getPeriodFromUrlParams({ ...urlParams, period: "last-month" });
+
+		const countryCo2pm = await Promise.all(
+			Object.keys(countryMap).map(async (countryCode) => {
+				const formatData = await getCarbon({ q: `country:${countryCode}`, start: period.start.toISOString(), end: period.end.toISOString(), breakdown: ['format{"co2pm":"avg"}'] }).promise;
+				const buckets = formatData?.by_format?.buckets;
+				const bucketsMap = buckets.reduce((acc, val) => {
+					acc.country = countryCode;
+					acc[val.key] = val.co2pm;
+					return acc;
+				}, {});
+				return bucketsMap;
+			})
+		);
+
+		let filteredTotalImpressions = 0;
+
+		/** @type {Object} */
+		const countryCo2pmMap = countryCo2pm.reduce((acc, val) => {
+			filteredTotalImpressions += countryMap[val.country];
+			acc[val.country] = { ...val, count: countryMap[val.country] };
+			delete acc[val.country].country;
+			return acc;
+		}, {});
+
+		const benchmarksResult = Object.entries(countryCo2pmMap).reduce((acc, [country, value]) => {
+			// eslint-disable-next-line no-undef
+			const dataOfCountry = Object.entries({ ...value }).reduce((accFormat, [format, co2pm]) => {
+				if (format !== "count") {
+					accFormat[format] = co2pm * (value.count / filteredTotalImpressions);
+				}
+				return accFormat;
+			}, {});
+			Object.entries(dataOfCountry).forEach(([format, co2pm]) => {
+				if (!Object.prototype.hasOwnProperty.call(acc, format)) {
+					acc[format] = (acc[format] || 0) + co2pm;
+				}
+			});
+			return acc;
+		}, {});
+
+		return benchmarksResult;
+	}, [per1000]);
 
 	useEffect(() => {
 		// Pop out of benchmarks
@@ -315,11 +404,17 @@ const CompareCard = ({ dataValue, ...props }) => {
 		}
 	}, [mode, per1000]);
 
+	useEffect(() => {
+		BenchmarksDataPv.then((data) => {
+			setBenchmarksData(data);
+		});
+	}, [BenchmarksDataPv]);
+
+	/** @type {GreenBuckets | false} */
+	const formatBuckets = dataValue?.by_format?.buckets;
+
 	// TODO don't offer campaign biew if we're focuding on one campaign
 	const campaignModeDisabled = !!DataStore.getUrlValue("campaign");
-
-	/** @type {GreenBuckets | null} */
-	const formatBuckets = dataValue?.by_format?.buckets;
 
 	return (
 		<GreenCard title="How do your ad emissions compare?" className="carbon-compare">
@@ -336,7 +431,7 @@ const CompareCard = ({ dataValue, ...props }) => {
 					</ModeButton>
 				</ButtonGroup>
 			</div>
-			<SwitchCard mode={mode} buckets={formatBuckets} props={{ ...props }} />
+			<SwitchCard mode={mode} buckets={formatBuckets} props={{ ...props, benchmarksData }} />
 			<GreenCardAbout>
 				<p>Explanation of quarterly and per-campaign emissions comparisons</p>
 			</GreenCardAbout>
