@@ -106,6 +106,8 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = "
 const AdtechBreakdownCard = ({ baseFilters }) => {
 	const [techData, setTechData] = useState();
 
+	const per1000 = isPer1000();
+
 	// Init - Call data
 	useEffect(async () => {
 		const techValueResponse = await getCarbon({
@@ -117,12 +119,14 @@ const AdtechBreakdownCard = ({ baseFilters }) => {
 		let techDataTemp = techValue.by_total?.buckets;
 
 		// Are we in carbon-per-mille mode?
-		if (isPer1000()) {
+		if (per1000) {
 			if (techDataTemp) techDataTemp = emissionsPerImpressions(techDataTemp);
 		}
-		
+
 		setTechData(techDataTemp);
-	}, []);
+	}, [per1000]);
+
+	// useEffect
 
 	return (
 		<GreenCard title="What is the adtech breakdown of your emissions?" className="carbon-breakdown">
@@ -130,7 +134,7 @@ const AdtechBreakdownCard = ({ baseFilters }) => {
 				<Misc.Loading text="Fetching your data..." />
 			) : (
 				<>
-					<TechSubcard data={techData} minimumPercentLabeled={10} chartType={isPer1000() ? "bar" : "pie"} />
+					<TechSubcard data={techData} minimumPercentLabeled={10} chartType={per1000 ? "bar" : "pie"} />
 					<GreenCardAbout>
 						<p>Where do we get numbers for each slice from?</p>
 						<p>How do we determine OS/device breakdowns?</p>

@@ -288,6 +288,8 @@ const BreakdownCard = ({ baseFilters }) => {
 	const [domainData, setDomainData] = useState();
 	const [formatData, setFormatData] = useState();
 
+	const per1000 = isPer1000();
+
 	/**
 	 * Fetch breakdown data async
 	 * @param {string} breakdownType
@@ -309,20 +311,19 @@ const BreakdownCard = ({ baseFilters }) => {
 		}
 
 		// Are we in carbon-per-mille mode?
-		if (isPer1000()) {
+		if (per1000) {
 			if (data) data = emissionsPerImpressions(data);
 		}
-
 		setBreakdownData(data);
 	};
 
 	// Init - Fetch breakdown data async
-	useEffect(() => {
+	useEffect(async () => {
 		fetchBreakdown("os", setOsData);
 		fetchBreakdown("adid", setAdidData);
 		fetchBreakdown("domain", setDomainData);
 		fetchBreakdown("format", setFormatData);
-	}, []);
+	}, [per1000]);
 
 	const loading = <Misc.Loading text="Fetching your data..." />;
 
@@ -338,7 +339,8 @@ const BreakdownCard = ({ baseFilters }) => {
 			subcard = domainData ? <PubSubcard data={domainData} /> : loading;
 			break;
 		case "format":
-			subcard = formatData ? <FormatSubcard data={formatData} minimumPercentLabeled={10} chartType={isPer1000() ? "bar" : "pie"} /> : loading;
+			subcard = formatData ? <FormatSubcard data={formatData} minimumPercentLabeled={10} chartType={per1000 ? "bar" : "pie"} /> : loading;
+			break;
 	}
 
 	return (
