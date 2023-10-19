@@ -8,7 +8,7 @@ import { dataColours, TONNES_THRESHOLD } from "./dashUtils";
 import SimpleTable, { Column } from "../../../base/components/SimpleTable";
 import List from "../../../base/data/List";
 import { ButtonGroup } from "reactstrap";
-import { getCarbon, getTags, emissionsPerImpressions, getSumColumn, getBreakdownByWithCount, getCompressedBreakdownWithCount, filterByCount, splitTizenOS, isPer1000 } from "./emissionscalcTs";
+import { getCarbon, getTags, emissionsPerImpressions, GreenBuckets, getBreakdownByWithCount, getCompressedBreakdownWithCount, splitTizenOS, isPer1000 } from "./emissionscalcTs";
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import "../../../../style/greendash-breakdown-card.less";
 import { CO2e, NOEMISSIONS, GreenCard, GreenCardAbout, ModeButton } from "./GreenDashUtils";
@@ -277,11 +277,12 @@ const PubSubcard = ({ data }) => {
 };
 
 /**
- *
- * @param {Object} p
- * @param {Object} p.dataValue pvChartData.value Which are split by breakdown: os, adid,
+ * 
+ * @param {Object} obj 
+ * @param {GreenBuckets} obj.formatBuckets
+ * @returns 
  */
-const BreakdownCard = ({ baseFilters }) => {
+const BreakdownCard = ({ formatBuckets, baseFilters }) => {
 	const [mode, setMode] = useState("device");
 	const [osData, setOsData] = useState();
 	const [adidData, setAdidData] = useState();
@@ -322,8 +323,9 @@ const BreakdownCard = ({ baseFilters }) => {
 		fetchBreakdown("os", setOsData);
 		fetchBreakdown("adid", setAdidData);
 		fetchBreakdown("domain", setDomainData);
-		fetchBreakdown("format", setFormatData);
-	}, [per1000]);
+		// fetchBreakdown("format", setFormatData);
+		setFormatData(per1000 ? emissionsPerImpressions(formatBuckets) : formatBuckets);
+	}, [per1000, formatBuckets]);
 
 	const loading = <Misc.Loading text="Fetching your data..." />;
 

@@ -26,7 +26,7 @@ const icons = {
 		<path d="M 43.279297 13.248047 L 42.765625 19.076172 L 23.974609 18.630859 L 16.246094 42.496094 L 10.292969 48.919922 L 8.6953125 61.035156 L 13.71875 67.861328 L 15.160156 82.021484 L 27.509766 82.199219 L 27.097656 69.115234 L 74.193359 69.884766 L 73.277344 81.34375 C 73.277344 81.34375 85.835999 83.23029 85.451172 82.03125 C 85.066345 80.83221 86.607422 66.138672 86.607422 66.138672 L 91.599609 60.433594 L 90.513672 49.179688 L 85.121094 42.398438 L 76.425781 17.609375 L 58.099609 17.527344 L 57.701172 13.888672 L 43.279297 13.248047 z M 71.642578 22.824219 L 76.388672 41.267578 L 23.859375 40.636719 L 28.916016 23.261719 L 71.642578 22.824219 z M 70.71875 45.984375 L 82.244141 45.984375 L 82.244141 57.394531 L 70.71875 57.394531 L 70.71875 45.984375 z M 18.507812 46.603516 L 30.03125 46.603516 L 30.03125 58.011719 L 18.507812 58.011719 L 18.507812 46.603516 z" />
 	</svg>
 };
-
+ 
 /**
 // According to "how bad are bananas" - a book by Mike Burners Lee
 // ...which is cited in this graphic: https://www.viessmann.co.uk/company/blog/the-carbon-footprint-of-nearly-everything 
@@ -90,9 +90,9 @@ const CO2Impact = ({ kg, mode }) => {
 			<div className="impact-leader"><Mass kg={kg} /> {CO2e}: that's</div>
 			<div className="impact-number">{printer.prettyInt(kg * factor, true)}</div>
 			<div className="impact-desc">{desc}</div>
-			<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>			
+			<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>
 		</div>
-	</div>
+	</div>;
 };
 
 /**

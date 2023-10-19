@@ -6,19 +6,17 @@ import PromiseValue from '../../../base/promise-value';
 import ErrAlert from '../../../base/components/ErrAlert';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import Misc from '../../../base/components/Misc';
-import List from '../../../base/data/List';
 import DataStore from '../../../base/plumbing/DataStore';
-import printer from '../../../base/utils/printer';
 import { getPeriodFromUrlParams, printPeriod } from '../../../base/utils/date-utils';
+import printer from '../../../base/utils/printer';
 
 import { GreenCard } from './GreenDashUtils';
-import { getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from './emissionscalcTs';
+import { emissionsPerImpressions, getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from './emissionscalcTs';
 
 import BreakdownCard from './BreakdownCard';
 import AdtechBreakdownCard from './AdtechBreakdownCard';
 import CompareCard from './CompareCard';
 import GreenDashboardFilters from './GreenDashboardFilters';
-import JourneyCard from './JourneyCard';
 import MapCard from './MapCard';
 import TimeOfDayCard from './TimeOfDayCard';
 import TimeSeriesCard from './TimeSeriesCard';
@@ -60,7 +58,7 @@ const OverviewWidget = ({ period, data, prob }) => {
 	);
 };
 
-const CTACard = ({}) => {
+const CTACard = () => {
 	return (
 		<GreenCard className='carbon-cta flex-column' downloadable={false}>
 			<div className='cta-card-decoration'>
@@ -145,6 +143,16 @@ const GreenMetrics2 = () => {
 		pvCampaigns = pvCampaigns.value;
 	}
 
+	// NB: breakdown: "emissions":"sum" is a hack that the backend turns into count(aka impressions) + co2 + co2-bits
+
+	// Call format breakdown here to share with Both CompareCard and Breakdowncard
+	const formatBreakdownDataValuePv = getCarbon({
+		...baseFilters,
+		breakdown: ['format{"countco2":"sum"}'],
+	});
+	const breakdownDataValue = formatBreakdownDataValuePv.value?.sampling || formatBreakdownDataValuePv.value;
+	const formatBuckets = breakdownDataValue?.by_format?.buckets;
+
 	return (
 		<>
 			<OverviewWidget period={period} data={pvChartTotalValue?.by_total.buckets} prob={samplingProb} />
@@ -170,10 +178,10 @@ const GreenMetrics2 = () => {
 			</Row>
 			<Row className='card-row'>
 				<Col xs='12' xl='4' className='flex-column'>
-					<CompareCard {...commonProps} />
+					<CompareCard formatBuckets={formatBuckets} {...commonProps} />
 				</Col>
 				<Col xs='12' xl='4' className='flex-column'>
-					<BreakdownCard {...commonProps} />
+					<BreakdownCard formatBuckets={formatBuckets} {...commonProps} />
 				</Col>
 				<Col xs='12' xl='4' className='flex-column'>
 					{false && <TimeOfDayCard {...commonProps} />}
@@ -185,7 +193,7 @@ const GreenMetrics2 = () => {
 	);
 };
 
-const GreenMetrics = ({}) => {
+const GreenMetrics = () => {
 	const [agencyIds, setAgencyIds] = useState();
 	let agencyId = DataStore.getUrlValue('agency');
 	if (!agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
