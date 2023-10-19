@@ -15,6 +15,7 @@ import { GreenCard } from './GreenDashUtils';
 import { getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from './emissionscalcTs';
 
 import BreakdownCard from './BreakdownCard';
+import AdtechBreakdownCard from './AdtechBreakdownCard';
 import CompareCard from './CompareCard';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import JourneyCard from './JourneyCard';
@@ -157,12 +158,15 @@ const GreenMetrics2 = () => {
 				right={{ label: 'Per 1000 impressions', value: 'per1000', colour: 'primary' }}
 			/>
 			<Row className='card-row'>
-				<Col xs='12' sm='12' className='flex-column'>
+				<Col xs='12' sm='8' className='flex-column'>
 					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
 				</Col>
 				{/* <Col xs='12' sm='4' className='flex-column'>
 					<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable || noData} />
 				</Col> */}
+				<Col xs='12' sm='4'>
+					<AdtechBreakdownCard {...commonProps} />
+				</Col>
 			</Row>
 			<Row className='card-row'>
 				<Col xs='12' xl='4' className='flex-column'>
