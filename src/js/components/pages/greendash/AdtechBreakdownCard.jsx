@@ -118,9 +118,9 @@ const AdtechBreakdownCard = ({ baseFilters }) => {
 
 		// Are we in carbon-per-mille mode?
 		if (isPer1000()) {
-			if (techDataTemp) techDataTemp = emissionsPerImpressions(techData);
+			if (techDataTemp) techDataTemp = emissionsPerImpressions(techDataTemp);
 		}
-
+		
 		setTechData(techDataTemp);
 	}, []);
 
