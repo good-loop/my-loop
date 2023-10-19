@@ -235,6 +235,9 @@ const BenchmarksCard = ({ formatBuckets, benchmarksData }) => {
 
 	// formatBuckets must be in per1000 mode
 	formatBuckets = emissionsPerImpressions(formatBuckets);
+	
+	// Put benchmarksData in the same order as formatBuckets
+	const benchmarksValues = formatBuckets.map((val) => benchmarksData[val.key]);
 
 	// buckets to datasets
 	const labels = formatBuckets.map((val) => capitalizeFirstLetter(val.key));
@@ -250,7 +253,7 @@ const BenchmarksCard = ({ formatBuckets, benchmarksData }) => {
 			},
 			{
 				label: "Benchmarks",
-				data: Object.values(benchmarksData),
+				data: benchmarksValues,
 				backgroundColor: "rgba(112, 128, 144, 0.6)", // Slate Gray
 			},
 		],
@@ -295,6 +298,7 @@ const capitalizeFirstLetter = (str) => {
 
 /**
  * Get the map of impressions per Country. Filter out data that have less than 0.1% of total impressions.
+ * Also filter out 'unset' country since their numbers don't make sense. 
  * @param {GreenBuckets | null} buckets
  * @param {Number | null} allCount
  * @returns {Object.<string, number> | null}
@@ -306,6 +310,10 @@ const getCountryMapFiltered = (buckets, allCount, filterThreshold = 0.001) => {
 
 	const countryMap = buckets.reduce((acc, val) => {
 		if (val.count < threshold) {
+			return acc;
+		}
+
+		if (val.key === "unset") {
 			return acc;
 		}
 
@@ -351,7 +359,7 @@ const CompareCard = ({ formatBuckets, ...props }) => {
 
 		const countryData = await getCarbon({ ...props.baseFilters, breakdown: ['country{"count":"sum"}'] }).promise;
 
-		/** A map of country and it's impressions count. Filtered out countries that have insufficient impressions. */
+		/** A map of country and it's impressions count. Filtered out 'unset' & countries that have insufficient impressions. */
 		const countryMap = getCountryMapFiltered(countryData.by_country?.buckets, countryData.allCount);
 
 		const urlParams = getUrlVars();
