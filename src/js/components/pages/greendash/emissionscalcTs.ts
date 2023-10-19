@@ -638,7 +638,7 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): (Impact
 };
 
 /** Tizen could mean Samsung mobile or Samsung TV, split them */
-export const splitTizenOS = (buckets: GreenBuckets, baseFilters: BaseFilters) => {
+export const splitTizenOS = async (buckets: GreenBuckets, baseFilters: BaseFilters) => {
 	// Escape if no tizen were found
 	if (!buckets.some((record) => Object.prototype.hasOwnProperty.call(record, "key") && record.key === "tizen")) {
 		return buckets;
@@ -649,10 +649,11 @@ export const splitTizenOS = (buckets: GreenBuckets, baseFilters: BaseFilters) =>
 
 	const filteredData: GreenBuckets = buckets.filter((record) => !(Object.prototype.hasOwnProperty.call(record, "key") && record.key === "tizen"));
 	const tizenFilters = { ...baseFilters, q: `(${baseFilters.q}) AND os:tizen`, breakdown: ['mbl{"countco2":"sum"}'] };
-	const pvTizenMblValue = getCarbon(tizenFilters);
 
-	if (pvTizenMblValue.resolved && pvTizenMblValue.value.by_mbl?.buckets) {
-		let mblBuckets = _.cloneDeep(pvTizenMblValue.value.by_mbl.buckets);
+	const pvTizenMblValue = await getCarbon(tizenFilters).promise;
+
+	if (pvTizenMblValue.by_mbl?.buckets) {
+		let mblBuckets = _.cloneDeep(pvTizenMblValue.by_mbl.buckets);
 		mblBuckets = mblBuckets.map((record: Record<string, string | number>) => {
 			if (record.key === "false") {
 				record.key = "samsung tv";

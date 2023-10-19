@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable import/extensions */
 import React, { useEffect, useState } from "react";
 
 import Misc from "../../../base/components/Misc";
@@ -8,41 +10,8 @@ import { TONNES_THRESHOLD } from "./dashUtils";
 import { getCarbon, emissionsPerImpressions, getSumColumn, isPer1000 } from "./emissionscalcTs";
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import "../../../../style/greendash-breakdown-card.less";
+import { pieOptions } from "./BreakdownCard";
 import { CO2e, NOEMISSIONS, GreenCard, GreenCardAbout } from "./GreenDashUtils";
-
-const pieOptions = (totalCO2, minimumPercentLabeled) => ({
-	layout: { autoPadding: true, padding: 5 },
-	plugins: {
-		legend: {
-			position: (ctx) => (ctx.chart.width < 250 ? "left" : "top"),
-			labels: { boxWidth: 20 },
-		},
-		tooltip: {
-			callbacks: {
-				label: (ctx) => ` ${printer.prettyNumber(ctx.dataset.data[ctx.dataIndex])} kg`,
-				title: (ctx) => ctx[0].label,
-			},
-		},
-		datalabels: {
-			labels: {
-				value: {
-					color: "#fff",
-					textStrokeColor: "#666",
-					textStrokeWidth: 2,
-					font: (ctx) => ({
-						family: "Montserrat",
-						weight: "bold",
-						size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 10),
-					}),
-					formatter: (value = 0) => {
-						const percentage = Math.round((value * 100) / totalCO2);
-						return percentage >= minimumPercentLabeled ? `${percentage}%` : "";
-					},
-				},
-			},
-		},
-	},
-});
 
 /**
  *
@@ -110,7 +79,6 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = "
 					legend: { display: false },
 					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 				},
-				// scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
 				scales: { x: { ticks: { callback: (v) => v + " " + unitShort, precision: 2 } } },
 			},
 		});
@@ -138,17 +106,21 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = "
 const AdtechBreakdownCard = ({ baseFilters }) => {
 	const [techData, setTechData] = useState();
 
+	// Init - Call data
 	useEffect(async () => {
 		const techValueResponse = await getCarbon({
 			...baseFilters,
 			breakdown: ['total{"emissions":"sum"}'],
 		}).promise;
+
 		const techValue = techValueResponse?.sampling || techValueResponse;
 		let techDataTemp = techValue.by_total?.buckets;
+
 		// Are we in carbon-per-mille mode?
 		if (isPer1000()) {
 			if (techDataTemp) techDataTemp = emissionsPerImpressions(techData);
 		}
+
 		setTechData(techDataTemp);
 	}, []);
 
