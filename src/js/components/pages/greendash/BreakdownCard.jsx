@@ -299,7 +299,6 @@ const BreakdownCard = ({ baseFilters }) => {
 			...baseFilters,
 			breakdown: [`${breakdownType}{"countco2":"sum"}`],
 		}).promise;
-		console.log("dataRes", dataRes);
 		const dataValue = dataRes?.sampling || dataRes;
 		let data;
 		if (breakdownType === "os") {
@@ -313,8 +312,6 @@ const BreakdownCard = ({ baseFilters }) => {
 		if (isPer1000()) {
 			if (data) data = emissionsPerImpressions(data);
 		}
-
-		console.log("data", data);
 
 		setBreakdownData(data);
 	};
