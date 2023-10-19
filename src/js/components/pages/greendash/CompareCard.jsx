@@ -228,16 +228,17 @@ const CampaignCard = ({ baseFilters }) => {
  * @param {GreenBuckets} obj.buckets
  * @returns {JSX.Element}
  */
-const BenchmarksCard = ({ buckets, benchmarksData }) => {
-	if (!isPer1000() || !buckets || !buckets.length || !benchmarksData) {
+const BenchmarksCard = ({ formatBuckets, benchmarksData }) => {
+	if (!isPer1000() || !formatBuckets || !formatBuckets.length || !benchmarksData) {
 		return <Misc.Loading />;
 	}
-	// Benchmarks must be in per1000 Mode
-	buckets = emissionsPerImpressions(buckets);
+
+	// formatBuckets must be in per1000 mode
+	formatBuckets = emissionsPerImpressions(formatBuckets);
 
 	// buckets to datasets
-	const labels = buckets.map((val) => capitalizeFirstLetter(val.key));
-	const values = buckets.map((val) => val.co2);
+	const labels = formatBuckets.map((val) => capitalizeFirstLetter(val.key));
+	const values = formatBuckets.map((val) => val.co2);
 
 	const data = {
 		labels: labels,
@@ -326,20 +327,20 @@ const getCountryMapFiltered = (buckets, allCount, filterThreshold = 0.001) => {
  * @param {BaseFilters} obj.props
  * @returns {JSX.Element}
  */
-const SwitchCard = ({ mode, buckets, props }) => {
+const SwitchCard = ({ mode, formatBuckets, props }) => {
 	switch (mode) {
 		case "quarter":
 			return <QuartersCard {...props} />;
 		case "campaign":
 			return <CampaignCard {...props} />;
 		case "benchmarks":
-			return <BenchmarksCard buckets={buckets} benchmarksData={props?.benchmarksData} />;
+			return <BenchmarksCard formatBuckets={formatBuckets} benchmarksData={props?.benchmarksData} />;
 		default:
 			return <QuartersCard {...props} />;
 	}
 };
 
-const CompareCard = ({ dataValue, ...props }) => {
+const CompareCard = ({ formatBuckets, ...props }) => {
 	const [mode, setMode] = useState("quarter");
 	const [benchmarksData, setBenchmarksData] = useState();
 
@@ -416,9 +417,6 @@ const CompareCard = ({ dataValue, ...props }) => {
 		});
 	}, [BenchmarksDataPv]);
 
-	/** @type {GreenBuckets | false} */
-	const formatBuckets = dataValue?.by_format?.buckets;
-
 	// TODO don't offer campaign biew if we're focuding on one campaign
 	const campaignModeDisabled = !!DataStore.getUrlValue("campaign");
 
@@ -437,7 +435,7 @@ const CompareCard = ({ dataValue, ...props }) => {
 					</ModeButton>
 				</ButtonGroup>
 			</div>
-			<SwitchCard mode={mode} buckets={formatBuckets} props={{ ...props, benchmarksData }} />
+			<SwitchCard mode={mode} formatBuckets={formatBuckets} props={{ ...props, benchmarksData }} />
 			<GreenCardAbout>
 				<p>Explanation of quarterly and per-campaign emissions comparisons</p>
 			</GreenCardAbout>

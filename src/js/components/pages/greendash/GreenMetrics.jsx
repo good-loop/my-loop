@@ -11,9 +11,10 @@ import { getPeriodFromUrlParams, printPeriod } from '../../../base/utils/date-ut
 import printer from '../../../base/utils/printer';
 
 import { GreenCard } from './GreenDashUtils';
-import { getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from './emissionscalcTs';
+import { emissionsPerImpressions, getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from './emissionscalcTs';
 
 import BreakdownCard from './BreakdownCard';
+import AdtechBreakdownCard from './AdtechBreakdownCard';
 import CompareCard from './CompareCard';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import MapCard from './MapCard';
@@ -144,12 +145,13 @@ const GreenMetrics2 = () => {
 
 	// NB: breakdown: "emissions":"sum" is a hack that the backend turns into count(aka impressions) + co2 + co2-bits
 
-	/** Moved from BreakdownCard to share buckets to other cards */
-	const pvBreakdownDataValue = getCarbon({
+	// Call format breakdown here to share with Both CompareCard and Breakdowncard
+	const formatBreakdownDataValuePv = getCarbon({
 		...baseFilters,
-		breakdown: ['os{"countco2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}', 'format{"countco2":"sum"}'],
+		breakdown: ['format{"countco2":"sum"}'],
 	});
-	const breakdownDataValue = pvBreakdownDataValue.value?.sampling || pvBreakdownDataValue.value;
+	const breakdownDataValue = formatBreakdownDataValuePv.value?.sampling || formatBreakdownDataValuePv.value;
+	const formatBuckets = breakdownDataValue?.by_format?.buckets;
 
 	return (
 		<>
@@ -164,19 +166,22 @@ const GreenMetrics2 = () => {
 				right={{ label: 'Per 1000 impressions', value: 'per1000', colour: 'primary' }}
 			/>
 			<Row className='card-row'>
-				<Col xs='12' sm='12' className='flex-column'>
+				<Col xs='12' xl='8' className='flex-column'>
 					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
 				</Col>
 				{/* <Col xs='12' sm='4' className='flex-column'>
 					<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable || noData} />
 				</Col> */}
+				<Col xs='12' xl='4'>
+					<AdtechBreakdownCard {...commonProps} />
+				</Col>
 			</Row>
 			<Row className='card-row'>
 				<Col xs='12' xl='4' className='flex-column'>
-					<CompareCard dataValue={breakdownDataValue} {...commonProps} />
+					<CompareCard formatBuckets={formatBuckets} {...commonProps} />
 				</Col>
 				<Col xs='12' xl='4' className='flex-column'>
-					<BreakdownCard dataValue={breakdownDataValue} {...commonProps} />
+					<BreakdownCard formatBuckets={formatBuckets} {...commonProps} />
 				</Col>
 				<Col xs='12' xl='4' className='flex-column'>
 					{false && <TimeOfDayCard {...commonProps} />}
