@@ -2,13 +2,12 @@
  * Green Dashboard jsx utilities
  */
 import React, { useState } from 'react';
+import { Button, Card, Tooltip } from 'reactstrap';
 import { PNGDownloadButton } from "../../../base/components/PNGDownloadButton";
-import { Button, Card } from 'reactstrap';
-import { mass } from './dashUtils';
-import { space } from '../../../base/utils/miscutils';
-import { getFilterTypeId } from './dashUtils';
-import { getDataItem } from '../../../base/plumbing/Crud';
 import KStatus from '../../../base/data/KStatus';
+import { getDataItem } from '../../../base/plumbing/Crud';
+import { space } from '../../../base/utils/miscutils';
+import { getFilterTypeId, mass } from './dashUtils';
 
 
 
@@ -107,11 +106,12 @@ export const GreenCard = ({ title, children, className, row, downloadable = true
 		{title ? <h6 className="gc-title">{title}</h6> : null}
 		{downloadButton}
 		<Card body className={space('gc-body', row ? 'flex-row' : 'flex-column')}>{children}</Card>
-	</div>
+	</div>;
 };
 
 
 export const GreenCardAbout = ({children, ...rest}) => {
+	// eslint-disable-next-line no-constant-condition
 	if (true) return null; // TODO write the text for these
 	const [open, setOpen] = useState(false);
 
@@ -126,4 +126,4 @@ export const GreenCardAbout = ({children, ...rest}) => {
 			</svg>
 		</a>
 	</div>;
-}
+};

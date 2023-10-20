@@ -438,9 +438,9 @@ const CompareCard = ({ formatBuckets, ...props }) => {
 					<ModeButton name="campaign" mode={mode} setMode={setMode} disabled={campaignModeDisabled}>
 						Campaign
 					</ModeButton>
-					<ModeButton name="benchmarks" mode={mode} setMode={setMode} disabled={!per1000}>
+					{per1000 && <ModeButton name="benchmarks" mode={mode} setMode={setMode}>
 						Benchmarks
-					</ModeButton>
+					</ModeButton>}
 				</ButtonGroup>
 			</div>
 			<SwitchCard mode={mode} formatBuckets={formatBuckets} props={{ ...props, benchmarksData }} />
