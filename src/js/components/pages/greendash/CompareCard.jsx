@@ -366,15 +366,30 @@ const CompareCard = ({ formatBuckets, ...props }) => {
 		/** Benchmarks period. TODO: Upgrade to last quarter later */
 		const period = getPeriodFromUrlParams({ ...urlParams, period: "last-month" });
 
-		/** Average co2pm of the countries it ran on.
+		// /** Average co2pm of the countries it ran on. Fast way using 'format{"co2pm":"avg"}'
+		//  * @type {Object[]} */
+		// const countryCo2pm = await Promise.all(
+		// 	Object.keys(countryMap).map(async (countryCode) => {
+		// 		const formatData = await getCarbon({ q: `country:${countryCode}`, start: period.start.toISOString(), end: period.end.toISOString(), breakdown: ['format{"co2pm":"avg"}'] }).promise;
+		// 		const buckets = formatData?.by_format?.buckets;
+		// 		const bucketsMap = buckets.reduce((acc, val) => {
+		// 			acc.country = countryCode;
+		// 			acc[val.key] = val.co2pm;
+		// 			return acc;
+		// 		}, {});
+		// 		return bucketsMap;
+		// 	})
+		// );
+
+		/** Average co2pm of the countries it ran on. Getting real data via 'format{"countco2":"sum"}'
 		 * @type {Object[]} */
-		const countryCo2pm = await Promise.all(
+		const countryCo2pmReal = await Promise.all(
 			Object.keys(countryMap).map(async (countryCode) => {
-				const formatData = await getCarbon({ q: `country:${countryCode}`, start: period.start.toISOString(), end: period.end.toISOString(), breakdown: ['format{"co2pm":"avg"}'] }).promise;
-				const buckets = formatData?.by_format?.buckets;
+				const formatData = await getCarbon({ q: `country:${countryCode}`, start: period.start.toISOString(), end: period.end.toISOString(), breakdown: ['format{"countco2":"sum"}'] }).promise;
+				const buckets = emissionsPerImpressions(formatData.by_format.buckets);
 				const bucketsMap = buckets.reduce((acc, val) => {
 					acc.country = countryCode;
-					acc[val.key] = val.co2pm;
+					acc[val.key] = val.co2;
 					return acc;
 				}, {});
 				return bucketsMap;
@@ -385,7 +400,7 @@ const CompareCard = ({ formatBuckets, ...props }) => {
 
 		/** Average co2pm converted to one Object for easy access
 		 * @type {Object} */
-		const countryCo2pmMap = countryCo2pm.reduce((acc, val) => {
+		const countryCo2pmMap = countryCo2pmReal.reduce((acc, val) => {
 			filteredTotalImpressions += countryMap[val.country];
 			acc[val.country] = { ...val, count: countryMap[val.country] };
 			delete acc[val.country].country;
