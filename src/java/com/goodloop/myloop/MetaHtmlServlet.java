@@ -70,6 +70,8 @@ public class MetaHtmlServlet implements IServlet {
 
 	private String cachebuster;
 
+	private String campaignId;
+
 	/**
 	 * Get a CrudClient to fetch items from local, test, or production portal
 	 * - according to the current server, and any ?server=x override param.
@@ -77,7 +79,7 @@ public class MetaHtmlServlet implements IServlet {
 	 * @param state
 	 * @return
 	 */
-	private CrudClient getPortalClient(Class<? extends AThing> _class, WebRequest state) {
+	private <T extends AThing> CrudClient<T> getPortalClient(Class<T> _class, WebRequest state) {
 		String type = _class.getSimpleName().toLowerCase();
 		type = type.replaceFirst("^advert", "vert"); // vertiser/vert servlets
 
@@ -116,6 +118,9 @@ public class MetaHtmlServlet implements IServlet {
 		if ("charity".equals(bit0)) {
 			return getPageSettings2_charity(state, vars);
 		}
+		if ("greendash".equals(bit0)) {
+			return getPageSettings2_greendash(state, vars);
+		}
 
 		// TODO Better Title
 		String subtitle = state.getRequestPath().replace("/", "");
@@ -137,6 +142,50 @@ public class MetaHtmlServlet implements IServlet {
 		// BlogPost??		
 		return vars;
 	}
+
+	private Map getPageSettings2_greendash(WebRequest state, Map vars) {
+		// do we have a campaign?
+//		if (campaignId==null) campaignId = state.getSlugBits(1);
+		Campaign campaign = null;
+		Advertiser vertiser = null;
+		Agency agency = null;
+		if (campaignId!=null) {
+			campaign = (Campaign) getPortalClient(Campaign.class, state).getIfPresent(campaignId);
+		}
+		if (agencyId!=null) {
+			agency = (Agency) getPortalClient(Agency.class, state).getIfPresent(agencyId);
+		}
+		if (vertiserId!=null) {
+			vertiser = (Advertiser) getPortalClient(Advertiser.class, state).getIfPresent(vertiserId);
+		}
+
+		String companyName = "";
+		if (agency != null) {
+			companyName = agency.getName();
+		}
+		
+		String description = "Good-Loop Green-Data Dashboard - Measure and reduce the carbon footprint from advertising";
+		String title = "Good-Loop: Green-Data Dashboard: "+companyName;
+
+		if (title != null)
+			vars.put("title", WebUtils2.htmlEncode(title));
+		
+		// image
+		String img = "";
+		if (agency != null && agency.getBranding()!=null) {
+			img = Utils.or(agency.getBranding().backgroundImage, agency.getBranding().logo);
+		}
+		if (vertiser!= null && vertiser.getBranding()!=null) {
+			img = Utils.or(vertiser.getBranding().backgroundImage, vertiser.getBranding().logo);
+		}
+		vars.put("image", img);
+		
+		vars.put("description", WebUtils2.htmlEncode(description));
+		vars.put("type", "summary");
+		return vars;
+	}
+
+	
 
 	private String cachebuster() {
 		if (cachebuster!=null) return cachebuster;
@@ -252,6 +301,7 @@ public class MetaHtmlServlet implements IServlet {
 		// For impact hub, we want different caches per vertiser/agency
 		vertiserId = Utils.or(state.get("gl.vertiser"), state.get("brand"));
 		agencyId = Utils.or(state.get("gl.agency"), state.get("agency"));
+		campaignId = state.get("campaign");
 		if (vertiserId != null)
 			slug += "_vertiser:" + vertiserId;
 		if (agencyId != null)
