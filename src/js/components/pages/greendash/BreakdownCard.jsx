@@ -158,7 +158,7 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = "pie" }) =
  * desktop vs mobile and different OS
  * @param {Object} p
  */
-const DeviceSubcard = ({ data: osTable }) => {
+const DeviceSubcard = ({ data: osTable, per1000 }) => {
 	if (!yessy(osTable)) return NOEMISSIONS;
 
 	const [chartProps, setChartProps] = useState();
@@ -174,7 +174,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 		}
 
 		// compress by OS group
-		const breakdownByOS2 = getCompressedBreakdownWithCount({ breakdownByX: breakdownByOS, osTypes });
+		const breakdownByOS2 = getCompressedBreakdownWithCount({ breakdownByX: breakdownByOS, osTypes, per1000 });
 		let data = Object.values(breakdownByOS2);
 		const labels = Object.keys(breakdownByOS2); // ["Windows", "Mac"];
 
@@ -332,7 +332,7 @@ const BreakdownCard = ({ formatBuckets, baseFilters }) => {
 	let subcard;
 	switch (mode) {
 		case "device":
-			subcard = osData ? <DeviceSubcard data={osData} /> : loading;
+			subcard = osData ? <DeviceSubcard data={osData} per1000={per1000} /> : loading;
 			break;
 		case "tag":
 			subcard = adidData ? <TagSubcard data={adidData} /> : loading;

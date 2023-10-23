@@ -213,10 +213,12 @@ export const getCompressedBreakdownWithCount = ({
 	breakdownByX,
 	minFraction = 0.05,
 	osTypes,
+	per1000
 }: {
 	breakdownByX: BreakdownByX;
 	minFraction: number;
 	osTypes: any | null;
+	per1000: boolean;
 }): Record<string, number> => {
 	let breakdownByOSGroup1: BreakdownByX = {} as BreakdownByX;
 	const total = sum(Object.values(breakdownByX).map((val) => val.count));
@@ -243,7 +245,7 @@ export const getCompressedBreakdownWithCount = ({
 	// get average of repeated keys
 	let breakdownByOSGroupOutput: { [key: string]: number } = {};
 	Object.entries(breakdownByOSGroup2).forEach(([k, v]) => {
-		breakdownByOSGroupOutput[k] = v.co2 / v.occurs!;
+		breakdownByOSGroupOutput[k] = v.co2 / (per1000 ? v.occurs! : 1);
 	});
 
 	return breakdownByOSGroupOutput;

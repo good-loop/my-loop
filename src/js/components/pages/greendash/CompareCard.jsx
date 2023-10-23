@@ -176,7 +176,7 @@ const CampaignCard = ({ baseFilters }) => {
 		let breakdownByX = {};
 		buckets.forEach((row) => (breakdownByX[row.key] = { co2: row.co2, count: row.count }));
 
-		vbyx = getCompressedBreakdownWithCount({ breakdownByX });
+		vbyx = getCompressedBreakdownWithCount({breakdownByX: breakdownByX, per1000: per1000});
 
 		// reformat ids we want to find names of into a bucket format (remove 'other' too)
 		const idsToNames = Object.keys(vbyx).filter((key) => key != "Other");
