@@ -234,7 +234,7 @@ const TagSubcard = ({ data }) => {
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [
 		// new Column({Header:"Campaign"}),
-		new Column({ Header: "Tag", accessor: (row) => tag4id[row.key]?.name, Cell: CellWithTitle }),
+		new Column({ Header: "Tag", accessor: (row) => tag4id[row.key]?.name || row.key, Cell: CellWithTitle }),
 		new Column({ Header: "Impressions", accessor: (row) => row.count }),
 		new Column({ Header: "CO2e (kg)", accessor: (row) => row.co2 }),
 	];
