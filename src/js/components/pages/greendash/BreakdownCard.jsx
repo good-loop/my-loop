@@ -231,10 +231,14 @@ const TagSubcard = ({ data }) => {
 	const tag4id = {};
 	tags.forEach((tag) => (tag4id[tag.id] = tag));
 
+	data = data.map((val) => {
+		return { ...val, nameOrKey: tag4id[val.key]?.name || val.key };
+	});
+
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [
 		// new Column({Header:"Campaign"}),
-		new Column({ Header: "Tag", accessor: (row) => tag4id[row.key]?.name || row.key, Cell: CellWithTitle }),
+		new Column({ Header: "Tag", accessor: (row) => row.nameOrKey, Cell: CellWithTitle }),
 		new Column({ Header: "Impressions", accessor: (row) => row.count }),
 		new Column({ Header: "CO2e (kg)", accessor: (row) => row.co2 }),
 	];
@@ -277,10 +281,10 @@ const PubSubcard = ({ data }) => {
 };
 
 /**
- * 
- * @param {Object} obj 
+ *
+ * @param {Object} obj
  * @param {GreenBuckets} obj.formatBuckets
- * @returns 
+ * @returns
  */
 const BreakdownCard = ({ formatBuckets, baseFilters }) => {
 	const [mode, setMode] = useState("device");
