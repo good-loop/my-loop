@@ -249,12 +249,12 @@ const BenchmarksCard = ({ formatBuckets, benchmarksData }) => {
 			{
 				label: "Your Emissions",
 				data: values,
-				backgroundColor: "rgba(135, 206, 250, 0.6)", // Light Blue
+				backgroundColor: "#1894DA", // GL Blue from colours.less
 			},
 			{
 				label: "Benchmarks",
 				data: benchmarksValues,
-				backgroundColor: "rgba(112, 128, 144, 0.6)", // Slate Gray
+				backgroundColor: "#a1a1a1", // GL Grey from colours.less
 			},
 		],
 	};
@@ -354,6 +354,7 @@ const CompareCard = ({ formatBuckets, ...props }) => {
 
 	const per1000 = isPer1000();
 
+	// Maybe move this code into BenchmarksCard??
 	const BenchmarksDataPv = useMemo(async () => {
 		if (!per1000) return null;
 
