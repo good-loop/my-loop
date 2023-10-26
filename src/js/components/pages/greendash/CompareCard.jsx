@@ -249,15 +249,18 @@ const BenchmarksCard = ({ formatBuckets, benchmarksData }) => {
 			{
 				label: "Your Emissions",
 				data: values,
-				backgroundColor: "#1894DA", // GL Blue from colours.less
 			},
 			{
 				label: "Benchmarks",
 				data: benchmarksValues,
-				backgroundColor: "#a1a1a1", // GL Grey from colours.less
 			},
 		],
 	};
+
+	const colours = dataColours([data.datasets[0].data[0], data.datasets[0].data[1]]);
+	data.datasets.forEach((dataset, index) => {
+		dataset.backgroundColor = colours[index];
+	});
 
 	const chartProps = {
 		data: data,
