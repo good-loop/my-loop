@@ -142,10 +142,7 @@ const MainDiv = () => {
 		}}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={NavbarChildren}
 		navbarBackgroundColour="white"
-		navbarAccountMenuItems={accountMenuItems}
-		//navbarAccountLinkText="My.Data"
 		navbarLogoClass="myloop-nav-logo"
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
@@ -153,19 +150,24 @@ const MainDiv = () => {
 		fullWidthPages={Object.keys(PAGES)}
 		undecoratedPages={["welcome", "greendash", "impact"]}
 		Footer={Footer}
-		canRegister
-		noLoginTitle
-		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
-		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
-		noSocials
-		loginChildren={LoginChildren}
-		LoginGuts={MyLoginWidgetGuts}
 		Persistent={MobileLandscapeHider}
+		// 2023-10 Remove login/ account related menu
+		// canRegister
+		// loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
+		// loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
+		// noLoginTitle
+		// navbarAccountMenuItems={accountMenuItems}
+		// //navbarAccountLinkText="My.Data"
+		// loginChildren={LoginChildren}
+		// LoginGuts={MyLoginWidgetGuts}
+		// navbarChildren={NavbarChildren}
+		// noSocials
+		noLogins
 	/>);
 };
 
-const NavbarChildren = () => <><T4GSignUpButton className="d-none d-md-inline-block" /><T4GSignUpModal /></>;
-const LoginChildren = () => <div className="text-center"><T4GSignUpButton>Not got an account? Sign up and get Tabs for Good</T4GSignUpButton></div>;
+// const NavbarChildren = () => <><T4GSignUpButton className="d-none d-md-inline-block" /><T4GSignUpModal /></>;
+// const LoginChildren = () => <div className="text-center"><T4GSignUpButton>Not got an account? Sign up and get Tabs for Good</T4GSignUpButton></div>;
 
 const MobileLandscapeHider = () => {
 	return <div className="mobile-landscape-hider">
