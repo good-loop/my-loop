@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-redeclare, @typescript-eslint/no-unused-vars
 /* global navigator */
 import React from 'react';
 import Login from '../base/youagain';
@@ -12,7 +13,6 @@ import C from '../C';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import MainDivBase from '../base/components/MainDivBase';
 import ServerIO from '../plumbing/ServerIO';
-import CampaignPage from './campaignpage/CampaignPage';
 import SubscriptionBox from './cards/SubscriptionBox';
 import Footer from './Footer';
 import MyGLAboutPage from './MyGLAboutPage';
@@ -37,14 +37,13 @@ import GetInvolvedPage from './pages/GetInvolvedPage';
 import OurImpactPage from './pages/OurImpactPage';
 import OurStoryPage from './pages/OurStoryPage';
 import SafariPage from './pages/SafariPage';
-import TabsForGoodProductPage from './pages/TabsForGoodProductPage';
 import WelcomePage from './pages/Welcome';
 import { T4GSignUpButton, T4GSignUpModal } from './T4GSignUp';
 
-import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
-import LogoutPage from './pages/LogoutPage';
 import ImpactPage from './impact/ImpactPages';
 import CampaignImpactPage from './impact/stories_components/ImpactB2C';
+import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
+import LogoutPage from './pages/LogoutPage';
 
 // DataStore
 C.setupDataStore();
@@ -55,13 +54,11 @@ ServerIO.USE_PROFILER = true;
 /**
  * Subscribe box as a single page??
  */
-const SubscribePage = ({ }) => {
-	return (<>
-		<div className="Subscribe widepage">
+const SubscribePage = () => {
+	return (<div className="Subscribe widepage">
 			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box" />
-		</div>
-	</>);
-}
+		</div>);
+};
 
 // Actions
 
@@ -92,7 +89,6 @@ const PAGES = {
 	ourstory: OurStoryPage,
 	safari: SafariPage,
 	//getmydata: MyDataProductPage,
-	tabsforgood: TabsForGoodProductPage,
 	getinvolved: GetInvolvedPage,
 	ourimpact: OurImpactPage,
 	welcome: WelcomePage,
@@ -109,12 +105,10 @@ const PAGES = {
 addFunderCredit("Scottish Enterprise");
 addDataCredit({ name: "The charity impact database", url: "https://sogive.org", author: "SoGive" });
 
-
 Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
 
 const MainDiv = () => {
-
 	const navPageLabels = {
 		ourstory: "Our Story",
 		'our-impact': "Our Impact",
@@ -137,10 +131,10 @@ const MainDiv = () => {
 		navbarPages={() => {
 			return {
 				// "dashboard":Login.isLoggedIn(), ??
-				"home": [],
+				home: [],
 				"our-impact": ['ourimpact', 'impactoverview', 'charities', Roles.isTester() && 'green'],
-				"ourstory": [],
-				'tabsforgood': [],
+				ourstory: [],
+				tabsforgood: [],
 				//'get-involved':['getinvolved', 'tabsforgood', 'getmydata'],
 				//"home#mydata-cta": [],
 				//"blog":Roles.isTester()
@@ -148,7 +142,7 @@ const MainDiv = () => {
 		}}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={() => <><T4GSignUpButton className="d-none d-md-inline-block" /><T4GSignUpModal /></>}
+		navbarChildren={NavbarChildren}
 		navbarBackgroundColour="white"
 		navbarAccountMenuItems={accountMenuItems}
 		//navbarAccountLinkText="My.Data"
@@ -164,15 +158,18 @@ const MainDiv = () => {
 		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
 		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
 		noSocials
-		loginChildren={() => <div className="text-center"><T4GSignUpButton>Not got an account? Sign up and get Tabs for Good</T4GSignUpButton></div>}
+		loginChildren={LoginChildren}
 		LoginGuts={MyLoginWidgetGuts}
 		Persistent={MobileLandscapeHider}
-	></MainDivBase>);
+	/>);
 };
 
+const NavbarChildren = () => <><T4GSignUpButton className="d-none d-md-inline-block" /><T4GSignUpModal /></>;
+const LoginChildren = () => <div className="text-center"><T4GSignUpButton>Not got an account? Sign up and get Tabs for Good</T4GSignUpButton></div>;
+
 const MobileLandscapeHider = () => {
-	return <div className='mobile-landscape-hider'>
-		<img src="/img/gl-logo/LogoMark/logo.512.png" className='w-50'/>
+	return <div className="mobile-landscape-hider">
+		<img alt="Logo" src="/img/gl-logo/LogoMark/logo.512.png" className="w-50"/>
 		<p>Please view in portrait for the best experience!</p>
 	</div>;
 };
