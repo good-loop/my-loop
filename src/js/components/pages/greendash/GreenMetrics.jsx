@@ -1,30 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
-import PromiseValue from '../../../base/promise-value';
-
-// import ChartWidget from '../../../base/components/ChartWidget';
-import ErrAlert from '../../../base/components/ErrAlert';
-import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
-import Misc from '../../../base/components/Misc';
-import DataStore from '../../../base/plumbing/DataStore';
-import { getPeriodFromUrlParams, printPeriod } from '../../../base/utils/date-utils';
-import printer from '../../../base/utils/printer';
-
-import { GreenCard } from './GreenDashUtils';
-import { emissionsPerImpressions, getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from './emissionscalcTs';
-
-import BreakdownCard from './BreakdownCard';
-import AdtechBreakdownCard from './AdtechBreakdownCard';
-import CompareCard from './CompareCard';
-import GreenDashboardFilters from './GreenDashboardFilters';
-import MapCard from './MapCard';
-import TimeOfDayCard from './TimeOfDayCard';
-import TimeSeriesCard from './TimeSeriesCard';
-
-import Login from '../../../base/youagain';
-
-import PropControl from '../../../base/components/PropControl';
-import { getUrlVars } from '../../../base/utils/miscutils';
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useEffect, useState } from "react";
+import { Alert, Card, Col, Container, Row } from "reactstrap";
+import ErrAlert from "../../../base/components/ErrAlert";
+import { LoginWidgetEmbed } from "../../../base/components/LoginWidget";
+import Misc from "../../../base/components/Misc";
+import PropControl from "../../../base/components/PropControl";
+import DataStore from "../../../base/plumbing/DataStore";
+import PromiseValue from "../../../base/promise-value";
+import { getPeriodFromUrlParams, printPeriod } from "../../../base/utils/date-utils.ts";
+import { getUrlVars } from "../../../base/utils/miscutils";
+import printer from "../../../base/utils/printer";
+import Login from "../../../base/youagain";
+import AdtechBreakdownCard from "./AdtechBreakdownCard";
+import BreakdownCard from "./BreakdownCard";
+import CompareCard from "./CompareCard";
+import GreenDashboardFilters from "./GreenDashboardFilters";
+import MapCard from "./MapCard";
+import TimeOfDayCard from "./TimeOfDayCard";
+import TimeSeriesCard from "./TimeSeriesCard";
+import { getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from "./emissionscalcTs.ts";
 
 /**
  * @param {Object} obj
@@ -34,47 +28,47 @@ import { getUrlVars } from '../../../base/utils/miscutils';
 const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
 	if (data?.length > 0) {
-		const total = getSumColumn(data, 'count');
+		const total = getSumColumn(data, "count");
 		// const [upper, lower] = [total*1.01, total*0.99]
 		// imps = !prob || (prob && prob == 1) ? printer.prettyInt(total) : `${printer.prettyInt(lower)} to ${printer.prettyInt(upper)}`;
 		imps = printer.prettyInt(total);
 	} else if (!data) {
-		imps = 'Fetching data...';
+		imps = "Fetching data...";
 	} else {
-		console.warn('OverviewWidget - Empty total-impressions table', data);
-		imps = 'No data';
+		console.warn("OverviewWidget - Empty total-impressions table", data);
+		imps = "No data";
 	}
 
 	return (
-		<Row className='greendash-overview mb-2'>
-			<Col xs='12'>
-				<span className='period mr-4'>{printPeriod(period)}</span>
-				<span id='impressions-span' className='impressions'>
-					Impressions served: <span className='impressions-count'>{imps}</span>
+		<Row className="greendash-overview mb-2">
+			<Col xs="12">
+				<span className="period mr-4">{printPeriod(period)}</span>
+				<span id="impressions-span" className="impressions">
+					Impressions served: <span className="impressions-count">{imps}</span>
 				</span>
-				{prob && <span className='probability ml-5'>Probability: {prob}</span>}
+				{prob && <span className="probability ml-5">Probability: {prob}</span>}
 			</Col>
 		</Row>
 	);
 };
 
-const CTACard = () => {
-	return (
-		<GreenCard className='carbon-cta flex-column' downloadable={false}>
-			<div className='cta-card-decoration'>
-				<img className='tree-side' src='/img/green/tree-light.svg' />
-				<img className='tree-centre' src='/img/green/tree-light.svg' />
-				<img className='tree-side' src='/img/green/tree-light.svg' />
-			</div>
-			<p className='mb-2'>Interested to know more about climate positive advertising?</p>
-			<a className='get-in-touch pull-right text-right' href='https://www.good-loop.com/contact' target='_blank'>
-				<Button color='primary' size='md'>
-					Get In Touch
-				</Button>
-			</a>
-		</GreenCard>
-	);
-};
+// const CTACard = () => {
+// 	return (
+// 		<GreenCard className="carbon-cta flex-column" downloadable={false}>
+// 			<div className="cta-card-decoration">
+// 				<img className="tree-side" alt="" src="/img/green/tree-light.svg" />
+// 				<img className="tree-centre" alt="" src="/img/green/tree-light.svg" />
+// 				<img className="tree-side" alt="" src="/img/green/tree-light.svg" />
+// 			</div>
+// 			<p className="mb-2">Interested to know more about climate positive advertising?</p>
+// 			<a className="get-in-touch pull-right text-right" href="https://www.good-loop.com/contact" target="_blank" rel="noreferrer" >
+// 				<Button color="primary" size="md">
+// 					Get In Touch
+// 				</Button>
+// 			</a>
+// 		</GreenCard>
+// 	);
+// };
 
 const GreenMetrics2 = () => {
 	const urlParams = getUrlVars();
@@ -87,10 +81,10 @@ const GreenMetrics2 = () => {
 
 	// BaseFiltersFailed
 	if (baseFilters.type && baseFilters.message) {
-		if (baseFilters.type === 'alert') {
-			return <Alert color='info'>{baseFilters.message}</Alert>;
+		if (baseFilters.type === "alert") {
+			return <Alert color="info">{baseFilters.message}</Alert>;
 		}
-		if (baseFilters.type === 'loading') {
+		if (baseFilters.type === "loading") {
 			return <Misc.Loading text={baseFilters.message} />;
 		}
 	}
@@ -108,16 +102,16 @@ const GreenMetrics2 = () => {
 	// TODO Fall back to filterMode methods to get campaigns when table is empty
 
 	if (!pvChartTotal.resolved) {
-		return <Misc.Loading text='Fetching campaign lifetime data...' />;
+		return <Misc.Loading text="Fetching campaign lifetime data..." />;
 	}
 	if (!pvChartTotal.value) {
-		return <ErrAlert error={pvChartTotal.error} color='danger' />;
+		return <ErrAlert error={pvChartTotal.error} color="danger" />;
 	}
 
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
 	// TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
 	// not working?? How does this compare to noData
-	const emptyTable = pvChartTotal.resolved && (!pvChartTotalValue?.allCount || pvChartTotalValue?.by_total.buckets.length === 0);
+	// const emptyTable = pvChartTotal.resolved && (!pvChartTotalValue?.allCount || pvChartTotalValue?.by_total.buckets.length === 0);
 
 	const commonProps = { period, baseFilters, per1000: isPer1000() };
 	// Removed (temp?): brands, campaigns, tags
@@ -132,7 +126,7 @@ const GreenMetrics2 = () => {
 			// 'domain{"emissions":"sum"}',
 			// 'campaign{"emissions":"sum"}', do campaign breakdowns later with more security logic
 		],
-		name: 'lotsa-chartdata',
+		name: "lotsa-chartdata",
 	});
 
 	const pvChartDatalValue = pvChartData.value?.sampling || pvChartData.value;
@@ -156,34 +150,26 @@ const GreenMetrics2 = () => {
 	return (
 		<>
 			<OverviewWidget period={period} data={pvChartTotalValue?.by_total.buckets} prob={samplingProb} />
-			<PropControl
-				inline
-				type='toggle'
-				prop='emode'
-				dflt='total'
-				label='Show emissions:'
-				left={{ label: 'Total', value: 'total', colour: 'primary' }}
-				right={{ label: 'Per 1000 impressions', value: 'per1000', colour: 'primary' }}
-			/>
-			<Row className='card-row'>
-				<Col xs='12' xl='8' className='flex-column'>
+			<PropControl inline type="toggle" prop="emode" dflt="total" label="Show emissions:" left={{ label: "Total", value: "total", colour: "primary" }} right={{ label: "Per 1000 impressions", value: "per1000", colour: "primary" }} />
+			<Row className="card-row">
+				<Col xs="12" xl="8" className="flex-column">
 					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
 				</Col>
 				{/* <Col xs='12' sm='4' className='flex-column'>
 					<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable || noData} />
 				</Col> */}
-				<Col xs='12' xl='4'>
+				<Col xs="12" xl="4">
 					<AdtechBreakdownCard {...commonProps} />
 				</Col>
 			</Row>
-			<Row className='card-row'>
-				<Col xs='12' xl='4' className='flex-column'>
+			<Row className="card-row">
+				<Col xs="12" xl="4" className="flex-column">
 					<CompareCard formatBuckets={formatBuckets} {...commonProps} />
 				</Col>
-				<Col xs='12' xl='4' className='flex-column'>
+				<Col xs="12" xl="4" className="flex-column">
 					<BreakdownCard formatBuckets={formatBuckets} {...commonProps} />
 				</Col>
-				<Col xs='12' xl='4' className='flex-column'>
+				<Col xs="12" xl="4" className="flex-column">
 					{false && <TimeOfDayCard {...commonProps} />}
 					<MapCard {...commonProps} />
 					{/* <CTACard /> "interested to know more" */}
@@ -195,7 +181,7 @@ const GreenMetrics2 = () => {
 
 const GreenMetrics = () => {
 	const [agencyIds, setAgencyIds] = useState();
-	let agencyId = DataStore.getUrlValue('agency');
+	let agencyId = DataStore.getUrlValue("agency");
 	if (!agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
 	const [pseudoUser, setPseudoUser] = useState(false);
 
@@ -203,7 +189,7 @@ const GreenMetrics = () => {
 	// Group M users will have multiple, so start by selecting one.
 	useEffect(() => {
 		const userId = Login.getId();
-		if (userId && userId.endsWith('@pseudo')) setPseudoUser(true);
+		if (userId && userId.endsWith("@pseudo")) setPseudoUser(true);
 
 		Login.getSharedWith().then((res) => {
 			if (!res?.cargo) {
@@ -221,8 +207,8 @@ const GreenMetrics = () => {
 		});
 
 		// Make sure emode is not messed up
-		if (!(DataStore.getUrlValue('emode') === 'total' || DataStore.getUrlValue('emode') === 'per1000')) {
-			DataStore.setUrlValue('emode', 'total');
+		if (!(DataStore.getUrlValue("emode") === "total" || DataStore.getUrlValue("emode") === "per1000")) {
+			DataStore.setUrlValue("emode", "total");
 		}
 	}, [Login.getId()]);
 
@@ -234,10 +220,10 @@ const GreenMetrics = () => {
 					<Container>
 						<Row>
 							<Col className="decoration flex-center" xs="12" sm="4">
-								<img className="stamp" src="/img/green/gl-carbon-neutral.svg" />
+								<img className="stamp" alt="stamp" src="/img/green/gl-carbon-neutral.svg" />
 							</Col>
 							<Col className="form" xs="12" sm="8">
-								<img className="gl-logo my-4" src="/img/gl-logo/rectangle/logo-name.svg" />
+								<img className="gl-logo my-4" alt="gl-logo" src="/img/gl-logo/rectangle/logo-name.svg" />
 								<p className="text-center my-4">
 									Understand the carbon footprint of your advertising and
 									<br />
@@ -253,7 +239,7 @@ const GreenMetrics = () => {
 	}
 
 	return (
-		<div className='green-subpage green-metrics'>
+		<div className="green-subpage green-metrics">
 			<Container fluid>
 				{agencyIds ? (
 					<>
@@ -261,7 +247,7 @@ const GreenMetrics = () => {
 						<GreenMetrics2 />
 					</>
 				) : (
-					<Misc.Loading text='Checking your access...' />
+					<Misc.Loading text="Checking your access..." />
 				)}
 			</Container>
 		</div>
