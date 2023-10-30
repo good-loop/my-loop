@@ -74,12 +74,13 @@ export const Mass = ({kg}) => {
  * @param {string} params.title 
  * @param {any} params.children 
  * @param {string} [params.className]
+ * @param {React.CSSProperties} [params.style]
  * @param {boolean} [params.row]
  * @param {boolean} [params.downloadable] default to be true
  * @param {any} [params.rest]
  * @returns {JSX.Element}
  */
-export const GreenCard = ({ title, children, className, row, downloadable = true, ...rest}) => {
+export const GreenCard = ({ title, children, className, style, row, downloadable = true, ...rest}) => {
 	const { filterType, filterId } = getFilterTypeId();
 	const pvItem = getDataItem({type: filterType, id: filterId, status: KStatus.PUB_OR_DRAFT});
 	const filterItemName = pvItem.value && pvItem.value.name;
@@ -111,7 +112,7 @@ export const GreenCard = ({ title, children, className, row, downloadable = true
 		/>
 	);
 
-	return <div className={space('green-card my-2 flex-column', className)} {...rest}>
+	return <div className={space('green-card my-2 flex-column', className)} style={style} {...rest} >
 		{title ? <h6 className="gc-title">{title}</h6> : null}
 		{downloadButton}
 		<Card body className={space('gc-body', row ? 'flex-row' : 'flex-column')}>{children}</Card>

@@ -63,10 +63,21 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = "
 			],
 		};
 
+		const pieChartOptions = pieOptions(totalCO2, minimumPercentLabeled);
+
 		setPieChartProps(
 			{
 				data: chartData,
-				options: pieOptions(totalCO2, minimumPercentLabeled),
+				options: {
+					...pieChartOptions,
+					plugins: {
+						...pieChartOptions.plugins,
+						legend: {
+							position: "right",
+							labels: { boxWidth: 20 },
+						},
+					},
+				},
 			},
 			[osBuckets]
 		);
@@ -89,7 +100,7 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = "
 
 	return (
 		<>
-			<p>{CO2e} emissions due to...</p>
+			{/* <p>{CO2e} emissions due to...</p> */}
 			{/* Options will clash between pie and bar, seperate the two chart would be easier to control */}
 			{chartType === "pie" && <NewChartWidget type="pie" {...pieChartProps} datalabels legend />}
 			{chartType === "bar" && <NewChartWidget type="bar" {...barChartProps} />}
