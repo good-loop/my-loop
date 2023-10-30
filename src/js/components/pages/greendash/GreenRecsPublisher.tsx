@@ -23,14 +23,14 @@ interface ChartObj {
 }
 
 /** Puts a PropControlRange in a container which overlays the supplied ChartJS chart */
-function CutoffSlider({ chartObj, ...props }: { chartObj?: ChartObj }): JSX.Element | null {
+function CutoffSlider({ chartObj, ...props }: { chartObj: ChartObj }): JSX.Element | null {
 	if (!chartObj) return null;
 	// Overlay the slider control on the chart
 	const rangeStyle = chartObj?.chartArea
 		? {
-				left: `${chartObj?.chartArea.left - 8}px`,
-				width: `${chartObj?.chartArea.width + 16}px`,
-				top: `${chartObj?.chartArea.height + 5}px`,
+				left: `${chartObj.chartArea.left - 8}px`,
+				width: `${chartObj.chartArea.width + 16}px`,
+				top: `${chartObj.chartArea.height + 5}px`,
 			}
 		: {};
 
@@ -100,7 +100,7 @@ function RecommendationChart({ bucketsPer1000, passBackChart }: { bucketsPer1000
 						text: "Grams CO2e per impression",
 					},
 					ticks: {
-						callback: (value, index) => dataLabels[index],
+						padding: 10, // make room for range slider TODO Not working
 					},
 				},
 				y: {
@@ -251,9 +251,9 @@ function DomainList({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 function GreenRecsPublisher(): JSX.Element | null {
 	const [co2Cutoff, setCO2Cutoff] = useState<number>(); // CO2 grams per impression to divide allow and block list
 	const [sortedBuckets, setSortedBuckets] = useState<GreenBuckets>(); // Publisher buckets, sorted low -> high CO2
-	const [rangeProps, setRangeProps] = useState(); // Props object for the range input
+	const [rangeProps, setRangeProps] = useState<unknown>(null); // Props object for the range input
 	const [reduction, setReduction] = useState<number>(0); // Reduction effect of allow/block list (fractional, ie 0.1 for 10%)
-	const [chartObj, setChartObj] = useState();
+	const [chartObj, setChartObj] = useState<ChartObj>();
 
 	/* Read / set up filters */
 	interface FitlerUrlParams extends Object {
@@ -273,7 +273,7 @@ function GreenRecsPublisher(): JSX.Element | null {
 			baseFiltersMessage = <Alert color="info">{baseFilters.message}</Alert>;
 		}
 		if (baseFilters.type === "loading") {
-			baseFiltersMessage = <Misc.Loading text={baseFilters.message!} pv={null} inline={null} />;
+			baseFiltersMessage = <Misc.Loading text={baseFilters.message!} pv={undefined} inline={undefined} />;
 		}
 	}
 	const baseFilterConfirmed = baseFiltersMessage ? null : ({ ...baseFilters, numRows: "10000" } as unknown as BaseFilters);
@@ -354,7 +354,7 @@ function GreenRecsPublisher(): JSX.Element | null {
 	if (baseFiltersMessage) return baseFiltersMessage;
 
 	// Haven't yet received and sorted publisher buckets
-	if (!sortedBuckets) return <Misc.Loading text={null} pv={null} inline={null} />;
+	if (!sortedBuckets) return <Misc.Loading text={undefined} pv={undefined} inline={undefined} />;
 
 	return (
 		<>
