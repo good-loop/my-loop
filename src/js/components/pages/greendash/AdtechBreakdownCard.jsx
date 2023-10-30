@@ -129,7 +129,7 @@ const AdtechBreakdownCard = ({ baseFilters }) => {
 	// useEffect
 
 	return (
-		<GreenCard title="What is the adtech breakdown of your emissions?" className="carbon-breakdown">
+		<GreenCard title="What is the adtech breakdown of your emissions?" className="adtech-breakdown">
 			{!techData ? (
 				<Misc.Loading text="Fetching your data..." />
 			) : (
