@@ -68,8 +68,17 @@ export const Mass = ({kg}) => {
 };
 
 
-
-/** Boilerplate styling for a subsection of the green dashboard */
+/**
+ * Boilerplate styling for a subsection of the green dashboard
+ * @param {Object} params 
+ * @param {string} params.title 
+ * @param {any} params.children 
+ * @param {string} [params.className]
+ * @param {boolean} [params.row]
+ * @param {boolean} [params.downloadable] default to be true
+ * @param {any} [params.rest]
+ * @returns {JSX.Element}
+ */
 export const GreenCard = ({ title, children, className, row, downloadable = true, ...rest}) => {
 	const { filterType, filterId } = getFilterTypeId();
 	const pvItem = getDataItem({type: filterType, id: filterId, status: KStatus.PUB_OR_DRAFT});
