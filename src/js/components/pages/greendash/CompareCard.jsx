@@ -257,7 +257,7 @@ const BenchmarksCard = ({ formatBuckets, benchmarksData }) => {
 		],
 	};
 
-	const colours = dataColours([data.datasets[0].data[0], data.datasets[0].data[1]]);
+	const colours = dataColours([data.datasets[0].data[0], data.datasets[0].data[1] || data.datasets[1].data[0]]);
 	data.datasets.forEach((dataset, index) => {
 		dataset.backgroundColor = colours[index];
 	});
