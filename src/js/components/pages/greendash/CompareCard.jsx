@@ -334,7 +334,7 @@ const getCountryMapFiltered = (buckets, allCount, filterThreshold = 0.001) => {
 /**
  * @param {Object} obj
  * @param {string} obj.mode
- * @param {GreenBuckets} obj.buckets
+ * @param {GreenBuckets} obj.formatBuckets
  * @param {BaseFilters} obj.props
  * @returns {JSX.Element}
  */
