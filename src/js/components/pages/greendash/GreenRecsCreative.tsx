@@ -37,15 +37,17 @@ function getBrandForItem(item, brandKey = 'vertiser') {
  * OR /tagid as set by ListLoad
  */
 const getCreative = (): string | null => {
-	let tagId = DataStore.getUrlValue('tag');
-	if (tagId) {
-		const ft = DataStore.getUrlValue('ft');
-		if (ft !== 'GreenTag') console.warn('tag set but filter-type is not GreenTag?!', tagId, ft);
-		return tagId;
-	}
-	// HACK this is what ListLoad sets - alter the url for compatibility with the publisher recommendations tab
-	tagId = DataStore.getValue(['location', 'path'])[3];
+	// From path /recommendation/creative/tagid, as set when clicking on ListLoad items
+	// Prioritise this if present or the user won't be able to switch tags if they came here from the dashboard
+	let tagId = DataStore.getValue(['location', 'path'])[3];
+	if (tagId) return tagId;
+
+	// From URL param "tag", as set when switching tabs from the metrics page
+	tagId = DataStore.getUrlValue('tag');
 	if (!tagId) return null;
+	const ft = DataStore.getUrlValue('ft');
+	if (ft !== 'GreenTag') console.warn('tag set but filter-type is not GreenTag?!', tagId, ft);
+
 	// Don't change the url -- ListLoad selection should leave the list alone. (see thread "Green Recommendations - navigation issue - Changing tab loses the selected creative state")
 	// modifyPage(null, {tag:tagId, ft:"GreenTag"}, false, false, {replaceState:true});
 	return tagId;
