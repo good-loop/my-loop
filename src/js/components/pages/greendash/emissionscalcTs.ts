@@ -318,9 +318,9 @@ export const getTags = (buckets: GreenBuckets): PromiseValue | null => {
 	const ids = Object.keys(tagIdSet);
 	if (!ids.length) return null;
 
-	// ??does PUB_OR_DRAFT work properly for `ids`??
+	const fetchSize = Math.min(10000, ids.length);
 
-	let pvTags = getDataList({ type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT });
+	let pvTags = getDataList({ type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT, ids:ids, size: fetchSize });
 
 	return pvTags;
 };
