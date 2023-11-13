@@ -28,7 +28,6 @@ import GreenDashboard from './pages/GreenDashboard';
 import GreenLanding from './pages/GreenLanding';
 import ProductsOverviewPage from './pages/ProductsOverviewPage';
 import TabsForGoodLandingPage from './pages/TabsForGoodLandingPage';
-// import ImpactOverviewPage from './pages/ImpactOverviewPage';
 import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 import { accountMenuItems } from './pages/CommonComponents';
 import ForBusinessPage from './pages/ForBusinessPage';

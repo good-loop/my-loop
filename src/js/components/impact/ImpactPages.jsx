@@ -96,6 +96,7 @@ const ImpactPage = () => {
 	if (isNaN(totalDonation.value)) totalDonation = new Money(0);
 
 	const totalString = Money.prettyStr(totalDonation);
+	console.log("totalString", totalString, "from", impactDebits, "from pvBaseObjects");
 
 	// No impact??
 	if ( ! impactChosen) {

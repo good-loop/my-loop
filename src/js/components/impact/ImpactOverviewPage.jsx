@@ -57,7 +57,7 @@ export class ImpactFilters {
  * @param {object[]} p.charities List of charity objects associated with ads under the current focus
  * @param {object} p.impactDebits All impact debits associated with items under the current focus
  * @param {string} p.mainLogo Primary brand logo for the hero card
- * @param {string} p.totalString String representation of amount donated under current focus
+ * @param {string} p.totalString String representation of amount donated under current focus. Comes from ImpactPages.jsx
  * 
  * @returns {JSX.Element}
  */
@@ -314,7 +314,7 @@ const SustainableGoalsCard = ({baseObjects}) => {
 
 /**
  * @param {Object} p
- * @param {PromiseValue} p.pvBaseObjects See ImpactPageData.js:fetchImpactBaseObjects for resolved value
+ * @param {PromiseValue} p.pvBaseObjects See ImpactPageData.js:fetchImpactBaseObjects for resolved value.
  * @param {object} p.navToggleAnimation Params for animating nav bar (?)
  * @param {string} totalS
  */
