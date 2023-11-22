@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Col, Form, Row } from 'reactstrap';
 import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
 import { getId } from '../../base/data/DataClass';
 import Person, { getPVClaim, getProfile, savePersons, setClaimValue, getClaimValue } from '../../base/data/Person';
 import { getDataItem } from '../../base/plumbing/Crud';
-import DataStore, { getListPath } from '../../base/plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 import { assert, assMatch } from '../../base/utils/assert';
 import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
@@ -18,7 +18,7 @@ import C from '../../C';
 import LinkOut from '../../base/components/LinkOut';
 import NGO from '../../base/data/NGO';
 import List from '../../base/data/List';
-import { T4GLayoutPicker, T4GLayoutSelector, T4GThemePicker } from '../NewTabLayouts';
+import { T4GLayoutPicker, T4GThemePicker } from '../NewTabLayouts';
 
 
 const TabsForGoodSettings = () => {
@@ -42,9 +42,9 @@ const TabsForGoodSettings = () => {
 };
 
 
-const retrurnProfile = () => {
+const returnProfile = () => {
 	return getProfile();
-}
+};
 
 
 const SearchEnginePicker = () => {
@@ -63,8 +63,9 @@ const SearchEnginePicker = () => {
 	};
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
-		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} saveFn={onSelect}
-		path={dpath} aria-label="Choose a search engine"/>;
+		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt="google" saveFn={onSelect}
+		path={dpath} aria-label="Choose a search engine"
+	/>;
 };
 
 
@@ -181,17 +182,15 @@ const TabStats = () => {
 /** Search box - a magnifying-glass icon by a text input ??Refactor with PropControl type=search??
  */
 const Search = ({ onSubmit, placeholder, icon, className }) => {
-	window.onload = function() {
-		document.getElementById('search').focus();
-	}
+	window.onload = function() { document.getElementById('search').focus(); };
 
-	return (<>
+	return (
 		<Form onSubmit={onSubmit} inline className={space("flex-row tab-search-form px-2", className)} >
 			{icon && icon}
 			<PropControl placeholder={placeholder} type="search" id="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
 			<i className="fa fa-search tab-search mr-2" onClick={onSubmit}/>
 		</Form>
-	</>);
+	);
 };
 
 /**
@@ -310,5 +309,5 @@ const StatCard = ({ md, lg, xs, number, label, className, padding, children }) =
 	</Col>;
 };
 
-export { getTabsOpened, Search, getPVSelectedCharityId, setPersonSetting, getPVSelectedTheme, retrurnProfile };
+export { getTabsOpened, Search, getPVSelectedCharityId, setPersonSetting, getPVSelectedTheme, returnProfile };
 export default TabsForGoodSettings;

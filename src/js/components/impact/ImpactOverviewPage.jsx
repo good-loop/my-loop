@@ -1,36 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { animated } from 'react-spring';
-import TODO from '../../base/components/TODO';
+import { Button, Col, Container, Row } from 'reactstrap';
+import { sumBy } from 'lodash';
+
+/* import TODO from '../../base/components/TODO'; */
 import DevOnly from '../../base/components/DevOnly';
-import { Button, Col, Container, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
-import BG from '../../base/components/BG';
+/* import BG from '../../base/components/BG'; */
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
 import NGO from '../../base/data/NGO';
 import Money from '../../base/data/Money';
 import CharityLogo from '../CharityLogo';
 import AdvertsCatalogue from '../campaignpage/AdvertsCatalogue';
 import Misc from '../../base/components/Misc';
-import Circle from '../../base/components/Circle';
-import Center from '../../base/components/Center';
 
 import Advert from '../../base/data/Advert';
-import { getActiveTypes, getImpressionsByCampaignByCountry } from '../../base/data/ImpactPageData';
-import printer from '../../base/utils/printer'
+import { getImpressionsByCampaignByCountry, getMainItem } from '../../base/data/ImpactPageData';
+import printer from '../../base/utils/printer';
 
 /**
  * DEBUG OBJECTS
  */
 
 // import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
-import { addAmountSuffixToNumber, space, stopEvent, uniq, isMobile } from '../../base/utils/miscutils';
-import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
-import { isEmpty, keyBy, sumBy } from 'lodash';
+import { addAmountSuffixToNumber, space, uniq } from '../../base/utils/miscutils';
+
 import Logo from '../../base/components/Logo';
 import { getId } from '../../base/data/DataClass';
-import ImpactHubLink from '../ImpactHubLink';
 import PortalLink from '../../base/components/PortalLink';
-import { getMainItem } from './ImpactPages';
-import ImpactSettings from '../../base/data/ImpactSettings';
 import MDText from '../../base/components/MDText';
 
 export class ImpactFilters {
@@ -88,7 +84,8 @@ function IOPFirstHalf({ mainItem, brand, campaign, charities, impactDebits, tota
 		)}
 		<GLModalCard id="left-half" />
 	</GLVertical>;
-};
+}
+
 
 /**
  * Collapsed: Count of campaigns/sub-campaigns under the current focus
@@ -179,6 +176,7 @@ function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable: campaigns
 function OffsetsCard() {
 	return null;
 
+	/*
 	return <GLCard
 		noPadding
 		className="offset-card"
@@ -196,6 +194,7 @@ function OffsetsCard() {
 			<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className="w-100" />
 		</div>
 	</GLCard>;
+	*/
 }
 
 
@@ -229,7 +228,7 @@ function AdsCatalogueCard({ ads, campaign, unwrap }) {
 
 	return <GLCard {...cardProps}>
 		{content}
-	</GLCard>
+	</GLCard>;
 }
 
 
@@ -279,37 +278,35 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 
 
 function WiderCSR({mainItem}) {
-	if ( ! mainItem?.impactSettings?.csrHtml) {
-		return null;
-	}
+	if (!mainItem?.impactSettings?.csrHtml) return null;
+
 	// HACK! extract e.g. background: url("https://example.com/myimage.jpg") cover
 	let html = mainItem.impactSettings.csrHtml;
-	let background;	
+	let background;
 	let m = html.match(/background:(.+)$/m);
 	if (m) {
 		background = "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0) 100%), " + m[1].trim();
 		html = html.substring(m[0].length).trim();
 	}
-	return <GLCard background={background}><MDText source={html} style={{maxWidth:"40%"}} className="d-flex flex-column justify-contents-center align-items-center" /></GLCard>;
+	return <GLCard background={background}>
+		<MDText source={html} style={{maxWidth: '40%'}} className="d-flex flex-column justify-contents-center align-items-center" />
+	</GLCard>;
 }
 
 const SustainableGoalsCard = ({baseObjects}) => {
-
 	const charities = baseObjects.charities;
-	const unsdgs = charities ? uniq(charities.map(c => c.unsdg).filter(x=>x)) : []; // no null entries or 0s
+	const unsdgs = charities ? uniq(charities.map(c => c.unsdg).filter(x => x)) : []; // no null entries or 0s
 
 	if (!unsdgs) return null;
 
 	return <GLCard className="boast">
-		<div className='d-flex justify-content-center mb-2'>
-			<img src="/img/unsdg/unsdg.png" className='w-50'/>
+		<div className="d-flex justify-content-center mb-2">
+			<img src="/img/unsdg/unsdg.png" className="w-50"/>
 		</div>
-		<div className='justify-content-center d-flex align-items-center flex-wrap'>
-			{unsdgs.map(goal => {
-				return <img key={goal} src={"/img/unsdg/goal-" + (goal - 1) + ".jpg"} className='goal-logo'/>
-			})}
+		<div className="justify-content-center d-flex align-items-center flex-wrap">
+			{unsdgs.map(goal => <img key={goal} src={`/img/unsdg/goal-${goal - 1}.jpg`} className="goal-logo"/>)}
 		</div>
-	</GLCard>
+	</GLCard>;
 };
 
 /**
@@ -324,11 +321,14 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, ...props}) => {
 
 	const mainItem = getMainItem(baseObjects);
 
+	const { width } = navToggleAnimation;
+	const style = { width, minWidth: width };
+
 	return <>
-		<div className='iview-positioner pr-md-1'>
-			<Container fluid className='iview-container'>
-				<animated.div className='impact-navbar-flow' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
-				<GLVertical id='overview-first-card' className="w-100">
+		<div className="iview-positioner pr-md-1">
+			<Container fluid className="iview-container">
+				<animated.div className="impact-navbar-flow" style={style} />
+				<GLVertical id="overview-first-card" className="w-100">
 					<GLHorizontal collapse="md" className="iview-grid">
 						<IOPFirstHalf mainItem={mainItem} {...baseObjects} {...props} />
 						<IOPSecondHalf mainItem={mainItem} {...baseObjects} {...props} />
@@ -346,8 +346,6 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, ...props}) => {
 
 
 const CampaignCharityDisplay = ({charities}) => {
-
-
 	return <GLHorizontal basis={20}>
 		{charities.map(charity => {
 			return <GLCard key={charity.id}
@@ -363,7 +361,7 @@ const CampaignCharityDisplay = ({charities}) => {
 				<h2>{Money.prettyStr(charity.dntnTotal)} Donated</h2>
 				<br/>
 				<h4>{NGO.displayName(charity)}</h4>
-			</GLCard>
+			</GLCard>;
 		})}
 	</GLHorizontal>;
 };
@@ -414,17 +412,19 @@ function CharitiesCardSet({mainItem, charities, impactDebits}) {
 			</div>
 		</GLCard>
 	</GLVertical>;
-};
+}
 
 
 /**
  * 
 */
 function CharityCard({charity}) {
+	/*
 	let headerStyle = charity.images? {
 		backgroundImage: "url("+charity.images+")",
 		backgroundPosition: 'center'
 	} : null;
+	*/
 
 	const cardProps = {
 		modalContent:<CharityInfo charity={charity}/>,
@@ -453,7 +453,7 @@ function CharityCard({charity}) {
 				</Center>
 				{/* <Misc.Logo service={C.app.id} url={logo} transparent={false} className="pull-left mr-1" />
 				{' '}{title}
-				{subtitle && <p className='my-4 login-subtitle'>{subtitle}</p>}
+				{subtitle && <p className="my-4 login-subtitle">{subtitle}</p>}
 			</ModalHeader>
 			</div>
 			<ModalBody>
@@ -465,18 +465,18 @@ function CharityCard({charity}) {
 		</h2>
 		<h3>raised</h3>
 	</GLCard>;
-};
+}
 
 
 
-const BrandLogo = ({item}) => {
+function BrandLogo({item}) {
 	return <Col md={1} xs={7} className="text-center">
 		{item.branding?.logo ? <img src={item.branding.logo} className="logo"/> : <p>{item.name}</p>}
-	</Col>
-};
+	</Col>;
+}
 
 
-const LogosDisplay = ({brand, subBrands}) => {
+function LogosDisplay({brand, subBrands}) {
 	return <>
 		<h3>Advertising that's a force for good</h3>
 		<br/><br/>
@@ -484,30 +484,24 @@ const LogosDisplay = ({brand, subBrands}) => {
 		<br/><br/>
 		<img className="a4glogo" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<br/><br/><br/>
-		<Row className='justify-content-center w-100'>
+		<Row className="justify-content-center w-100">
 			{subBrands.map(b => <BrandLogo item={b} key={b.id}/>)}
 		</Row>
 	</>;
-
-};
-
-const QuestionIcon = () => {
-	return <div className='question-icon'>
-		?
-	</div>
 }
 
-const ThisAdDoesGoodModal = ({ads, brand}) => {
+/*
+function ThisAdDoesGoodModal({ads, brand}) {
 	const charity = TEST_CHARITY_OBJ;
 
 	return <div className="bg-gl-background-default inmodal-wrapper p-5">
 		<GLCard className="inmodal-content" noPadding>
 			<BG src="/img/Impact/curves-background.svg" className="py-5 img-bg">
-				<h3 className='text-white'>1 This Ad Does Good Campaign</h3>
+				<h3 className="text-white">1 This Ad Does Good Campaign</h3>
 				<br/>
 				<AdsCatalogueCard ads={ads} unwrap noPreviews />
 				<br/>
-				<Row className='text-center rates'>
+				<Row className="text-center rates">
 					<Col xs={4}>
 						<p><TODO><b>XX%</b></TODO></p>
 						<p>Viewability rate</p>
@@ -527,9 +521,9 @@ const ThisAdDoesGoodModal = ({ads, brand}) => {
 			<br/>
 			<h5>SUPPORTING</h5>
 			<br/><br/>
-			<p className='text-center'>Reforestation projects in Madagascar, Kenya, and Mozambique</p>
+			<p className="text-center">Reforestation projects in Madagascar, Kenya, and Mozambique</p>
 			<br/>
-			<Row className='w-50 mx-auto'>
+			<Row className="w-50 mx-auto">
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
 					<img src={brand.branding?.logo} className="logo"/>
 				</Col>
@@ -542,23 +536,25 @@ const ThisAdDoesGoodModal = ({ads, brand}) => {
 		</GLCard>
 	</div>;
 }
+*/
 
 /**
  * TODO refactor to share code with ThisAdDoesGoodModal and BrandDonationInfo
  * @param {*} param0 
  * @returns 
  */
+/*
 const WatchToDonateModal = ({ads, brand}) => {
 	const charity = TEST_CHARITY_OBJ;
 
 	return <div className="bg-gl-background-default inmodal-wrapper p-5">
 		<GLCard className="inmodal-content" noPadding >
 			<BG src="/img/Impact/curves-background.svg" className="py-5 img-bg">
-				<h3 className='text-white'><TODO>15</TODO> Watch To Donate Campaigns</h3>
+				<h3 className="text-white"><TODO>15</TODO> Watch To Donate Campaigns</h3>
 				<br/>
 				<AdsCatalogueCard ads={ads} unwrap noPreviews />
 				<br/>
-				<Row className='text-center rates'>
+				<Row className="text-center rates">
 					<Col xs={4}>
 						<p>
 							<b><TODO>XX%</TODO></b>
@@ -584,9 +580,9 @@ const WatchToDonateModal = ({ads, brand}) => {
 			<br/>
 			<h5>INCLUDING</h5>
 			<br/><br/>
-			<p className='text-center'><TODO>Reforestation projects in Madagascar, Kenya, and Mozambique</TODO></p>
+			<p className="text-center"><TODO>Reforestation projects in Madagascar, Kenya, and Mozambique</TODO></p>
 			<br/>
-			<Row className='w-50 mx-auto'>
+			<Row className="w-50 mx-auto">
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
 					<img src={brand.branding?.logo} className="logo"/>
 				</Col>
@@ -598,7 +594,8 @@ const WatchToDonateModal = ({ads, brand}) => {
 			<br/>
 		</GLCard>
 	</div>;
-}
+};
+*/
 
 
 // Keys matched to members of baseObjects
@@ -611,7 +608,7 @@ const contentTypes = {
 };
 
 
-const ContentListCard = (baseObjects) => {
+function ContentListCard(baseObjects) {
 	const activeTypes = Object.entries(contentTypes).map(([type, name]) => {
 		const active = baseObjects[type]?.length; // ie true if there are entries in the "wtdAds" list etc
 		return <Row key={type}>
@@ -619,7 +616,7 @@ const ContentListCard = (baseObjects) => {
 				<img src={`/img/mydata/circle${active ? '' : '-no'}-tick.svg`} className="logo" />
 			</Col>
 			<Col xs={9} className="d-flex flex-column align-items-start justify-content-center">
-				<h5 className="text-left" style={{fontSize:"1.5rem"}}>{name}</h5>
+				<h5 className="text-left" style={{fontSize: '1.5rem'}}>{name}</h5>
 			</Col>
 		</Row>;
 	});
@@ -633,14 +630,16 @@ const ContentListCard = (baseObjects) => {
 }
 
 
-const AdsForGoodCTAHeader = () => {
-	return <div className='bg-gl-impact-red pt-5 position-relative'>
-		<img src="/img/curves/curve-white.svg" className='w-100'/>
-		<img src="/img/Impact/images-combined.png" className='header-overlay'/>
+/*
+function AdsForGoodCTAHeader() {
+	return <div className="bg-gl-impact-red pt-5 position-relative">
+		<img src="/img/curves/curve-white.svg" className="w-100" />
+		<img src="/img/Impact/images-combined.png" className="header-overlay" />
 	</div>;
 };
+*/
 
-
+/*
 const AdsForGoodCTA = () => {
 	const vertiser = TEST_BRAND_OBJ;
 
@@ -652,17 +651,20 @@ const AdsForGoodCTA = () => {
 		<Button color="primary">Get in touch</Button>
 	</div>
 };
+*/
 
 
-const CO2OffsetInfoHeader = () => {
+/*
+function CO2OffsetInfoHeader() {
 	return <div className="bg-co2-offset pt-5 position-relative">
-		<img src="/img/curves/curve-white.svg" className='w-100'/>
-		<img src="/img/green/hummingbird.png" className='header-overlay'/>
+		<img src="/img/curves/curve-white.svg" className="w-100" />
+		<img src="/img/green/hummingbird.png" className="header-overlay" />
 	</div>;
 };
+*/
 
-
-const CO2OffsetInfo = () => {
+/*
+function CO2OffsetInfo() {
 	const vertiser = TEST_BRAND_OBJ;
 
 	return <div className="d-flex flex-column align-items-center justify-content-between h-100">
@@ -675,19 +677,20 @@ const CO2OffsetInfo = () => {
 		<Button color="primary">Download offset certificate</Button>
 	</div>
 }
+*/
 
-const BrandList = ({brand, subBrands}) => {
-	const BrandListItem = ({item}) => {
-		const contents = <Col md={4} className="mt-3">
-			<GLCard className={space('preview h-100', item._shouldHide && 'g-gl-light-red')} noMargin href={'/impact/view/brand/'+item.id}>
-				{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
-				{item._shouldHide && <p className="text-white">Normally hidden</p>}
-				<p className="text-center">{item.name}</p>
-			</GLCard>
-		</Col>;
-		return item._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
-	}
+function BrandListItem({item}) {
+	const contents = <Col md={4} className="mt-3">
+		<GLCard className={space('preview h-100', item._shouldHide && 'g-gl-light-red')} noMargin href={'/impact/view/brand/'+item.id}>
+			{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
+			{item._shouldHide && <p className="text-white">Normally hidden</p>}
+			<p className="text-center">{item.name}</p>
+		</GLCard>
+	</Col>;
+	return item._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
+}
 
+function BrandList({brand, subBrands}) {
 	return <>
 		<br/>
 		<h5>Brands donating via Good-Loop Ads</h5>
@@ -697,9 +700,10 @@ const BrandList = ({brand, subBrands}) => {
 			{subBrands.map(b => <BrandListItem item={b} key={b.id}/> )}
 		</Row>
 	</>;
-};
+}
 
-const CharityList = ({mainItem, charities}) => {
+
+function CharityList({mainItem, charities}) {
 	return <>
 		<br/>
 		<h5>Charities supported by <span className="color-gl-red">{mainItem?.name}</span> via Good-Loop Ads</h5>		
@@ -714,22 +718,24 @@ const CharityList = ({mainItem, charities}) => {
 					modalId="left-half"
 				>
 					{charity && <CharityLogo charity={charity}/>}
-					<p className='text-center'>{NGO.displayName(charity)}</p>
+					<p className="text-center">{NGO.displayName(charity)}</p>
 				</GLCard>
 			</Col>)}
 		</Row>
 	</>;
 }
 
-const CharityHeader = ({charity}) => {
+
+function CharityHeader({charity}) {
 	return <div className="w-100 position-relative">
 		<div className="white-circle">
 			<CharityLogo charity={charity}/>
 		</div>
-	</div>
+	</div>;
 }
 
-const CharityInfo = ({charity}) => {
+
+function CharityInfo ({charity}) {
 	return <div className="d-flex flex-column justify-content-center align-items-center charity-body">
 		<h3>{NGO.displayName(charity)}</h3>
 		<img className="w-25" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
@@ -742,10 +748,9 @@ const CharityInfo = ({charity}) => {
 }
 
 
-const CampaignList = ({campaigns, brand, subBrands, status}) => {
-	const allBrandList = [brand, ...subBrands];
+function CampaignList({campaigns, brand, subBrands}) {
 	const allBrands = {};
-	allBrandList.forEach(b => {
+	[brand, ...subBrands].forEach(b => {
 		allBrands[b.id] = b;
 	});
 
@@ -765,7 +770,7 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 			return campaign._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
 		})}
 	</>;
-};
+}
 
 
 /** Round number to 3 significant figures and shorten with K/M/B suffix */
@@ -793,8 +798,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	// handle list of campaigns & countries inside modal
 
 	return (
-	<GLCard
-		basis={basis}
+	<GLCard basis={basis}
 		modalContent={modalMapCardContent}
 		modalClassName="impact-map"
 		modalId="right-half"
@@ -802,24 +806,23 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	>
 		<h3>{shortNumber(impressions)} VIEWS | {totalCountries} {countryWord}</h3>
 	</GLCard>
-	)
-}
+	);
+};
 
 
-// TODO map widget in its own file
-const MapCardContent = ({data}) => {
-	const [mapData, setMapData] = useState('loading'); // Object mapping region ID to imps + carbon
+/**
+ * Stripped-down copy+paste from the Green Dashboard map widget.
+ * TODO Make the aforementioned more generic and share code beyond just the mapdefs files?
+ */
+function MapCardContent({data}) {
 	const [focusRegion, setFocusRegion] = useState('world'); // ID of currently focused country
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
-	const [svgEl, setSvgEl] = useState(); // ref to the map SVG to create download button
-	const [error, setError] = useState(); // Problems loading map?
 
 	// Fetch the JSON with the map data for the current focus country
 	useEffect(() => {
 		// No mapdefs for this country? Return to world map and tell user
 		const onError = () => {
 			setFocusRegion('world');
-			setError(`No detailed map available for country code "${focusRegion}"`);
 		};
 
 		fetch(`/js-data/mapdefs-${focusRegion}.json`).then((res) => {
@@ -829,22 +832,15 @@ const MapCardContent = ({data}) => {
 			}
 			res.json().then((json) => {
 				setMapDefs(json);
-				// clear error on successfully loading a country map
-				if (!isWorld) setError(null);
 			}).catch(onError);
 		});
 	}, [focusRegion]);
 
-
-	const isWorld = (focusRegion === 'world');
-
-	return <SVGMap mapDefs={mapDefs} data={data} setFocusRegion={setFocusRegion} showLabels={false} svgEl={svgEl} setSvgEl={setSvgEl} />;
+	return <SVGMap mapDefs={mapDefs} data={data} setFocusRegion={setFocusRegion} />;
 }
 
 
-const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
-	const [pathCentres, setPathCentres] = useState({}); // Estimate region centres from bounding boxes to place text labels
-
+function SVGMap({ mapDefs, data, setFocusRegion, setSvgEl}) {
 	if (!mapDefs) return null;
 	const loading = data === 'loading';
 
@@ -857,7 +853,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 		// Don't paint misleading colours on a map we don't have data for
 		if (!loading) {
 			// Define colours in CSS instead of code
-			props.className = `region-path ${impressions ? 'impressions' : 'no-impressions'}`
+			props.className = `region-path ${impressions ? 'impressions' : 'no-impressions'}`;
 		}
 
 		// Countries are clickable, sublocations aren't.
@@ -866,28 +862,15 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 			props.onClick = () => setFocusRegion(id);
 		}
 
-		const pathId = `${mapDefs.id}-${id}`;
-
-		// Once path is drawn, find the centre of the region's bounding box to position a text label on the bigger map
-		const pathRef = showLabels ? (path) => {
-			if (!path) return;
-			setPathCentres((prev) => {
-				if (prev[pathId]) return prev;
-				return { ...prev, [pathId]: bbCentre(path) };
-			});
-		} : null;
-
 		// Tooltip on hover
-		const title = loading ? null : (
-			<title>{props.name}: {impressions} views</title>
-		);
+		const title = loading ? null : <title>{props.name}: {impressions} views</title>;
 
 		regions.push(
-			<path key={`path-${id}`} data-id={id} {...props} ref={pathRef}>
+			<path key={`path-${id}`} data-id={id} {...props}>
 				{title}
 			</path>
 		);
-	})
+	});
 	const svgRef = (element) => element && setSvgEl(element);
 
 	return (
@@ -900,6 +883,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 	);
 }
 
+
 function UnsetCountryWarning() {
 	return <div className="row-aux unset-warning">
 		Geolocation recording was implemented in April 2022.<br/>
@@ -907,16 +891,17 @@ function UnsetCountryWarning() {
 	</div>;
 }
 
-// comparator for sorting the weird-shaped Object.entries() data we work with in CampaignCountryList
+
+/** Sorts the Object.entries() data we work with in CampaignCountryList */
 const countryListComparator = ([,a], [,b]) => (b.impressions - a.impressions);
 
-const CampaignCountryList = ({data}) => {
-	const regions = Object.entries(data);
-	regions.sort(countryListComparator);
 
-	// if data has an unset region, push it to the back so it'll appear at the bottom of the country list
-	const unsetIndex = regions.findIndex(([k, v]) => k === 'unset');
-	if (unsetIndex >= 0){
+function CampaignCountryList({data}) {
+	const regions = Object.entries(data).sort(countryListComparator);
+
+	// If data has a region code "unset", push it to the back so it'll appear at the bottom of the country list.
+	const unsetIndex = regions.findIndex(([key]) => key === 'unset');
+	if (unsetIndex >= 0) {
 		const [unsetKV] = regions.splice(unsetIndex, 1);
 		regions.push(unsetKV);
 	}
@@ -924,15 +909,16 @@ const CampaignCountryList = ({data}) => {
 	// [['a', {x: 1, y: 2}], ['b', {x: 3, y: 4}], ['c', {x: 5, y: 6}]].map(([first, {x, y}]) => console.log(first, x, y))
 
 	return regions.map(([regionCode, {impressions, campaignsInRegion}]) => {
-		if (impressions === 0) return;
+		if (impressions === 0) return null;
 
+		// Special display for the "unset" region
 		let isUnset = false;
 		let flag = null;
 		if (regionCode === 'unset') {
 			isUnset = true;
 			regionCode = 'Unknown';
 		} else {
-			flag = <img src={`/img/country-flags/${regionCode.toLowerCase()}.svg`} className="country-flag" alt={`flag for ${regionCode}`} />
+			flag = <img src={`/img/country-flags/${regionCode.toLowerCase()}.svg`} className="country-flag" alt={`flag for ${regionCode}`} />;
 		}
 
 		return (

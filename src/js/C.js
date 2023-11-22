@@ -1,4 +1,5 @@
 import Enum from 'easy-enums';
+
 import { defineRole } from './base/Roles';
 import C from './base/CBase';
 import GLAppManifest from '../../GLAppManifest';
@@ -16,15 +17,15 @@ initRouter();
 C.app = GLAppManifest;
 
 /** To help us standardise on the use or not of -s */
-C.T4G = "Tabs for Good";
+C.T4G = 'Tabs for Good';
 
 /**
  * Warning: also written as "£4.7 million" in places
  */
-C.DONATIONS_TOTAL = "£4,700,000";
+C.DONATIONS_TOTAL = '£4,700,000';
 
 // NB: MonetaryAmount is deprecated - left here for old data
-C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency ImpactDebit ImpactCredit User Person Money MonetaryAmount BlogPost ScheduledContent GreenTag");
+C.TYPES = new Enum('Publisher NGO Advert Campaign Advertiser Agency ImpactDebit ImpactCredit User Person Money MonetaryAmount BlogPost ScheduledContent GreenTag');
 
 /**
  * What parameter to use in a url?
@@ -33,12 +34,14 @@ C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency ImpactDebit 
  * @returns {!string} e.g. `brand`
  */
 export const urlParamForType = type => {
-    if ( ! type) return;
-    switch(type) {
-    case "Advertiser": return "brand";
-    case "GreenTag": return "tag";
-    }
-    return type.toLowerCase();
+	if (!type) return null;
+	switch(type) {
+		case 'Advertiser':
+			return 'brand';
+		case 'GreenTag':
+			return 'tag';
+	}
+	return type.toLowerCase();
 };
 
 /**
@@ -47,14 +50,18 @@ export const urlParamForType = type => {
  * @returns {!string} e.g. `vertiser`
  */
 export const searchParamForType = type => {
-    if ( ! type) return;
-    switch(type) {
-    case "Advertiser": return "vertiser";
-    case "Advert": return "adid";
-    case "Agency": return "agencyId";
-    case "GreenTag": return "adid";
-    }
-    return type.toLowerCase();
+	if (!type) return null;
+	switch(type) {
+		case 'Advertiser':
+			return 'vertiser';
+		case 'Advert':
+			return 'adid';
+		case 'Agency':
+			return 'agencyId';
+		case 'GreenTag':
+			return 'adid';
+	}
+	return type.toLowerCase();
 };
 /**
  * 
@@ -62,16 +69,19 @@ export const searchParamForType = type => {
  * @returns {string} e.g. Brand for Advertiser
  */
 export const nameForType = type => {
-    if ( ! type) return;
-    switch(type) {
-    case "Advertiser": return "Brand";
-    case "GreenTag": return "Tag";
-    }
-    return type;
+	if (!type) return null;
+	switch(type) {
+		case 'Advertiser':
+			return 'Brand';
+		case 'GreenTag':
+			return 'Tag';
+	}
+	return type;
 };
 
-C.ROLES = new Enum("user admin marketing agency");
-C.CAN = new Enum("view edit admin sudo viewmarketingreports");
+C.ROLES = new Enum('user admin marketing agency');
+C.CAN = new Enum('view edit admin sudo viewmarketingreports');
+
 // setup roles
 defineRole(C.ROLES.user, [C.CAN.view]);
 defineRole(C.ROLES.admin, C.CAN.values);

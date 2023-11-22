@@ -1,5 +1,4 @@
-/* global navigator */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import BG from '../base/components/BG';
 import MainDivBase from '../base/components/MainDivBase';
@@ -9,23 +8,13 @@ import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import detectAdBlock from '../base/utils/DetectAdBlock';
 import { lg } from '../base/plumbing/log';
-import {
-	encURI,
-	stopEvent,
-	getBrowserVendor,
-	ellipsize,
-	space,
-} from '../base/utils/miscutils';
+import { encURI, stopEvent, space } from '../base/utils/miscutils';
 import Login from '../base/youagain';
 import C from '../C';
-import WhiteCircle from './campaignpage/WhiteCircle';
 // Components
 import CharityLogo from './CharityLogo';
 import AccountMenu from '../base/components/AccountMenu';
-import NewtabLoginWidget, {
-	NewtabLoginLink,
-	setShowTabLogin,
-} from './NewtabLoginWidget';
+import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
 // import RedesignPage from './pages/RedesignPage';
 import NewtabTutorialCard, {
 	openTutorial,
@@ -34,28 +23,15 @@ import NewtabTutorialCard, {
 	PopupWindow,
 } from './NewtabTutorialCard';
 import { fetchCharity } from './pages/MyCharitiesPage';
-import {
-	getPVSelectedCharityId,
-	getTabsOpened,
-	getTabsOpened2,
-	retrurnProfile,
-	Search,
-	setPersonSetting,
-} from './pages/TabsForGoodSettings';
+import { getPVSelectedCharityId, Search } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
-import Person, { getProfile, getPVClaim, getClaimValue } from '../base/data/Person';
-import Misc from '../base/components/Misc';
-import Money from '../base/data/Money';
-import NGO from '../base/data/NGO';
-import Roles, { isTester } from '../base/Roles';
+import Person, { getProfile, getPVClaim } from '../base/data/Person';
+import Roles from '../base/Roles';
 import Claim from '../base/data/Claim';
 import { accountMenuItems } from './pages/CommonComponents';
-import { getCharityObject, getPersonSetting } from '../base/components/propcontrols/UserClaimControl';
-import NGOImage from '../base/components/NGOImage';
-import { hasRegisteredForMyData, ProfileCreationSteps } from './mydata/MyDataCommonComponents';
-import {getThemeBackground} from './NewTabThemes'
 import {getT4GLayout, getT4GTheme, getT4GThemeData} from './NewTabLayouts';
-import {NewTabCustomise} from './NewTabCustomise'
+import {NewTabCustomise} from './NewTabCustomise';
+
 // DataStore
 C.setupDataStore();
 
@@ -85,26 +61,23 @@ const WebtopPage = () => {
 	const charityID = pvCharityID && (pvCharityID.value || pvCharityID.interim);
 	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
 	let [showPopup, setShowPopup] = useState(false);
-	let person = undefined;
 
 	// Yeh - a tab is opened -- let's log that (once only)
 	if (!logOnceFlag && Login.isLoggedIn()) {
 		let pvPerson = getProfile();
-		pvPerson.promise.then((person) => {   // This is the problem, how do we get 'person' before this?
+		pvPerson.promise.then(person => { // This is the problem, how do we get 'person' before this?
 			// Hurrah - T4G is definitely installed
-			if (!person) console.warn('no person?!');
-			else Person.setHasApp(person, Login.app);
-
+			if (person) {
+				Person.setHasApp(person, Login.app);
+				return;
+			}
+			console.warn('no person?!');
 		});
-		console.log("after pv", person)
-		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
-		lg('tabopen', { nonce: nonce(6) });
+		lg('tabopen', { nonce: nonce(6) }); // Include nonce to break deduping of multiple tab-open events within 15-minute bucket
 		// Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
 		setTimeout(() => {
 			// Avoid race condition: don't log until we know we have charity ID
-			pvCharityID.promise.then((cid) =>
-				lg('tabadview', { nonce: nonce(6), cid })
-			);
+			pvCharityID.promise.then(cid => lg('tabadview', { nonce: nonce(6), cid }));
 		}, 1500);
 		logOnceFlag = true;
 	}
@@ -119,17 +92,15 @@ const WebtopPage = () => {
 	if (!verifiedLoginOnceFlag) {
 		// Popup login widget if not logged in
 		// Login fail conditions from youagain.js
-		Login.verify()
-			.then((res) => {
-				if (!res || !res.success) {
-					setShowTabLogin(true);
-				} else {
-					checkIfOpened();
-				}
-			})
-			.catch((res) => {
+		Login.verify().then((res) => {
+			if (!res || !res.success) {
 				setShowTabLogin(true);
-			});
+			} else {
+				checkIfOpened();
+			}
+		}).catch(() => {
+			setShowTabLogin(true);
+		});
 		verifiedLoginOnceFlag = true;
 	}
 
@@ -138,35 +109,20 @@ const WebtopPage = () => {
 
 	// Background images on tab plugin sourced locally, but not on Safari
 
-	const pvNgo = Login.isLoggedIn() ? getCharityObject() : null;
-	const ngo = pvNgo && pvNgo.resolved && pvNgo.value;
-
 	const [bookmarksData, setBookmarksData] = useState([]);
 
 	const handleMessage = (event) => {
-		if (
-			event.origin.includes('chrome-extension://') &&
-			typeof event.data === 'object'
-		) {
-			setBookmarksData(event.data);
-			// console.log("bookmarks loaded", event.data);
-		}
-	};
-
-	const bookmarkRequest = () => {
-		parent.postMessage('give-me-bookmarks', '*');
+		if (!event.origin.includes('chrome-extension://') || typeof event.data !== 'object') return;
+		setBookmarksData(event.data);
 	};
 
 	useEffect(() => {
-		bookmarkRequest();
-
-		window.addEventListener('message', (event) => handleMessage(event));
-		return () => {
-			window.removeEventListener('message', (event) => handleMessage(event));
-		};
+		window.addEventListener('message', handleMessage);
+		window.parent.postMessage('give-me-bookmarks', '*');
+		return () => window.removeEventListener('message', handleMessage);
 	}, []);
 
-	const [customiseModalOpen, setCustomiseModalOpen] = useState(false)
+	const [customiseModalOpen, setCustomiseModalOpen] = useState(false);
 
 	const layout = getT4GLayout();
 	const curTheme = getT4GTheme();
@@ -175,20 +131,16 @@ const WebtopPage = () => {
 	const [rand, setRand] = useState(Math.round(Math.random() * 9) + 1); // use state to prevent new random numbers each update
 	// update rand if the image list changes
 	useEffect(() => {
-		if (backdropImages && backdropImages.length)
-				setRand(Math.floor(Math.random()*backdropImages.length))
-		else
-				setRand(Math.round(Math.random() * 9) + 1);
+		if (backdropImages?.length) {
+			setRand(Math.floor(Math.random() * backdropImages.length));
+		} else {
+			setRand(Math.round(Math.random() * 9) + 1);
+		}
 	}, []);
 
-	const customBG = backdropImages && rand < backdropImages.length ? backdropImages[rand].contentUrl || backdropImages[rand] : null;
-
-	// console.log("THEME??", curTheme);
-	// console.log("LAYOUT??", layout);
-	// console.log("CUSTOM BG?", customBG);
-	// console.log("CUSTOM LOGO?", customLogo);
-
-	console.log("BACKDROP IMAGES", backdropImages);
+	const customBG = (backdropImages && rand < backdropImages.length) ? (
+		backdropImages[rand].contentUrl || backdropImages[rand]
+	) : null;
 
 	return (
 		<div className={space('t4g', 'layout-' + layout)}>
@@ -230,20 +182,12 @@ const WebtopPage = () => {
 							md={4}
 							className="h-100 flex-column justify-content-center align-items-center unset-margins mt-2"
 						>
-							{true && ( //! loadingCharity && ! charityID &&
-								// Show the total raised across all charities, if the user hasn't selected one.
-								<>
-										<TutorialComponent page={2} className="t4g-total">
-												<h5
-														className="text-center together-we-ve-raised"
-														style={{ fontSize: '.8rem' }}
-												>
-														Together we've raised&nbsp;
-														<TickerTotal />
-												</h5>
-									</TutorialComponent>
-								</>
-							)}
+							{/* Show the total raised across all charities, if the user hasn't selected one. */}
+							<TutorialComponent page={2} className="t4g-total">
+								<h5 className="text-center together-we-ve-raised" style={{ fontSize: '.8rem' }}>
+									Together we've raised <TickerTotal />
+								</h5>
+							</TutorialComponent>
 							<NormalTabCenter style={{transform:'translate(0,-30%)'}} customLogo={t4gLogo} />
 							<LinksDisplay bookmarksData={bookmarksData} style={{transform:'translate(0,-30%)'}} />
 						</Col>
@@ -262,150 +206,48 @@ const WebtopPage = () => {
 				onClose={() => setShowPopup(true)}
 			/>
 			{showPopup && <PopupWindow />}
-			<NewtabLoginWidget
-				onRegister={() => {
-					checkIfOpened();
-				}}
-			/>
+			<NewtabLoginWidget onRegister={() => checkIfOpened()} />
 			<ConnectionStatusPopup />
 			<NewTabCustomise modalOpen={customiseModalOpen} setModalOpen={setCustomiseModalOpen} />
 		</div>
 	);
 }; // ./WebTopPage
 
+
 const PAGES = {
 	newtab: WebtopPage,
 };
-const NewTabMainDiv = () => {
-	return (
-		<MainDivBase
-			pageForPath={PAGES}
-			defaultPage="newtab"
-			navbar={false}
-			className="newtab"
-		/>
-	);
-};
+
+
+const NewTabMainDiv = () => (
+	<MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />
+);
+
 
 /**
  *
  * @param {Object} p
- * @param {string} p.cid Charity ID
  * @returns
  */
-const UserControls = ({ cid }) => {
-	// const showMyloopLink = !Login.isLoggedIn() || !hasRegisteredForMyData();
-	const charity = cid ? fetchCharity(cid) : null;
-	const [showPopup, setShowPopup] = useState(false);
-	const mydataRef = useRef();
-
-	const mydataLink = ServerIO.MYLOOP_ENDPOINT + '/account?scrollMyData=true';
-
-	// useEffect(() => {
-	// 	const myDataElement = document.getElementById('myloop-link');
-	// 	if (myDataElement && myDataElement.getAttribute('listener') !== 'true') {
-	// 		myDataElement.addEventListener('mouseover', () => setShowPopup(true));
-	// 	}
-	// 	return () => {
-	// 		if (myDataElement) {
-	// 		myDataElement.addEventListener('mouseover', () => setShowPopup(true));
-	// 		}
-	// 	};
-	// }, [myloopLink]);
-
-	// useEffect(() => {
-	// 	document.addEventListener('mousedown', handleClickOutside);
-	// 	return () => {
-	// 		document.removeEventListener('mousedown', handleClickOutside);
-	// 	};
-	// }, [popupDiv]);
-
-	const handleClickOutside = (e) => {
-		if (!mydataRef.current) return;
-		if (mydataRef.current.contains(e.target)) {
-			return; // inside click
-		}
-		setShowPopup(false); // outside click
-	};
-
-	// const myloopLink = (
-	// 	<>
-	// 		<div
-	// 			onClick={() => (top.location.href = mydataLink)}
-	// 			className="myloop-link"
-	// 			id="myloop-link"
-	// 			style={{ cursor: 'pointer' }}
-	// 		>
-	// 			My.Good-Loop &nbsp;
-	// 			<img
-	// 				src="/img/mydata/my_good-loop_RoundLogo.300w.png"
-	// 				className="heart-white-circle"
-	// 			/>
-	// 		</div>
-	// 		&nbsp;&nbsp;&nbsp;
-	// 	</>
-	// );
-
-	// const popupDiv = (
-	// 	<div
-	// 		ref={mydataRef}
-	// 		className='mydata-t4g-popup bg-white shadow p-3 position-absolute
-	// 		d-flex flex-column justify-content-center align-items-center text-center'
-	// 		onClick={() => (top.location.href = mydataLink)}
-	// 	>
-	// 		<img src="/img/mydata/data-badge.png" className="logo" />
-	// 		<span className="my-3" style={{ fontSize: '.9rem' }}>
-	// 			Visit My.Good-Loop to earn your data badge and raise even more donations
-	// 			for {charity ? charity.displayName : 'charities'}!
-	// 		</span>
-	// 		{charity && <CharityLogo charity={charity} />}
-	// 	</div>
-	// );
-
-	const T4GLogoutLink = () => <a href={'#'} className={"LogoutLink"} 
-	onClick={() => {
-		console.log("logging out...")
-		top.location.href = ServerIO.MYLOOP_ENDPOINT + '/logout';
-	}}>
-		Logout
-	</a>;
-
-	return (
-		<>
-			{/* {showMyloopLink && myloopLink} */}
-			{/* {showPopup && popupDiv} */}
-			<AccountMenu
-				accountMenuItems={accountMenuItems}
-				linkType="a"
-				small
-				// logoutLink= {<T4GLogoutLink/>}
-				customImg={"/img/logo/my-loop-logo-round.svg"}
-				customLogin={
-					<NewtabLoginLink className="login-menu btn btn-transparent fill">
-						Register / Log in
-					</NewtabLoginLink>
-				}
-				logoutLink={<T4GLogoutLink/>}
-			/>
-		</>
+const UserControls = () => {
+	const logoutFn = () => window.top.location.href = `${ServerIO.MYLOOP_ENDPOINT}/logout`;
+	const logoutLink = <a href="#" role="button" className="LogoutLink" onClick={logoutFn}>Log out</a>;
+	const customLogin = (
+		<NewtabLoginLink className="login-menu btn btn-transparent fill">
+			Register / Log in
+		</NewtabLoginLink>
 	);
+
+	return <AccountMenu
+		accountMenuItems={accountMenuItems}
+		linkType="a"
+		small
+		customImg="/img/logo/my-loop-logo-round.svg"
+		customLogin={customLogin}
+		logoutLink={logoutLink}
+	/>;
 };
 
-/**
- * @deprecated in August 2022
- * TODO: remove if applicable, last updated around Feb 2021
- */
-const TabsOpenedCounter = () => {
-	let pvTabsOpened = getTabsOpened();
-	if (pvTabsOpened && pvTabsOpened.value) {
-		return (
-			<span className="pr-3 text-white font-weight-bold">
-				{pvTabsOpened.value} tabs opened
-			</span>
-		);
-	}
-	return null;
-};
 
 const ENGINES = {
 	google: {
@@ -441,6 +283,7 @@ const ENGINES = {
  */
 const NormalTabCenter = ({style, customLogo}) => {
 	let pvSE = getPVClaim({ xid: Login.getId(), key: 'searchEngine' });
+	console.log('**************** pvSE', pvSE, 'value', Claim.value(pvSE));
 	let searchEngine = Claim.value(pvSE) || 'google';
 	const engineData = ENGINES[searchEngine];
 
@@ -459,12 +302,9 @@ const NormalTabCenter = ({style, customLogo}) => {
 					<div className="tab-search-container mx-auto">
 						<Search
 							onSubmit={(e) => doSearch(e, searchEngine)}
-							placeholder={'Search with ' + engineData?.title}
+							placeholder={`Search with ${engineData?.title}`}
 							icon={
-								<C.A
-									href="/?tab=tabsForGood"
-									title="click here to change the search engine"
-								>
+								<C.A href="/?tab=tabsForGood" title="Click here to change search engine">
 									<img
 										src={engineData?.logo}
 										alt="search icon"
@@ -482,152 +322,77 @@ const NormalTabCenter = ({style, customLogo}) => {
 	);
 };
 
-/**
- * *New*
- * Fetch total donation of charity from Monday (on ElasticSearch)
- * @param {Object} charity
- * @returns
- */
-const fetchDonationTotalMonday = ({ charity }) => {
-	if (!charity) return null;
-	let pvTotalForCharityMonday = DataStore.fetch(
-		['misc', 'donations-monday'],
-		() =>
-			ServerIO.load(
-				'https://lg.good-loop.com/data?dataspace=gl&q=evt:dntnmon AND time:' +
-					new Date().toISOString().substring(0, 10)
-			)
-	);
-	if (pvTotalForCharityMonday && pvTotalForCharityMonday.value) {
-		// Temporary null check for locked down DataServlet
-		if (!pvTotalForCharityMonday.value.examples) return null;
-		if (pvTotalForCharityMonday.value.examples.length === 0) return null;
-		const arrayTotal = pvTotalForCharityMonday.value.examples[0]._source.props;
-		const mapTotal = arrayTotal.reduce((map, obj) => {
-			map[obj.k] = obj.n;
-			return map;
-		});
-		const donationMonday = mapTotal[charity.id] || mapTotal[charity.name];
-		return donationMonday / 100;
-	}
-};
 
 const NewTabCharityCard = ({ cid, loading }) => {
 	const charity = cid ? fetchCharity(cid) : null;
-	const isInTutorialHighlight =
-		DataStore.getValue(['widget', 'TutorialCard', 'open']) &&
-		DataStore.getValue(['widget', 'TutorialCard', 'page']) === 1;
-	const returnLink = encURI('/newtab.html#webtop?tutOpen=true&tutPage=2');
-	//const params = isInTutorialHighlight ? "&task=return&link=" + returnLink : "";
-
-	const donationTotalMonday = charity && fetchDonationTotalMonday({ charity });
-
-	// HACK we want to show the total going up as tabs are opened. But we only reconcile on a quarterly basis.
-	// SO: take 1 month of data, which will usually be an under-estimate, and combine it with an underestimate of CPM
-	// to give a counter that ticks up about right.
-	let pvNumTabsOpenedEveryone = getTabsOpened2({ start: 0, cid }); // 1 month's data -- which is alsmost certainly not included in the total
-
-	// Aug 2022 Not showing totalMoney on front end anymore
-	// let totalMoney;
-	// if (isTester() && pvTotalForCharity.value && pvNumTabsOpenedEveryone.value) {
-	// 	// TODO other currencies e.g. USD
-	// 	const tabEst = new Money(pvNumTabsOpenedEveryone.value* 2/1000); // $/£2 CPM as a low estimate
-	// 	totalMoney = Money.add(pvTotalForCharity.value.total, tabEst);
-
-	// 	// New: If donations from Monday is found, use that instead of the tab estimate
-	// 	if (donationTotalMonday) totalMoney = donationTotalMonday;
-	// }
 
 	// Use top.location.href instead of C.A to advoid CORS issues.
-	const charityLink =
-		(charity && charity.url) ||
-		ServerIO.MYLOOP_ENDPOINT + '/account?tab=tabsForGood';
+	const charityLink = charity?.url || `${ServerIO.MYLOOP_ENDPOINT}/account?tab=tabsForGood`;
 
 	return (
 		<TutorialComponent page={1} className="NewTabCharityCard">
-				<div className="text-center">
-				{/*<div onClick={() => top.location.href = charityLink}> */}
-				<a href={charityLink} target="_blank" rel="noopener noreferrer" className="charity-cta">
-						{/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
-						{charity && <CharityLogo charity={charity} />}
-						{!charity && loading && <p className="my-auto">Loading...</p>}
-						{!charity && !loading && <p className="my-auto">Select a charity</p>}
-						{/* </WhiteCircle> */}
-				</a>
+				<div className="text-center w-100">
+					<a href={charityLink} target="_blank" rel="noopener noreferrer" className="charity-cta">
+							{charity && <CharityLogo charity={charity} />}
+							{!charity && loading && <p className="my-auto">Loading...</p>}
+							{!charity && !loading && <p className="my-auto">Select a charity</p>}
+					</a>
 				</div>
 		</TutorialComponent>
 	);
 };
 
-const LinksDisplay = ({ bookmarksData, style }) => {
-	const CircleLink = ({ domain, url, children, title }) => {
-		if (!url) url = '#';
-		return (
-			<Col
-				onClick={() => (parent.location.href = url)}
-				title={title}
-				className="bookmark-item d-flex flex-column align-items-center"
-			>
-				<BG
-					src={`https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`}
-					className="bookmark-box shadow mb-1"
-					center
-					style={{ backgroundSize: '1.5rem', backgroundRepeat: 'no-repeat' }}
-				/>
-				{/* <span className="text-white text-center" style={{userSelect:"none",padding:'0 .5rem',paddingTop:'.3rem',borderRadius:'10px',backgroundColor:'rgb(0 0 0 / 10%)'}}>
+
+const CircleLink = ({ domain, url, children, title }) => {
+	if (!url) url = '#';
+	return (
+		<Col
+			onClick={() => { window.parent.location.href = url; }}
+			title={title}
+			className="bookmark-item d-flex flex-column align-items-center"
+		>
+			<BG
+				src={`https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`}
+				className="bookmark-box shadow mb-1"
+				center
+				style={{ backgroundSize: '1.5rem', backgroundRepeat: 'no-repeat' }}
+			/>
+			{/* <span className="text-white text-center" style={{userSelect:"none",padding:'0 .5rem',paddingTop:'.3rem',borderRadius:'10px',backgroundColor:'rgb(0 0 0 / 10%)'}}>
 				{children}
 			</span> */}
-			</Col>
-		);
-	};
+		</Col>
+	);
+};
 
-	// To allow sites like mail.google.com get fetch app specific favicons, at the same time advoid 404 favicons
-	const favSubdomainKeywords = ['google'];
 
-	const maxBookmarks = 5; // max number of bookmarks to display
+// Usually strip subdomains to avoid 404 favicons - but some domains have subdomains with app-specific favicons
+const retainSubdomainKeywords = ['google'];
+const maxBookmarks = 5; // max number of bookmarks to display
 
-	if (bookmarksData.length >= 1) {
-		// console.log("bookmarksData loaded", bookmarksData);
-		return (
-			<Row className="bookmark-flexbox" style={style}>
-				{bookmarksData.slice(0, maxBookmarks).map((bookmark, i) => {
-					if (bookmark.url) {
-						// Catch bookmarks folder that do not have url
-						const url = bookmark.url;
-						let domain = url.match('(?<=://)(.*?)(?=/)')[0];
-						if (
-							domain.split('.').length >= 3 &&
-							!domain.includes(favSubdomainKeywords)
-						) {
-							domain = domain.split('.').slice(1).join('.');
-						}
-						const title = ellipsize(bookmark.title, 10);
-						return (
-							<CircleLink
-								key={i}
-								url={url}
-								title={bookmark.title}
-								domain={domain}
-							>
-								{/* {title} */}
-							</CircleLink>
-						);
-					}
-				})}
-			</Row>
-		);
-	}
+
+const LinksDisplay = ({ bookmarksData, style }) => {
+	if (bookmarksData.length < 1) return <Row className="bookmark-flexbox" />;
 
 	return (
-		<Row className="bookmark-flexbox">
-			{/* {Array.apply(null, Array(10)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)} */}
+		<Row className="bookmark-flexbox" style={style}>
+			{bookmarksData.slice(0, maxBookmarks).map((bookmark, i) => {
+				if (!bookmark.url) return null;
+				// Catch bookmarks folder that do not have url
+				const url = bookmark.url;
+				let domain = url.match('(?<=://)(.*?)(?=/)')[0];
+				if (
+					domain.split('.').length >= 3 &&
+					!domain.includes(retainSubdomainKeywords)
+				) {
+					domain = domain.split('.').slice(1).join('.');
+				}
+				return <CircleLink key={i} url={url} title={bookmark.title} domain={domain} />;
+			})}
 		</Row>
 	);
 };
 
-const CharityCustomContent = ({ content, className }) => {
-	return <div className="charity-custom-content">{content}</div>;
-};
+
 
 // Checks for internet connection and any adblock interference
 const ConnectionStatusPopup = () => {
@@ -700,21 +465,17 @@ const ConnectionStatusPopup = () => {
 	) : null;
 };
 
-/**
- * redirect to Ecosia
- */
+
+/** Redirect to chosen search engine */
 const doSearch = (e, engine) => {
 	stopEvent(e);
 	// NB: use window.parent to break out of the newtab iframe, otherwise ecosia objects
 	const search = DataStore.getValue('widget', 'search', 'q');
-	// Cancel search if empty
-	// DONT use !search - if user searches a string that can evaluate falsy, like '0', it will cause a false positive
-	if (search == null || search === '') {
-		return;
-	}
-	(window.parent || window.parent).location =
-		ENGINES[engine].url + encURI(search);
+	// Cancel search if empty (NB don't mess with this condition - eg '0' is falsy but still counts)
+	if (search == null || search === '') return;
+	window.parent.location = ENGINES[engine].url + encURI(search);
 };
+
 
 const tutorialPages = [
 	<>
@@ -722,8 +483,7 @@ const tutorialPages = [
 		<p>
 			Thanks for signing up to Tabs for Good!
 			<br />
-			You are now raising money for your favourite charity every time you open a
-			new tab.
+			You are now raising money for your favourite charity every time you open a new tab.
 		</p>
 	</>,
 	<>
@@ -753,17 +513,13 @@ const tutorialPages = [
 	</>,
 	<>
 		<h2>Explore the Loop</h2>
-		<p>
-			Find out more about Good-Loop and what more you can do for good at
-			My-Loop.
-		</p>
+		<p>Find out more about Good-Loop and what more you can do for good at My-Loop.</p>
 	</>,
 	<>
 		<h2>Customize your page</h2>
-		<p>
-				Make your Tabs For Good page yours! Change themes and layouts in here.
-		</p>
-</>,
+		<p>Make your Tabs For Good page yours! Change themes and layouts in here.</p>
+	</>,
 ];
+
 
 export default NewTabMainDiv;

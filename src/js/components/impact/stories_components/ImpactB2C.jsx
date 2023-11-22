@@ -37,7 +37,7 @@ function CampaignImpactPage() {
 	const newStories = DataStore.getUrlValue('newStories');
 
 	// return old impact hub
-	if(LEGACY_IMPACT_IDS.includes(itemId) || !newStories) return <CampaignPage />;
+	if (LEGACY_IMPACT_IDS.includes(itemId) || !newStories) return <CampaignPage />;
 	
 	if(glVertiser) {
 		itemType = "brand"
