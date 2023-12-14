@@ -374,27 +374,33 @@ const CampaignCharityDisplay = ({charities}) => {
  * @param {ImpactDebit[]} p.impactDebits The ImpactDebit objects representing in-scope donations.
  */
 function CharitiesCardSet({mainItem, charities, impactDebits}) {
+	// TODO Why do we have both of these? The user-visible one is never going to be seen...
+	if (!charities?.length) return <DevOnly>No charities</DevOnly>;
+	if (!charities.length) return <Misc.Loading text="Fetching donation data..." />;
 
-	if (!charities?.length) {
-		return <DevOnly>No charities</DevOnly>;
-	};
+	const [sortedCharities, setSortedCharities] = useState(charities);
+	useEffect(() => {
+		setSortedCharities(charities.toSorted((cA, cB) => {
+			const dntnA = cA.dntnTotal || new Money(0);
+			const dntnB = cB.dntnTotal || new Money(0);
+			return -Money.compare(dntnA, dntnB);
+		}));
+	}, [charities]);
 
-	if (!charities.length) {
-		return <Misc.Loading text="Fetching donation data..." />;
-	}
+	console.log('sortedCharities', sortedCharities.map(c => `${c.id}: ${Money.prettyStr(c.dntnTotal || 0)}`));
 
 	const topCharities = <GLHorizontal className="top-charities">
-		{charities.slice(0, 3).map(charity => {
+		{sortedCharities.slice(0, 3).map(charity => {
 			const cid = getId(charity);
 			return <CharityCard id={cid} key={cid} charity={charity} impactDebits={impactDebits} />;
 		})}
 	</GLHorizontal>;
 
-	if (charities.length <= 3) return topCharities;
+	if (sortedCharities.length <= 3) return topCharities;
 
 	const cardSetProps = {
-		modalContent: <CharityList mainItem={mainItem} charities={charities}/>,
-		modalTitle: `${charities.length} Charities`,
+		modalContent: <CharityList mainItem={mainItem} charities={sortedCharities}/>,
+		modalTitle: `${sortedCharities.length} Charities`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
@@ -402,9 +408,9 @@ function CharitiesCardSet({mainItem, charities, impactDebits}) {
 	return <GLVertical>
 		{topCharities}
 		<GLCard className="more-charities card-body" noPadding noGrow {...cardSetProps}>
-			<h5>Plus {charities.length-3} more</h5>
-			<div className='flex-row'>
-				{charities.slice(3).splice(0, 6).map(charity => { // only show 6 charities = one row, to fit on page
+			<h5>Plus {sortedCharities.length - 3} more</h5>
+			<div className="flex-row">
+				{sortedCharities.slice(3).splice(0, 6).map(charity => { // only show 6 charities = one row, to fit on page
 					const cid = getId(charity);
 					const cname = NGO.displayName(charity);
 					return <img className="charity-link logo" key={cid} src={charity?.logo} title={cname} />;
@@ -784,10 +790,10 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		console.warn('CountryViewsGLCard - no baseObjects');
 		return null;
 	}
-	let impressionData = getImpressionsByCampaignByCountry({baseObjects, cutoff:0.01})
+	const impressionData = getImpressionsByCampaignByCountry({baseObjects, cutoff: 0.01}).value || {};
 	// Prepare data for non-modal view - total impressions and countries
 	const totalCountries = Object.keys(impressionData).filter(country => country !== 'unset').length;
-	const impressions = sumBy(Object.values(impressionData), 'impressions') // sum impressions over all regions
+	const impressions = sumBy(Object.values(impressionData), 'impressions'); // sum impressions over all regions
 	const countryWord = (totalCountries === 1) ? 'COUNTRY' : 'COUNTRIES';
 
 	const modalMapCardContent = <>
