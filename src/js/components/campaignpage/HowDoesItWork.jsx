@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-const HowDoesItWork = ({ nvertiserName, charities, ongoing, setCtaModalOpen }) => {
+const HowDoesItWork = ({ nvertiserName, charities, ongoing, setCtaModalOpen, campaignId }) => {
 	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
 	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
 	const nvertiserNamePoss = nvertiserName ? (
@@ -38,7 +38,7 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing, setCtaModalOpen }) =
 						{charities.length > 1 ? (
 							" the user " + (ongoing ? "can" : "could") + " then choose which charity they " + (ongoing ? "want" : "wanted") + " to fund with 50% of the ad money."
 						) : (
-							" 50% of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + (charityName || "charity") + "."
+							(campaignId === "zeni_aviv_8412" ? " 20%" : " 50%") + " of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + (charityName || "charity") + "."
 						)}
 					</div>
 				</div>
