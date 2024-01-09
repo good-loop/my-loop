@@ -325,7 +325,7 @@ const CampaignPage = () => {
 					ctaModalOpen={ctaModalOpen} setCtaModalOpen={setCtaModalOpen}
 					/>
 				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={campaign.ongoing} 
-					setCtaModalOpen={setCtaModalOpen}
+					setCtaModalOpen={setCtaModalOpen} campaignId={campaign.id}
 					/>
 
 				{!isLanding && <Container>
@@ -407,7 +407,7 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 					{dmin && (Money.value(dmin) || Money.value(dmax))?  /* NB: using && here resulted in a stray "0" */
 						<>Donation Amount: <Misc.Money amount={dmin} /> { dmax &&!Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>
 					: null}
-					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies.
+					{campaign.id === "zeni_aviv_8412" ? "20%" : "50%"} of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies.
 					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
 				</span>
 				<br/>
