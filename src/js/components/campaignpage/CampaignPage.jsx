@@ -403,7 +403,7 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 	return <div className="container py-5">
 			<CharityDetails charities={charities} />
 			<div className="text-center smallprint">
-				<span className="small">
+				<span className="small footer-1">
 					{dmin && (Money.value(dmin) || Money.value(dmax))?  /* NB: using && here resulted in a stray "0" */
 						<>Donation Amount: <Misc.Money amount={dmin} /> { dmax &&!Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>
 					: null}
@@ -411,7 +411,7 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
 				</span>
 				<br/>
-				<span className="small">
+				<span className="small footer-2">
 					{!!Money.value(totalBudget) && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
 					{!start && end && <>End date: <Misc.DateTag date={end} /> <br/></>}
@@ -422,12 +422,12 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 						</span>}
 				</span>
 				<br/>
-				<span className="small">
+				<span className="small footer-3">
 					Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
 					They're just doing good &mdash; which we are glad to support.
 				</span>
 				<br/>
-				<span className="small">
+				<span className="small footer-4">
 					Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.
 				</span>
 			</div>
