@@ -34,12 +34,14 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing, setCtaModalOpen }) =
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
+						<span id="how-its-done-3">
 						3. Once the donation {ongoing ? "is" : "was"} unlocked,
 						{charities.length > 1 ? (
 							" the user " + (ongoing ? "can" : "could") + " then choose which charity they " + (ongoing ? "want" : "wanted") + " to fund with 50% of the ad money."
 						) : (
 							" 50% of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + (charityName || "charity") + "."
 						)}
+						</span>
 					</div>
 				</div>
 				<button className="cta-modal-btn btn btn-primary text-uppercase" onClick={e => setCtaModalOpen(true)}>
