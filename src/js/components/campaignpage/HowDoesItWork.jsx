@@ -26,20 +26,26 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing, setCtaModalOpen, cam
 				<div className="row mb-3 text-center align-items-start">
 					<div className="col-md d-flex flex-column">
 						<img src="/img//Graphic_tv.scaled.400w.png" className="w-100" alt="wrapped video" />
+						<span id="how-does-it-work-1">
 						1. {nvertiserNamePoss || "This"} video ad {ongoing ? "is" : "was"} ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
+						</span>
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" className="w-100" alt="choose to watch" />
+						<span id="how-does-it-work-2">
 						2. When the users choose to engage (by watching, swiping or clicking) they unlock{!ongoing && "ed"} a donation, funded by {nvertiserName}.
+						</span>
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
+						<span id="how-does-it-work-3">
 						3. Once the donation {ongoing ? "is" : "was"} unlocked,
 						{charities.length > 1 ? (
 							" the user " + (ongoing ? "can" : "could") + " then choose which charity they " + (ongoing ? "want" : "wanted") + " to fund with 50% of the ad money. "
 						) : (
 							(campaignId === "zeni_aviv_8412" ? " 20%" : " 50%") + " of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + (charityName || "charity") + "."
 						)}
+						</span>
 					</div>
 				</div>
 				<button className="cta-modal-btn btn btn-primary text-uppercase" onClick={e => setCtaModalOpen(true)}>
