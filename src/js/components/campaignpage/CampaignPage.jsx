@@ -324,7 +324,7 @@ const CampaignPage = () => {
 					totalViewCount={totalViewCount} landing={isLanding} status={status} nvertiserName={nvertiserName}
 					ctaModalOpen={ctaModalOpen} setCtaModalOpen={setCtaModalOpen}
 					/>
-				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={campaign.ongoing} 
+				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={Campaign.isOngoing(campaign)} 
 					setCtaModalOpen={setCtaModalOpen} campaignId={campaign.id}
 					/>
 
