@@ -37,6 +37,9 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 		<p className="raised splash-counter">{donationDisplay}</p>
 		<p className="splash-gl">{ongoing ? "Raising" : "Raised"} for charity by using purpose lead online ads with Good-Loop</p>
 	</>;
+
+	let splashFallback = <><div id="splash-fallback-1"/><div id="splash-fallback-2"/></>;
+
 	// Change the splashText to show wider impact?
 	if (campaignPage.showWiderImpact && campaignPage.widerAnnualDntn) {
 		splashText = <div className="header text-white">
@@ -54,10 +57,8 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	return (<>
 		<div className="impact-hub-splash position-relative">
 			<div className="splash-decoration">
-				<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={campaignPage.bg ? "w-100 splash-img" : "splash-curve"} alt="splash" />
-				<div className="dark-overlay" />
-				<img src="/img/redcurve.svg" className="splash-curve curve-border" alt="dark border to curve" />
-				<img src="/img/redcurve.svg" className="splash-curve" alt="curve" />
+				{campaignPage.bg ? <DynImg src={campaignPage.bg} className="w-100 splash-img" alt="background image" /> : splashFallback}
+				<div id="splash-bg" />
 			</div>
 			<div className="hero splash-card px-5">
 				<div className="splash-content">
@@ -71,7 +72,6 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 						</WhiteCircle>
 					</div>
 					<div className="splash-text mt-5 flex-column flex-center">
-					<img src="/img/curves/mobile-curve-white.svg" className="splash-text-top-curve" alt="white bottom border" />
 						<div className="splash-text-content" style={{color: "@gl-red"}}>
 							{splashText}
 							{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}

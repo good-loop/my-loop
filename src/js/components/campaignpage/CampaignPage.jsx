@@ -151,20 +151,17 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 };
 
 const JustTheBeginning = ({ setCtaModalOpen }) => {
-	return <div className="w-100 bg-gl-pale-orange" >
-		<PageCard className="bg-gl-desat-blue">
-			<h1 style={{color:"white",fontWeight:'bold'}}>This is just the beginning.</h1>
+	return <div className="w-100" >
+		<PageCard>
+			<h1>This is just the beginning.</h1>
 			<br/>
-			<p className="white text-center"><b>See what else we're doing and join the Good-Loop movement.</b></p>
+			<p className="text-center"><b>See what else we're doing and join the Good-Loop movement.</b></p>
 			<TriCards className="pt-0"
 				titles={["Tabs for Good", "Ad Campaigns", "Our Story"]}
 				texts={['Raise money for charity every time you open a new tab', 'Explore more examples of our campaigns', 'Meet the cofounders and discover the story of Good-Loop']}
 				images={['/img/homepage/slide-1.png', '/img/homepage/UsingAdMoneyForGood.png', '/img/homepage/amyanddaniel.png']}
 				links={['/tabsforgood', '/impactoverview', '/ourstory']}
 			/>
-			<button className="cta-modal-btn btn btn-primary text-uppercase" onClick={e => setCtaModalOpen(true)}>
-				want to raise even more?
-			</button>
 		</PageCard>
 	</div>
 }
@@ -345,19 +342,6 @@ const CampaignPage = () => {
 				{charities.length !== 0 && 
 					<CharitiesSection charities={charities} donation4charity={donation4charity} campaign={campaign} setCtaModalOpen={setCtaModalOpen}/>
 				}
-
-
-				<div className="bg-white">
-					<Container>
-						<h2 className="my-5">Look out for our ads</h2>
-						<p className="w-60 mx-auto">If you see one of our shiny Good-Loop ads online, remember to engage with it to unlock your charity donation. Together we can raise even more money for good causes.</p>
-					</Container>
-					{isMobile() ? (
-						<img src="/img/Graphic_metro_mobile_large.png" className="w-100" alt="publishers" />
-					) : (
-						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />
-					)}
-				</div>
 				<JustTheBeginning setCtaModalOpen={setCtaModalOpen}/>
 				<SmallPrintInfo ads={ads} charities={charities} campaign={campaign} pvTopItem={pvTopItem} />
 			</div>
@@ -400,7 +384,7 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 	// Did we use an impact model?
 	const impactModels = charities.map(c => c.simpleImpact).filter(m => m);
 
-	return <div className="container py-5">
+	return <div className="container py-5 w-100">
 			<CharityDetails charities={charities} />
 			<div className="text-center smallprint">
 				<span className="small footer-1">

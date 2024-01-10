@@ -25,19 +25,19 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing, setCtaModalOpen, cam
 				<h2 className="pb-5">How does it work?</h2>
 				<div className="row mb-3 text-center align-items-start">
 					<div className="col-md d-flex flex-column">
-						<img src="/img//Graphic_tv.scaled.400w.png" className="w-100" alt="wrapped video" />
+						<img src="/img/icons/Eye-red.svg" className="mb-3 w-50 align-self-center" alt="wrapped video" />
 						<span id="how-does-it-work-1">
 						1. {nvertiserNamePoss || "This"} video ad {ongoing ? "is" : "was"} ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
 						</span>
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
-						<img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" className="w-100" alt="choose to watch" />
+						<img src="/img/icons/Lock-red.svg" className="mb-3 w-50 align-self-center" alt="choose to watch" />
 						<span id="how-does-it-work-2">
 						2. When the users choose to engage (by watching, swiping or clicking) they unlock{!ongoing && "ed"} a donation, funded by {nvertiserName}.
 						</span>
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
-						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
+						<img src="/img/icons/Hearth-red.svg" className="mb-3 w-50 align-self-center" alt="choose charity" />
 						<span id="how-does-it-work-3">
 						3. Once the donation {ongoing ? "is" : "was"} unlocked,
 						{charities.length > 1 ? (
