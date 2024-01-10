@@ -298,7 +298,7 @@
 
 			// Darker red edge to curve
 			&.curve-border {
-				filter: brightness(0.5);
+				filter: brightness(0.85);
 				transform: translateX(-1rem);
 				@media @width-mobile {
 					transform: translateX(-0.6rem);
@@ -328,10 +328,8 @@
 		.splash-thanks {
 			// override h3 styling
 			text-shadow: none !important;
-			color: white !important;
-			@media @width-mobile {
-				color: @gl-red !important;
-			}
+			color: black !important;
+			text-transform: none !important;
 		}
 
 		// The donation counter
@@ -468,7 +466,7 @@
 
 				.sub-header {
 					font-size: 1.4rem;
-					color: @gl-orange;
+					color: @gl-red;
 					font-weight: 700;
 
 					@media @ipad-max {
