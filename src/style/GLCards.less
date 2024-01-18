@@ -54,7 +54,6 @@ The GLCards layout is a layout for modular cards which are designed to expand an
 
 .glcard {
 	box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
-	flex-basis: 1;
 	flex-grow: 1;
 	border: none;
 	border-radius: @GLCardRadius;
@@ -73,10 +72,10 @@ The GLCards layout is a layout for modular cards which are designed to expand an
 	}
 
 	// Override Bootstrap defaults to match card border-radius
-	.card-header:first-child {
+	> .card-header:first-child {
 		border-radius: calc(@GLCardRadius - 1px) calc(@GLCardRadius - 1px) 0 0;
 	}
-	.card-footer:last-child {
+	> .card-footer:last-child {
 		border-radius: 0 0 calc(@GLCardRadius - 1px) calc(@GLCardRadius - 1px);
 	}
 }
