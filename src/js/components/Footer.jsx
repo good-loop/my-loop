@@ -36,7 +36,7 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 	return <Container fluid className={fullClassName}>
 		<div className="text-center position-relative d-flex flex-column align-items-center">
 			<h5>Keep in touch</h5>
-			<h5>Join The Ads For Good Movement</h5>
+			<h5>join the ads for good movement</h5>
 			<img className="position-relative" style={{ width: '120%', maxWidth: '500px' }} src="/img/footer/newsletter-background.svg" />
 			<div className="position-absolute" style={{ maxWidth: '360px', top: '5em' }}>
 				<p className="mt-5">In partnership with</p>

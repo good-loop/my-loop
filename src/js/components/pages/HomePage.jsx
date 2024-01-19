@@ -137,8 +137,8 @@ const SlideCardsSection = () => {
 
 	return (<>
 		<PageCard className="tabs-for-goods-slide-card" >
-			<h3 className="text-center" style={{ fontSize: '1.25rem' }}>Here's How You Can Get Involved</h3>
-			<p className="text-center d-none d-md-block color-gl-muddy-blue">As Well As Our Adverts, We're Creating Some Smart Ways To Help You Do Some Good Every Day, For Free...</p>
+			<h3 className="text-center" style={{ fontSize: '1.25rem' }}>here's how you can get involved</h3>
+			<p className="text-center d-none d-md-block color-gl-muddy-blue">As well as our adverts, we're creating some smart ways to help you do some good every day, for free...</p>
 			{/*<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} /> */}
 			<OneCard cardData={cardOne} />
 		</PageCard>
@@ -298,9 +298,9 @@ export const MovementCard = () => {
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
 					<img style={{ maxWidth: '480px', zIndex: '1', margin: '0 -1rem' }} src="img/homepage/movement-blob-images.svg" />
 					<div className="bubble-content position-absolute text-center" style={{ top: '18%', margin: '0 10%', maxWidth: '400px', zIndex: '2' }}>
-						<h4 className="color-gl-red">Join Our Movement</h4>
-						<p className="color-gl-dark-grey" style={isMobile() ? { fontSize: '.9rem' } : {}} >Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
-						<ArrowLink className="color-gl-red font-weight-bold" link="/tabsforgood">Get Involved</ArrowLink>
+						<h4 className="color-gl-red">Join our movement</h4>
+						<p className="color-gl-dark-grey" style={isMobile() ? { fontSize: '.9rem' } : {}} >Start transforming your web browsing and data into <b>life saving vaccines, meals for children in need, habitats for endangered animals,</b> plus many more good causes.</p>
+						<ArrowLink className="color-gl-red font-weight-bold" link="/tabsforgood">Get involved</ArrowLink>
 					</div>
 				</div>
 				<img className="position-absolute w-100 join-our-movement-bg-front" src="img/homepage/our-movement-front-curve.svg" />
@@ -330,7 +330,7 @@ export const MovementCard = () => {
 const JoinOurMovement = () => <>
 	<PageCard id="upper-cta" className="tabs-for-goods-slide-card" >
 		<div className="upper-cta white">
-			<h1 className="mb-4 white">Join Our Movement!</h1>
+			<h1 className="mb-4 white">Join our movement!</h1>
 			<p className="leader-text text-center">Start transforming your web browsing into life saving vaccines, meals for children in need, habitats for endangered animals, plus many more good causes.</p>
 			<img src="/img/homepage/bird-cloud.png" className="top-right" />
 			<img src="/img/signup/hand-globe-coins.png" className="top-left" />

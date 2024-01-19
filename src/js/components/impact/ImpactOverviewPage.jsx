@@ -68,8 +68,8 @@ function IOPFirstHalf({ mainItem, brand, campaign, charities, impactDebits, tota
 					<br/>
 					<h1 style={{marginBottom:0}}>{totalString}</h1>
 					<h2>Donated</h2>
-					<h5>With</h5>
-					<img className="w-50" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+					<h5 className="m-0">With</h5>
+					<img style={{width: '40%'}} src="/img/logo/Good-Loop-lockup.svg"/>
 				</div>
 			</div>
 			<GLModalCard id="hero-card-modal" />
@@ -99,18 +99,19 @@ function IOPFirstHalf({ mainItem, brand, campaign, charities, impactDebits, tota
 function SubBrandsCard({ brand, subBrandsDisplayable: subBrands }) {
 	if (!subBrands.length) return null;
 
+	const count = subBrands.length;
+	const noun = (count === 1) ? 'Brand' : 'Brands';
+
 	const cardProps = {
 		className: 'center-number',
 		modalContent: <BrandList brand={brand} subBrands={subBrands} />,
-		modalTitle: `${subBrands.length} Brands`,
+		modalTitle: `${count} ${noun}`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
-	const noun = (subBrands.length === 1) ? 'Brand' : 'Brands';
-
 	return <GLCard {...cardProps}>
-		<h2>{subBrands.length}</h2>
+		<h2 className="m-0">{count}</h2>
 		<h3>{noun}</h3>
 	</GLCard>;
 }
@@ -123,19 +124,22 @@ function SubBrandsCard({ brand, subBrandsDisplayable: subBrands }) {
  * @param {object[]} p.charities List of charity objects associated with ads under the current focus
  * @returns {JSX.Element}
  */
-function CharitiesCard({mainItem, charities }) {
+function CharitiesCard({ mainItem, charities }) {
+	if (!charities.length) return null;
+
+	const count = charities.length;
+	const noun = (count === 1) ? 'Charity' : 'Charities';
+
 	const cardProps = {
 		className: 'center-number',
 		modalContent: <CharityList mainItem={mainItem} charities={charities}/>,
-		modalTitle: `${charities.length} Charities`,
+		modalTitle: `${count} ${noun}`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
-	const noun = (charities.length === 1) ? 'Charity' : 'Charities';
-
 	return <GLCard {...cardProps}>
-		<h2>{charities.length}</h2>
+		<h2 className="m-0">{count}</h2>
 		<h3>{noun}</h3>
 	</GLCard>;
 }
@@ -154,19 +158,20 @@ function CharitiesCard({mainItem, charities }) {
 function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable: campaigns, impactDebits}) {
 	if (!campaigns.length) return null;
 
+	const count = campaigns.length;
+	const noun = (count === 1) ? 'Campaign' : 'Campaigns';
+
 	const cardProps = {
 		basis: 10,
+		className: 'center-number',
 		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={campaigns} impactDebits={impactDebits}/>,
-		modalTitle: `${campaigns.length} Campaigns`,
+		modalTitle: `${count} ${noun}`,
 		modalId: 'right-half',
-		modalClassName: 'list-modal',
-		className:"center-number"
+		modalClassName: 'list-modal'
 	};
 
-	const noun = (campaigns.length === 1) ? 'Campaign' : 'Campaigns';
-
 	return <GLCard {...cardProps}>
-		<h2>{campaigns.length}</h2>
+		<h2 className="m-0">{count}</h2>
 		<h3>{noun}</h3>
 	</GLCard>;
 }
@@ -485,11 +490,11 @@ function BrandLogo({item}) {
 function LogosDisplay({brand, subBrands}) {
 	return <>
 		<h3>Advertising that's a force for good</h3>
-		<br/><br/>
+		<br/>
 		<img src={brand?.branding?.logo} className="logo"/>
-		<br/><br/>
-		<img className="a4glogo" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
-		<br/><br/><br/>
+		<br/>
+		<img className="a4glogo" src="/img/logo/Good-Loop-lockup.svg"/>
+		<br/>
 		<Row className="justify-content-center w-100">
 			{subBrands.map(b => <BrandLogo item={b} key={b.id}/>)}
 		</Row>
@@ -606,9 +611,9 @@ const WatchToDonateModal = ({ads, brand}) => {
 
 // Keys matched to members of baseObjects
 const contentTypes = {
-	wtdAds: 'Watch To Donate',
+	wtdAds: 'Watch to Donate',
 	tadgAds: 'This Ad Does Good',
-	etdAds: 'Engage To Donate',
+	etdAds: 'Engage to Donate',
 	// greenTags: 'Green Ad Tag',
 	// tasl: 'This Ad Supports Local'
 };
@@ -617,19 +622,18 @@ const contentTypes = {
 function ContentListCard(baseObjects) {
 	const activeTypes = Object.entries(contentTypes).map(([type, name]) => {
 		const active = baseObjects[type]?.length; // ie true if there are entries in the "wtdAds" list etc
-		return <Row key={type}>
-			<Col xs={3}>
-				<img src={`/img/mydata/circle${active ? '' : '-no'}-tick.svg`} className="logo" />
-			</Col>
-			<Col xs={9} className="d-flex flex-column align-items-start justify-content-center">
-				<h5 className="text-left" style={{fontSize: '1.5rem'}}>{name}</h5>
-			</Col>
-		</Row>;
+		return <div className="d-flex justify-content-start align-items-center">
+				<img src={`/img/mydata/circle${active ? '' : '-no'}-tick.svg`} className="logo mr-3" />
+				<h4>{name}</h4>
+		</div>;
 	});
 
 	return <GLCard>
 		<div className="d-flex flex-column align-items-stretch justify-content-between h-100">
-			<img className="w-75 align-self-center my-3" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
+			<div className="my-3 text-center">
+				<img className="w-75" src="/img/logo/Good-Loop-lockup.svg" />
+				<h4>Ad Formats</h4>
+			</div>
 			{activeTypes}
 		</div>
 	</GLCard>;
@@ -794,7 +798,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	// Prepare data for non-modal view - total impressions and countries
 	const totalCountries = Object.keys(impressionData).filter(country => country !== 'unset').length;
 	const impressions = sumBy(Object.values(impressionData), 'impressions'); // sum impressions over all regions
-	const countryWord = (totalCountries === 1) ? 'COUNTRY' : 'COUNTRIES';
+	const countryWord = (totalCountries === 1) ? 'country' : 'countries';
 
 	const modalMapCardContent = <>
 		<MapCardContent data={impressionData}/>
@@ -810,7 +814,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		modalId="right-half"
 		className="center-number"
 	>
-		<h3>{shortNumber(impressions)} VIEWS | {totalCountries} {countryWord}</h3>
+		<h3>{shortNumber(impressions)} views in {totalCountries} {countryWord}</h3>
 	</GLCard>
 	);
 };

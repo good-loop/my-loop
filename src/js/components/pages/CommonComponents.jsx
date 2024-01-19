@@ -1,23 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
+import React, { useState, useRef } from 'react';
 import { Col, Container, Row, Button, Card, CardImg, CardTitle, CardBody, CardText } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { getBrowserVendor, isMobile, isPortraitMobile, scrollTo, space, stopEvent } from '../../base/utils/miscutils';
 import C from '../../C';
-import Icon from '../../base/components/Icon';
 import LinkOut from '../../base/components/LinkOut';
-import CharityLogo from '../CharityLogo';
 import { SubscriptionForm } from '../cards/SubscriptionBox';
-import Login from '../../base/youagain';
 import BSCarousel from '../../base/components/BSCarousel';
 import { T4GSignUpButton, T4GHowItWorksButton } from '../T4GSignUp';
-import Roles from '../../base/Roles';
-import { A } from '../../base/plumbing/glrouter';
 import NGOImage from '../../base/components/NGOImage';
 import NGO from '../../base/data/NGO';
 import { MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal } from '../mydata/MyDataSignUp';
 import { hasRegisteredForMyData } from '../mydata/MyDataCommonComponents';
-import TickerTotal from '../TickerTotal';
+
 
 export const accountMenuItems = [
 	{page: "tabsForGood", label: "Account"},
@@ -189,7 +183,7 @@ const MyDataButton = ({className}) => {
 	return (<>
 	<a onClick={myDataOnClick} 
 		className={space(className, 'w-100 mb-3 btn btn-primary d-unset')}> 
-			{isReg ? 'My.Data Profile' : 'Sign Up For My.Data'}
+			{isReg ? 'My.Data Profile' : 'Sign up for My.Data'}
 	</a>
 	</>)
 }
@@ -198,7 +192,7 @@ const MyLandingSection = ({title, bgImg, noProducts}) => {
 	const fontSizeCTA = isMobile() ? '.8rem' : '1rem';
 
 	if ( ! title) {
-		title = `Raise Money For The Causes You Care Most About. For free.`;
+		title = `Raise money for the causes you care most about. For free.`;
 	}
 
 	const scrollToUpperCta = () => document.getElementById("upper-cta").scrollIntoView({behavior: "smooth"});
