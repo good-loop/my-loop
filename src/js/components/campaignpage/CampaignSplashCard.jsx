@@ -1,10 +1,7 @@
-import React, {useState} from 'react';
-import { Modal, ModalHeader, ModalBody, Row, Col, Container } from 'reactstrap';
+import React from 'react';
 import Counter from '../../base/components/Counter';
 import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
-import { space, scrollTo } from '../../base/utils/miscutils';
-import ShareButton from '../ShareButton';
 import DevLink from './DevLink';
 import MDText from '../../base/components/MDText';
 import KStatus from '../../base/data/KStatus';
@@ -12,8 +9,6 @@ import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
 import Campaign from '../../base/data/Campaign';
 import DynImg from '../../base/components/DynImg';
-import ModalCTA from '../campaignpage/CampaignModalTFG';
-import { T4GSignUpButton, T4GSignUpModal, T4GPluginButton } from '../T4GSignUp';
 import C from '../../C';
 
 /**
@@ -35,7 +30,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	let splashText = <>
 		<h3 className="splash-thanks">Thank you for watching {nvertiserName}'s advert and donating!</h3>
 		<p className="raised splash-counter">{donationDisplay}</p>
-		<p className="splash-gl">{ongoing ? "Raising" : "Raised"} for charity by using purpose lead online ads with Good-Loop</p>
+		<p className="splash-gl">{ongoing ? "Raising" : "Raised"} for charity by using purpose-led online ads with Good-Loop</p>
 	</>;
 
 	let splashFallback = <><div id="splash-fallback-1"/><div id="splash-fallback-2"/></>;
@@ -49,7 +44,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 				</LinkOut>
 				<br /><br />
 				<div>
-					{donationDisplay} of it is raised by<br />purpose led online ads
+					{donationDisplay} of it is raised by<br />purpose-led online ads
 				</div>
 			</div>
 		</div>;
@@ -75,8 +70,8 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 						<div className="splash-text-content" style={{color: "@gl-red"}}>
 							{splashText}
 							{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}
-							<button className="cta-splash-button btn btn-secondary text-uppercase" onClick={e => setCtaModalOpen(true)}>
-								want to raise even more?
+							<button className="cta-splash-button btn btn-secondary" onClick={e => setCtaModalOpen(true)}>
+								Want to raise even more?
 							</button>
 						</div>
 					</div>
@@ -116,6 +111,7 @@ const WiderImpactQuote = ({ campaign }) => {
 		</div>
 	</div>);
 };
+
 
 const DraftBanner = ({ status }) => {
 	if (status !== KStatus.DRAFT && status !== KStatus.MODIFIED) {
