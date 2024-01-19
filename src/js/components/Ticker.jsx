@@ -80,7 +80,7 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 	if (pretty) offsetDispVal = formatNum(offsetDispVal);
 	
 	return (
-		<span className="Ticker">{disp}
+		<span className="Ticker">
 			{currencySymbol}{offsetDispVal}
 		</span>
 	);
