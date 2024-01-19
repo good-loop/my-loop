@@ -151,7 +151,7 @@ const StoriesSection = () => {
 		imgClass: 'bg-gl-light-pink',
 		title: <span className="text-uppercase" style={{ fontWeight: 'bold' }}>We can make things happen</span>,
 		text: 'Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.',
-		button: <ArrowLink className="w-100 color-gl-red" link="/ourimpact" >Discover Our Impact</ArrowLink>
+		button: <ArrowLink className="w-100 color-gl-red" link="/ourimpact" >Discover our Impact</ArrowLink>
 	}
 
 	const cardTwo = {
@@ -159,7 +159,7 @@ const StoriesSection = () => {
 		imgClass: 'bg-gl-blue',
 		title: <span className="text-uppercase" style={{ fontWeight: 'bold' }}>How it all began</span>,
 		text: 'My.Good-Loop is brought you by the team at Good-Loop, founded by Amy Williams and Daniel Winterstein.',
-		button: <ArrowLink className="w-100 color-gl-red" link="/ourstory" >Our Story</ArrowLink>
+		button: <ArrowLink className="w-100 color-gl-red" link="/ourstory">Our Story</ArrowLink>
 	}
 
 	const testimonialOne = {
@@ -280,15 +280,15 @@ export const MovementCard = () => {
 	const movementContents = [
 		{
 			img: 'img/homepage/planet-positive.png',
-			span: 'Good For The Planet'
+			span: 'Good for the planet'
 		},
 		{
 			img: 'img/homepage/responsible-journalism.png',
-			span: 'Supporting Responsible Journalism'
+			span: 'Supporting responsible journalism'
 		},
 		{
 			img: 'img/homepage/50-charity.png',
-			span: '50% Of Ad Fees To Charity'
+			span: '50% of ad fees to charity'
 		},
 	]
 

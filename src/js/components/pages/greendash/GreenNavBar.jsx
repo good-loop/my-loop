@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Collapse, Nav, Navbar, NavbarToggler, NavItem as BSNavItem, Tag } from 'reactstrap';
 import AccountMenu from '../../../base/components/AccountMenu';
 import KStatus from '../../../base/data/KStatus';
@@ -120,7 +120,7 @@ const GreenNavBar = ({active}) => {
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>
 			<a href={pseudoUser ? 'https://www.good-loop.com' : '/greendash'}>
-				<img className="logo" src="/img/logo-green-dashboard.svg" />
+				<img className="logo" src="/img/Good-Loop-lockup-vertical.svg" />
 			</a>
 			<NavItem name="metrics" href={metricsUrl}>Metrics</NavItem>
 			{!pseudoUser && <NavItem name="tags" href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>Manage<br/>Tags</NavItem>}

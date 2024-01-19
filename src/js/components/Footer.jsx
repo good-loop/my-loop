@@ -1,10 +1,12 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import DynImg from '../base/components/DynImg';
-import PropControl from '../base/components/PropControl';
-import { space, equals, isPortraitMobile } from '../base/utils/miscutils';
+
+import { space, equals } from '../base/utils/miscutils';
+import { SubscriptionForm } from './cards/SubscriptionBox';
+
 import C from '../C';
-import SubscriptionBox, { SubscriptionForm } from './cards/SubscriptionBox';
+import DataStore from '../base/plumbing/DataStore';
+
 
 const setFooterClassName = (className) => {
 	// NB: update if not equals, which avoids the infinite loop bug of default update behaviour
@@ -12,7 +14,7 @@ const setFooterClassName = (className) => {
 		return; // no-op
 	}
 	DataStore.setValue(['widget', 'Footer', 'className'], className);
-}
+};
 
 const getFooterClassName = () => DataStore.getValue(['widget', 'Footer', 'className']) || DataStore.setValue(['widget', 'Footer', 'className'], '', false);
 
@@ -37,9 +39,9 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 			<h5>Join The Ads For Good Movement</h5>
 			<img className="position-relative" style={{ width: '120%', maxWidth: '500px' }} src="/img/footer/newsletter-background.svg" />
 			<div className="position-absolute" style={{ maxWidth: '360px', top: '5em' }}>
-				<p className="mt-5">In Partnership With</p>
+				<p className="mt-5">In partnership with</p>
 				<img style={{ width: '140px' }} src="/img/footer/Eden.org_RGB.png" />
-				<p className="font-weight-bold color-gl-red">Subscribe To Get A Tree Planted On Your Behalf And Receive Even More Good News!</p>
+				<p className="font-weight-bold color-gl-red">Subscribe to get a tree planted on your behalf and receive even more good news!</p>
 				<SubscriptionForm className="w-100" buttonText="Subscribe" thankYouTextcolour="text-muted" showTrees buttomColor="primary" />
 			</div>
 			<img className="position-absolute" style={{ width: '120%', maxWidth: '500px', pointerEvents: 'none' }} src="/img/footer/cloud-overlay.png" />
@@ -78,7 +80,8 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 			</Row>
 		</div>
 	</Container>;
-}
+};
+
 
 const FooterNavigation = () => {
 	return (
@@ -96,17 +99,17 @@ const FooterNavigation = () => {
 				<div className='col-6 col-md mt-5 mt-md-0 footer-links'>
 					<div className="d-inline-block">
 						<h5>For business</h5>
-						<a href="https://good-loop.com/what-we-do">What We Do</a><br />
+						<a href="https://good-loop.com/what-we-do">What we do</a><br />
 						<a href="https://good-loop.com/products">Products</a><br />
-						<a href="https://good-loop.com/brands">Brands And Agencies</a><br />
+						<a href="https://good-loop.com/brands">Brands and agencies</a><br />
 						<a href="https://good-loop.com/charities">Charities</a><br />
-						<a href="https://good-loop.com/case-study/index">Case Studies</a><br />
+						<a href="https://good-loop.com/case-study/index">Case studies</a><br />
 					</div>
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
 export default MyLoopFooterSummer2022;
 export { setFooterClassName };
