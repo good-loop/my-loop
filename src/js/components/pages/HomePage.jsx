@@ -58,7 +58,7 @@ const HomePage = ({ spring }) => {
 
 const FindOutMoreSection = () => {
 
-	return (<><BG image="img/homepage/our-mission-background-lg.svg" style={{ backgroundPosition: 'center bottom' }} >
+	return (<BG image="img/homepage/our-mission-background-lg.svg" style={{ backgroundPosition: 'center bottom' }} >
 		<PageCard id="upper-cta" >
 			<div className="text-center">
 				<div className="raised text-white" style={{ fontFamily: 'Montserrat' }}>
@@ -71,14 +71,14 @@ const FindOutMoreSection = () => {
 					<img className="position-absolute" style={{ width: (isMobile() ? '1024px' : '1400px'), top: (isMobile() ? '-10em' : '-13em'), left: (isMobile() ? '-18em' : '') }} src="img/homepage/our-mission-images-lg.png" />
 					<div className="bubble-content position-absolute" style={{ top: (isMobile() ? '12%' : '20%'), margin: '0 10%', maxWidth: '400px' }}>
 						<h3 style={{ fontWeight: '600', marginBottom: '0' }}>Our Mission</h3>
-						<h5 style={{ fontWeight: 'unset' }}>Changing The World: Together</h5>
+						<h5 style={{ fontWeight: 'unset' }}>Changing the world — together</h5>
 						<p style={{ fontSize: '.9rem', marginTop: '1rem' }}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you care most about.</b></p>
 						<a href="/ourimpact" className="text-decoration-none"><span style={{ textDecoration: "underline", fontWeight: '600' }}>Our Impact</span> →</a>
 					</div>
 				</div>
 			</div>
 		</PageCard>
-	</BG></>);
+	</BG>);
 };
 
 /**
@@ -137,7 +137,7 @@ const SlideCardsSection = () => {
 
 	return (<>
 		<PageCard className="tabs-for-goods-slide-card" >
-			<h3 className="text-center" style={{ fontSize: '1.25rem' }}>here's how you can get involved</h3>
+			<h3 className="text-center" style={{ fontSize: '1.25rem' }}>Here's how you can get involved</h3>
 			<p className="text-center d-none d-md-block color-gl-muddy-blue">As well as our adverts, we're creating some smart ways to help you do some good every day, for free...</p>
 			{/*<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} /> */}
 			<OneCard cardData={cardOne} />
