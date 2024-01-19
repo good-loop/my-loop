@@ -624,7 +624,7 @@ function ContentListCard(baseObjects) {
 		const active = baseObjects[type]?.length; // ie true if there are entries in the "wtdAds" list etc
 		return <div className="d-flex justify-content-start align-items-center">
 				<img src={`/img/mydata/circle${active ? '' : '-no'}-tick.svg`} className="logo mr-3" />
-				<h4>{name}</h4>
+				<h4 className="m-0 color-gl-dark-grey">{name}</h4>
 		</div>;
 	});
 
@@ -632,7 +632,7 @@ function ContentListCard(baseObjects) {
 		<div className="d-flex flex-column align-items-stretch justify-content-between h-100">
 			<div className="my-3 text-center">
 				<img className="w-75" src="/img/logo/Good-Loop-lockup.svg" />
-				<h4>Ad Formats</h4>
+				<h4 className="m-0">Ad Formats</h4>
 			</div>
 			{activeTypes}
 		</div>

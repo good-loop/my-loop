@@ -232,7 +232,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doRe
 
 	const DropDownIcon = () => (
 		<button className="filter-row" onClick={openFilters} >
-			<img src="/img/icons/down-arrow.svg" />
+			<img className="filter-down-arrow" src="/img/icons/down-arrow.svg" />
 		</button>
 	);
 
@@ -241,7 +241,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doRe
 		return (
 			<div id="filters">
 				<OpenFiltersButton content={brand.name} rightArrow />
-				<OpenFiltersButton content={"All Brands"} />
+				<OpenFiltersButton content="All Brands" />
 				<DropDownIcon />
 			</div>
 		);
