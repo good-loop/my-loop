@@ -17,3 +17,4 @@ web/*.html
 web/charity
 .DS_Store
 playwright-report
+/target/
