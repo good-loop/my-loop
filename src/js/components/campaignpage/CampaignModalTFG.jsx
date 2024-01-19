@@ -24,7 +24,7 @@ const ModalCTA = ({ modalOpen, setModalOpen, nvertiserName }) => {
 								</WhiteCircle>
 								<WhiteCircle width="70%" className="modal-middle-circle">
 									<p className="red-text" style={{ color: "@gl-red" }}>Here's how you can keep involved...</p>
-									<p>Get the Tabs For Good browser extension and raise money for the causes you care the most about - <span className="text-red">for free</span></p>
+									<p>Get the Tabs For Good browser extension and raise money for the causes you care the most about — <span className="text-red">for free</span></p>
 									<img className="modal-overlay-sm modal-overlay" src="/img/overlay-mobile.png" alt="showcase photos"></img>
 									<img className="modal-overlay-lg modal-overlay" src="/img/overlay-desktop.png" alt="showcase photos"></img>
 								</WhiteCircle>

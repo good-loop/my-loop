@@ -24,7 +24,7 @@ import Money from '../base/data/Money';
  * @param {Boolean} p.centerText Centers the text when counting up in the animation.
  * @param {Date} p.startTime Calculates the start value based on a start time so the ticker updates on refreshes
  */
-const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, noPennies, centerText=false, startTime}) =>
+const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, noPennies, startTime, Tag = 'span', ...props}) =>
 {
 	if (amount) {
 		value = Money.value(amount);
@@ -80,9 +80,9 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 	if (pretty) offsetDispVal = formatNum(offsetDispVal);
 	
 	return (
-		<span className="Ticker">
+		<Tag className="Ticker" {...props}>
 			{currencySymbol}{offsetDispVal}
-		</span>
+		</Tag>
 	);
 };
 

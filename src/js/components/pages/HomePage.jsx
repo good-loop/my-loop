@@ -43,6 +43,16 @@ const HomePage = ({ spring }) => {
 	);
 };
 
+const FindOutMoreOverlay = () => {
+	const style = isMobile() ? {
+		width: '1024px', top: '-10em', left: '-18em'
+	} : {
+		width: '1400px', top: '-13em', left: 'unset'
+	};
+	style.pointerEvents = 'none'; // no catching interactions!
+	return <img className="position-absolute" style={style} src="img/homepage/our-mission-images-lg.png" />;
+};
+
 
 const FindOutMoreSection = () => {
 	return (<BG image="img/homepage/our-mission-background-lg.svg" style={{ backgroundPosition: 'center bottom' }}>
@@ -50,12 +60,12 @@ const FindOutMoreSection = () => {
 			<div className="text-center">
 				<div className="raised text-white">
 					Together we've raised
-					<div><TickerTotal noPennies /></div>
+					<TickerTotal Tag="div" noPennies />
 					for global causes
 				</div>
 				<div className="conversation-bubble position-relative d-flex align-items-center justify-content-center">
 					<img className="w-100" style={{ maxWidth: '480px' }} src="img/homepage/our-mission-blob.svg" />
-					<img className="position-absolute" style={{ width: (isMobile() ? '1024px' : '1400px'), top: (isMobile() ? '-10em' : '-13em'), left: (isMobile() ? '-18em' : '') }} src="img/homepage/our-mission-images-lg.png" />
+					<FindOutMoreOverlay />
 					<div className="bubble-content position-absolute" style={{ top: (isMobile() ? '12%' : '20%'), margin: '0 10%', maxWidth: '400px' }}>
 						<h3 style={{ fontWeight: '600', marginBottom: '0' }}>Our Mission</h3>
 						<h5 style={{ fontWeight: 'unset' }}>Changing the world — together</h5>

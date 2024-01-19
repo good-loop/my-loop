@@ -14,8 +14,8 @@ const tickerProps = {
 /**
  * How much money has Good-Loop raised?
  */
-const TickerTotal = ({noPennies}) => (
-	<Ticker noPennies={noPennies} preservePennies {...tickerProps} />
+const TickerTotal = ({noPennies, ...props}) => (
+	<Ticker noPennies={noPennies} preservePennies {...props} />
 );
 
 export default TickerTotal;
