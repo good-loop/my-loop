@@ -4,7 +4,7 @@ The GLCards layout is a layout for modular cards which are designed to expand an
 
 */
 
-@GLCardRadius: 0.75rem;
+@GLCardRadius: 0.25rem;
 
 @keyframes fade-in {
 	0% {
@@ -77,6 +77,13 @@ The GLCards layout is a layout for modular cards which are designed to expand an
 	}
 	> .card-footer:last-child {
 		border-radius: 0 0 calc(@GLCardRadius - 1px) calc(@GLCardRadius - 1px);
+	}
+
+	// Remove bottom margins from h* to keep vertical balance inside card header
+	.card-header {
+		h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+			margin: 0;
+		}
 	}
 }
 

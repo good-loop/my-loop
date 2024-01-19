@@ -120,7 +120,7 @@ const GreenNavBar = ({active}) => {
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>
 			<a href={pseudoUser ? 'https://www.good-loop.com' : '/greendash'}>
-				<img className="logo" src="/img/Good-Loop-lockup-vertical.svg" />
+				<img className="logo" src="/img/logo/Good-Loop-lockup-vertical-white.svg" />
 			</a>
 			<NavItem name="metrics" href={metricsUrl}>Metrics</NavItem>
 			{!pseudoUser && <NavItem name="tags" href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>Manage<br/>Tags</NavItem>}
