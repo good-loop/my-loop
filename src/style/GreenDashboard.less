@@ -7,6 +7,11 @@
 	padding-left: @nav-width;
 	overflow: hidden;
 	display: flex;
+
+	// Override my-loop base rules with header colours
+	h1, h3 {
+		color: inherit;
+	}
 } // /#greendash
 
 
@@ -40,7 +45,6 @@
 	max-height: unset; // override BS navbar height limit
 	background-color: @greenmedia-darkcyan;
 	z-index: 2;
-	font-family: 'Montserrat';
 	padding: 0; // Override BS navbar default
 	transition: none; // vertical bar = no height transition
 
@@ -50,9 +54,8 @@
 
 	.logo {
 		width: 100%;
-		height: 6em;
-		margin-top: 3rem;
-		margin-bottom: 3rem;
+		height: 8em;
+		margin: 2rem 0;
 	}
 
 	.nav-item {
@@ -68,10 +71,10 @@
 			text-decoration: none;
 			display: flex;
 			align-items: center;
-			text-transform: uppercase;
-			padding: 0.5em 0 0.5em 3em;
+			padding: 0.5em 0 0.5em 2.5em;
 			font-weight: 600;
-			letter-spacing: 0.04em;
+			line-height: 1.1;
+			font-size: 1.1rem;
 		}
 	}
 
@@ -201,13 +204,13 @@
 		position: relative;
 		padding: 2em 10%;
 		.gl-logo {
-			width: 100%;
+			width: 75%;
+			margin-left: 12.5%;
 		}
 	}
 }
 
 .GreenLandingPage {
-	font-family: "Montserrat";
 	color: white;
 	position: relative; // See .landing-behind-footer below - overall page div needs to be a position reference
 	.landing-splash {

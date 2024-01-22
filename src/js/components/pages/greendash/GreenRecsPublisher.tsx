@@ -199,7 +199,7 @@ function DomainList({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 	return (
 		<GLCard className={`domain-list ${allow ? "allow" : "block"}`} noPadding>
 			<CardHeader className="domain-list-title p-2">
-				<h4 className="m-0">Suggested {allow ? "Allow" : "Block"} List</h4>
+				<h4>Suggested {allow ? "Allow" : "Block"} List</h4>
 			</CardHeader>
 			<CardBody className="flex-column p-0">
 				<div className="cutoff-header p-3">
@@ -378,7 +378,7 @@ function GreenRecsPublisher(): JSX.Element | null {
 					<Col xs={6} className="px-0">
 						<GLCard className="generator flex-column" noPadding>
 							<CardHeader className="generator-title p-2">
-								<h4 className="m-0">Allow and Block list generator</h4>
+								<h4>Allow and Block list generator</h4>
 							</CardHeader>
 							<CardBody className="flex-column">
 								{/* We should pick the display that's best for the users.

@@ -165,7 +165,7 @@ function CreativeSizeOverview({ tag, manifest }) {
 
 	return (
 		<GLCard noPadding noMargin className="creative-size-card">
-			<CardHeader>Your Creative</CardHeader>
+			<CardHeader>Your creative</CardHeader>
 			<CardBody>
 				{manifest && (
 					<img className="creative-screenshot w-100" src={manifest.screenshot} alt="creative screenshot" />
@@ -300,7 +300,7 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 
 	return (
 		<GLCard noPadding noMargin className="creative-opt-overview-card">
-			<CardHeader>Optimisation Recommendations</CardHeader>
+			<CardHeader><h3>Optimisation recommendations</h3></CardHeader>
 			<CardBody>
 				{badSiteName && <div className="text-center">
 					Creative previews on {badSiteName}
@@ -356,7 +356,7 @@ function AnalyseTagPrompt({ tag, manifest }): JSX.Element {
 		</> : <>
 			This creative has not yet been analysed.
 		</>}
-		<Button className="mx-2" onClick={doIt} size="lg">Analyse Now</Button>
+		<Button className="mx-2" onClick={doIt} size="lg">Analyse now</Button>
 	</h4>;
 }
 

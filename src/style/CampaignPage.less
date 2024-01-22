@@ -266,13 +266,29 @@
 
 		// Contains and sizes the hero image & red curve
 		.splash-decoration {
-			position: absolute; // Out of flow so content can overlap it
-			height: 100%;
-			width: 100vw;
 			z-index: 0; // Keep behind content
-			@media @width-mobile {
-				height: 50%;
+
+			#splash-fallback-1, #splash-fallback-2, #splash-bg {
+				height: calc(100vh - 60px);
+				position: absolute;
+				top: 0;
+				right: 50vw;
+				background-color: @gl-red;
 			}
+			#splash-bg {
+				right: 0 !important;
+				width: 50vw;
+			}
+			#splash-fallback-1{
+				width: 10vw;
+			}
+			#splash-fallback-2{
+				width: 7.5vw;
+				background-color: black;
+			}
+			
+
+
 		}
 
 		// The hero image in the top section
@@ -281,63 +297,17 @@
 			object-fit: cover;
 		}
 
-		// The red curved background section
-		.splash-curve {
-			position: absolute;
-			top: 0;
-			left: -40%;
-			height: 130%;
-			width: 150%;
-			z-index: 2;
-			@media @width-mobile {
-				top: unset;
-				bottom: 0;
-				width: 200%;
-				left: -60%;
-			}
-
-			// Darker red edge to curve
-			&.curve-border {
-				filter: brightness(0.5);
-				transform: translateX(-1rem);
-				@media @width-mobile {
-					transform: translateX(-0.6rem);
-				}
-			}
-		}
-
-		// Mobile version: white curve above splash-text
-		.splash-text-top-curve {
-			position: absolute;
-			// Fix aspect to cut off the bottom of the curve
-			width: 100vw;
-			height: 15vw;
-			object-fit: cover;
-			object-position: top;
-			// Place above splash content box
-			bottom: 100%;
-			z-index: -1;
-			// Mobile only
-			display: none;
-			@media @width-mobile {
-				display: block;
-			}
-		}
-
 		// "Thank you for watching X and donating!"
 		.splash-thanks {
 			// override h3 styling
 			text-shadow: none !important;
-			color: white !important;
-			@media @width-mobile {
-				color: @gl-red !important;
-			}
+			color: black !important;
+			text-transform: none !important;
 		}
 
 		// The donation counter
 		.splash-counter {
 			// no preset font style fits - counter needed a bigger & bolder font
-			font-family: 'Montserrat', sans-serif;
 			font-weight: 700;
 			font-size: 4rem;
 			text-shadow: none;
@@ -410,7 +380,7 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			width: 40%;
+			width: 50%;
 			height: 100%;
 
 			// Mobile - normal flow layout, sub-elements can flex
@@ -430,11 +400,13 @@
 
 			@media @width-mobile {
 				width: 100vw;
-				position: relative;
-
+				position: absolute;
+				height: 50vh;
+				top: 50vh;
 				.splash-text-content { // container for splash thanks, counter & cta
 					padding: 2em 2.5%;
 					background-color: white;
+					height: 100%;
 				}
 			}
 		}
@@ -468,7 +440,7 @@
 
 				.sub-header {
 					font-size: 1.4rem;
-					color: @gl-orange;
+					color: @gl-red;
 					font-weight: 700;
 
 					@media @ipad-max {
@@ -590,7 +562,7 @@
 	h4,
 	h5 {
 		//font-weight: 600;
-		text-transform: uppercase;
+		text-transform: none !important;
 	}
 
 
@@ -904,7 +876,6 @@
 		/* Why local font rules? header tags/classes were being awkward here, May 2021 */
 		font-weight: 900;
 		font-size: 1.5rem;
-		font-family: "Montserrat", sans-serif;
 		color: white;
 
 		a {

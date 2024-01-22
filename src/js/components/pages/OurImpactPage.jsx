@@ -11,8 +11,7 @@ const OurImpactSplash = () => {
 	const tickerStyle = {
 		fontSize: "2.5rem",
 		fontWeight: "bold",
-		fontFamily: 'Montserrat',
-	}
+	};
 
 	return (<>
 		<BG className="position-relative" image="img/ourimpact/ourimpact-header-background.svg">
@@ -167,9 +166,9 @@ const ImpactMovementSection = () => {
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
 					<img style={{ maxWidth: '480px', zIndex: '1', margin: '0 -1rem' }} src="img/homepage/movement-blob-images.svg" />
 					<div className="bubble-content position-absolute text-center" style={{ top: '18%', margin: '0 10%', maxWidth: '400px', zIndex: '2' }}>
-						<h4 className="color-gl-red">Join Our Movement</h4>
-						<p className="color-gl-dark-grey" style={isMobile() ? { fontSize: '.9rem' } : {}} >Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
-						<ArrowLink className="color-gl-red font-weight-bold" link="/tabsforgood">Get Involved</ArrowLink>
+						<h4 className="color-gl-red">Join our movement</h4>
+						<p className="color-gl-dark-grey" style={isMobile() ? { fontSize: '.9rem' } : {}} >Start transforming your web browsing and data into <b>life saving vaccines, meals for children in need, habitats for endangered animals,</b> plus many more good causes.</p>
+						<ArrowLink className="color-gl-red font-weight-bold" link="/tabsforgood">Get involved</ArrowLink>
 					</div>
 				</div>
 				<img className="position-absolute w-100 join-our-movement-bg-front" src="img/homepage/our-movement-front-curve.svg" />

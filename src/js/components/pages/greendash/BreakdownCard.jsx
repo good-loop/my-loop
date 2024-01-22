@@ -68,7 +68,6 @@ export const pieOptions = (totalCO2, minimumPercentLabeled) => ({
 					textStrokeColor: "#666",
 					textStrokeWidth: 2,
 					font: (ctx) => ({
-						family: "Montserrat",
 						weight: "bold",
 						size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 10),
 					}),
