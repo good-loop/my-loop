@@ -97,6 +97,13 @@ const MapDownloader = ({ data, svgEl, mapDefs, focusRegion }) => {
 	);
 };
 
+/** Inline styling for the map SVG which should carry across to the downloadable version */
+const svgStyle = {
+	aspectRatio: '3/2', // fix size to correctly reserve space in variable-width containers
+	fontFamily: 'Helvetica, Arial, "Open Sans", sans-serif', // Don't use Tajawal etc: we'd need to embed the font in the downloadable version
+};
+
+
 const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) => {
 	const [pathCentres, setPathCentres] = useState({}); // Estimate region centres from bounding boxes to place text labels
 
@@ -210,7 +217,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 
 	return (
 		<div className="map-container text-center">
-			<svg className="map-svg" version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef} style={{aspectRatio: "3/2"}}>
+			<svg className="map-svg" version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef} style={svgStyle}>
 				{regions}
 				{labels}
 			</svg>
