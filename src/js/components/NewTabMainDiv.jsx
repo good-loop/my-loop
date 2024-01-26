@@ -188,7 +188,7 @@ const WebtopPage = () => {
 	return (
 		<div className={space("t4g", "layout-" + layout)}>
 			{/* Sunset Notification */}
-			{window.localStorage.getItem("dontShowSunsetPopup") && <SunsetPopUp isOpen={showSunsetPopup} handleClose={handleSunsetClose} />}
+			{!window.localStorage.getItem("dontShowSunsetPopup") && <SunsetPopUp isOpen={showSunsetPopup} handleClose={handleSunsetClose} />}
 			{!Roles.isDev() && <style>{".MessageBar .alert {display: none;}"}</style>}
 			{/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
 			<BG bg src={customBG} fullscreen opacity={1} bottom={0} style={{ backgroundPosition: "center", backgroundColor: backdropImages && backdropImages.length ? null : backgroundColor }} alwaysDisplayChildren>
