@@ -48,7 +48,9 @@ let verifiedLoginOnceFlag;
 
 /**
  * The main Tabs for Good page
- *
+ * Tabs for Good is a Browser extension that raises money for charity every time you open a new tab.
+ * See documentations in {@link https://github.com/good-loop/good-loop-chrome-extension}
+ * @deprecated {@link SunsetPopUp}
  */
 const WebtopPage = () => {
 	Login.app = "t4g.good-loop.com"; // Not My.GL!
