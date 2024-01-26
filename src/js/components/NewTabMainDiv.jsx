@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Modal, Row } from "reactstrap";
 import BG from "../base/components/BG";
 import MainDivBase from "../base/components/MainDivBase";
 import { nonce } from "../base/data/DataClass";
 // Plumbing
-import DataStore from "../base/plumbing/DataStore";
-import ServerIO from "../plumbing/ServerIO";
-import detectAdBlock from "../base/utils/DetectAdBlock";
-import { lg } from "../base/plumbing/log";
-import { encURI, stopEvent, space } from "../base/utils/miscutils";
-import Login from "../base/youagain";
 import C from "../C";
+import DataStore from "../base/plumbing/DataStore";
+import { lg } from "../base/plumbing/log";
+import detectAdBlock from "../base/utils/DetectAdBlock";
+import { encURI, space, stopEvent } from "../base/utils/miscutils";
+import Login from "../base/youagain";
+import ServerIO from "../plumbing/ServerIO";
 // Components
-import CharityLogo from "./CharityLogo";
 import AccountMenu from "../base/components/AccountMenu";
+import CharityLogo from "./CharityLogo";
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from "./NewtabLoginWidget";
 // import RedesignPage from './pages/RedesignPage';
-import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter, PopupWindow } from "./NewtabTutorialCard";
-import { fetchCharity } from "./pages/MyCharitiesPage";
-import { getPVSelectedCharityId, Search } from "./pages/TabsForGoodSettings";
-import TickerTotal from "./TickerTotal";
-import Person, { getProfile, getPVClaim } from "../base/data/Person";
 import Roles from "../base/Roles";
 import Claim from "../base/data/Claim";
-import { accountMenuItems } from "./pages/CommonComponents";
-import { getT4GLayout, getT4GTheme, getT4GThemeData } from "./NewTabLayouts";
+import Person, { getPVClaim, getProfile } from "../base/data/Person";
 import { NewTabCustomise } from "./NewTabCustomise";
+import { getT4GLayout, getT4GTheme, getT4GThemeData } from "./NewTabLayouts";
+import NewtabTutorialCard, { PopupWindow, TutorialComponent, TutorialHighlighter, openTutorial } from "./NewtabTutorialCard";
+import TickerTotal from "./TickerTotal";
+import { accountMenuItems } from "./pages/CommonComponents";
+import { fetchCharity } from "./pages/MyCharitiesPage";
+import { Search, getPVSelectedCharityId } from "./pages/TabsForGoodSettings";
 
 // DataStore
 C.setupDataStore();
@@ -138,8 +138,34 @@ const WebtopPage = () => {
 
 	const customBG = backdropImages && rand < backdropImages.length ? backdropImages[rand].contentUrl || backdropImages[rand] : null;
 
+	const [showSunsetPopup, setShowSunsetPopup] = useState(true);
+
+	/**
+	 * @param {Object} obj
+	 * @param {boolean} obj.isOpen
+	 * @param {Function} obj.handleClose
+	 * @returns {JSX.Element}
+	 */
+	// eslint-disable-next-line react/no-unstable-nested-components
+	const SunsetPopUp = ({ isOpen, handleClose }) => (
+		<Modal className="rounded rounded-lg shadow" isOpen={isOpen} onRequestClose={handleClose} contentLabel="Sunset">
+			<div className="p-3 m-3">
+				<h2>Important Update</h2>
+				<p>Due to recent changes in Google Chrome's policies, Tabs for Good will be discontinued.</p>
+				<p>
+					Thank you for being a part of the Tabs for Good community. Stay connected through our website <a href="https://good-loop.com">https://good-loop.com</a>.
+				</p>
+				<p className="font-weight-light">
+					<a href="https://developer.chrome.com/blog/resuming-the-transition-to-mv3">Read more about Google's new policy</a>
+				</p>
+				<Button onClick={handleClose}>Close</Button>
+			</div>
+		</Modal>
+	);
 	return (
 		<div className={space("t4g", "layout-" + layout)}>
+			{/* Sunset Notification */}
+			{true && <SunsetPopUp isOpen={showSunsetPopup} handleClose={() => setShowSunsetPopup(false)} />}
 			{!Roles.isDev() && <style>{".MessageBar .alert {display: none;}"}</style>}
 			{/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
 			<BG bg src={customBG} fullscreen opacity={1} bottom={0} style={{ backgroundPosition: "center", backgroundColor: backdropImages && backdropImages.length ? null : backgroundColor }} alwaysDisplayChildren>
