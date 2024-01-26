@@ -1,36 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import BG from '../base/components/BG';
-import MainDivBase from '../base/components/MainDivBase';
-import { nonce } from '../base/data/DataClass';
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col } from "reactstrap";
+import BG from "../base/components/BG";
+import MainDivBase from "../base/components/MainDivBase";
+import { nonce } from "../base/data/DataClass";
 // Plumbing
-import DataStore from '../base/plumbing/DataStore';
-import ServerIO from '../plumbing/ServerIO';
-import detectAdBlock from '../base/utils/DetectAdBlock';
-import { lg } from '../base/plumbing/log';
-import { encURI, stopEvent, space } from '../base/utils/miscutils';
-import Login from '../base/youagain';
-import C from '../C';
+import DataStore from "../base/plumbing/DataStore";
+import ServerIO from "../plumbing/ServerIO";
+import detectAdBlock from "../base/utils/DetectAdBlock";
+import { lg } from "../base/plumbing/log";
+import { encURI, stopEvent, space } from "../base/utils/miscutils";
+import Login from "../base/youagain";
+import C from "../C";
 // Components
-import CharityLogo from './CharityLogo';
-import AccountMenu from '../base/components/AccountMenu';
-import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
+import CharityLogo from "./CharityLogo";
+import AccountMenu from "../base/components/AccountMenu";
+import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from "./NewtabLoginWidget";
 // import RedesignPage from './pages/RedesignPage';
-import NewtabTutorialCard, {
-	openTutorial,
-	TutorialComponent,
-	TutorialHighlighter,
-	PopupWindow,
-} from './NewtabTutorialCard';
-import { fetchCharity } from './pages/MyCharitiesPage';
-import { getPVSelectedCharityId, Search } from './pages/TabsForGoodSettings';
-import TickerTotal from './TickerTotal';
-import Person, { getProfile, getPVClaim } from '../base/data/Person';
-import Roles from '../base/Roles';
-import Claim from '../base/data/Claim';
-import { accountMenuItems } from './pages/CommonComponents';
-import {getT4GLayout, getT4GTheme, getT4GThemeData} from './NewTabLayouts';
-import {NewTabCustomise} from './NewTabCustomise';
+import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter, PopupWindow } from "./NewtabTutorialCard";
+import { fetchCharity } from "./pages/MyCharitiesPage";
+import { getPVSelectedCharityId, Search } from "./pages/TabsForGoodSettings";
+import TickerTotal from "./TickerTotal";
+import Person, { getProfile, getPVClaim } from "../base/data/Person";
+import Roles from "../base/Roles";
+import Claim from "../base/data/Claim";
+import { accountMenuItems } from "./pages/CommonComponents";
+import { getT4GLayout, getT4GTheme, getT4GThemeData } from "./NewTabLayouts";
+import { NewTabCustomise } from "./NewTabCustomise";
 
 // DataStore
 C.setupDataStore();
@@ -56,7 +51,7 @@ let verifiedLoginOnceFlag;
  *
  */
 const WebtopPage = () => {
-	Login.app = 't4g.good-loop.com'; // Not My.GL!
+	Login.app = "t4g.good-loop.com"; // Not My.GL!
 	const pvCharityID = getPVSelectedCharityId();
 	const charityID = pvCharityID && (pvCharityID.value || pvCharityID.interim);
 	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
@@ -65,26 +60,27 @@ const WebtopPage = () => {
 	// Yeh - a tab is opened -- let's log that (once only)
 	if (!logOnceFlag && Login.isLoggedIn()) {
 		let pvPerson = getProfile();
-		pvPerson.promise.then(person => { // This is the problem, how do we get 'person' before this?
+		pvPerson.promise.then((person) => {
+			// This is the problem, how do we get 'person' before this?
 			// Hurrah - T4G is definitely installed
 			if (person) {
 				Person.setHasApp(person, Login.app);
 				return;
 			}
-			console.warn('no person?!');
+			console.warn("no person?!");
 		});
-		lg('tabopen', { nonce: nonce(6) }); // Include nonce to break deduping of multiple tab-open events within 15-minute bucket
+		lg("tabopen", { nonce: nonce(6) }); // Include nonce to break deduping of multiple tab-open events within 15-minute bucket
 		// Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
 		setTimeout(() => {
 			// Avoid race condition: don't log until we know we have charity ID
-			pvCharityID.promise.then(cid => lg('tabadview', { nonce: nonce(6), cid }));
+			pvCharityID.promise.then((cid) => lg("tabadview", { nonce: nonce(6), cid }));
 		}, 1500);
 		logOnceFlag = true;
 	}
 
 	const checkIfOpened = () => {
-		if (!window.localStorage.getItem('t4gOpenedB4')) {
-			window.localStorage.setItem('t4gOpenedB4', true);
+		if (!window.localStorage.getItem("t4gOpenedB4")) {
+			window.localStorage.setItem("t4gOpenedB4", true);
 			openTutorial();
 		}
 	};
@@ -92,15 +88,17 @@ const WebtopPage = () => {
 	if (!verifiedLoginOnceFlag) {
 		// Popup login widget if not logged in
 		// Login fail conditions from youagain.js
-		Login.verify().then((res) => {
-			if (!res || !res.success) {
+		Login.verify()
+			.then((res) => {
+				if (!res || !res.success) {
+					setShowTabLogin(true);
+				} else {
+					checkIfOpened();
+				}
+			})
+			.catch(() => {
 				setShowTabLogin(true);
-			} else {
-				checkIfOpened();
-			}
-		}).catch(() => {
-			setShowTabLogin(true);
-		});
+			});
 		verifiedLoginOnceFlag = true;
 	}
 
@@ -112,21 +110,21 @@ const WebtopPage = () => {
 	const [bookmarksData, setBookmarksData] = useState([]);
 
 	const handleMessage = (event) => {
-		if (!event.origin.includes('chrome-extension://') || typeof event.data !== 'object') return;
+		if (!event.origin.includes("chrome-extension://") || typeof event.data !== "object") return;
 		setBookmarksData(event.data);
 	};
 
 	useEffect(() => {
-		window.addEventListener('message', handleMessage);
-		window.parent.postMessage('give-me-bookmarks', '*');
-		return () => window.removeEventListener('message', handleMessage);
+		window.addEventListener("message", handleMessage);
+		window.parent.postMessage("give-me-bookmarks", "*");
+		return () => window.removeEventListener("message", handleMessage);
 	}, []);
 
 	const [customiseModalOpen, setCustomiseModalOpen] = useState(false);
 
 	const layout = getT4GLayout();
 	const curTheme = getT4GTheme();
-	const {backdropImages, t4gLogo, backgroundColor} = getT4GThemeData(curTheme);
+	const { backdropImages, t4gLogo, backgroundColor } = getT4GThemeData(curTheme);
 
 	const [rand, setRand] = useState(Math.round(Math.random() * 9) + 1); // use state to prevent new random numbers each update
 	// update rand if the image list changes
@@ -138,73 +136,40 @@ const WebtopPage = () => {
 		}
 	}, []);
 
-	const customBG = (backdropImages && rand < backdropImages.length) ? (
-		backdropImages[rand].contentUrl || backdropImages[rand]
-	) : null;
+	const customBG = backdropImages && rand < backdropImages.length ? backdropImages[rand].contentUrl || backdropImages[rand] : null;
 
 	return (
-		<div className={space('t4g', 'layout-' + layout)}>
-			{!Roles.isDev() && <style>{'.MessageBar .alert {display: none;}'}</style>}
+		<div className={space("t4g", "layout-" + layout)}>
+			{!Roles.isDev() && <style>{".MessageBar .alert {display: none;}"}</style>}
 			{/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
-			<BG
-				bg
-				src={customBG}
-				fullscreen
-				opacity={1}
-				bottom={0}
-				style={{ backgroundPosition: 'center', backgroundColor: backdropImages && backdropImages.length ? null : backgroundColor}}
-				alwaysDisplayChildren
-			>
+			<BG bg src={customBG} fullscreen opacity={1} bottom={0} style={{ backgroundPosition: "center", backgroundColor: backdropImages && backdropImages.length ? null : backgroundColor }} alwaysDisplayChildren>
 				<NewTabCharityCard cid={charityID} loading={loadingCharity} />
-				<TutorialHighlighter
-					page={[4, 5]}
-					className="position-fixed p-3"
-					style={{ top: 0, left: 0, width: '100vw', zIndex: 1 }}
-				>
+				<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 					<div className="d-flex justify-content-end">
-						<TutorialComponent
-							page={4}
-							className="user-controls flex-row align-items-center"
-						>
+						<TutorialComponent page={4} className="user-controls flex-row align-items-center">
 							<UserControls cid={charityID} />
 						</TutorialComponent>
 					</div>
 				</TutorialHighlighter>
-				<Container
-					fluid
-					className="flex-column justify-content-end align-items-center position-absolute unset-margins"
-					style={{ top: 0, left: 0, width: '100vw', height: '99vh' }}
-				>
+				<Container fluid className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{ top: 0, left: 0, width: "100vw", height: "99vh" }}>
 					<Row className="h-100 w-100" noGutters>
 						<Col sm={3} md={4} />
-						<Col
-							sm={6}
-							md={4}
-							className="h-100 flex-column justify-content-center align-items-center unset-margins mt-2"
-						>
+						<Col sm={6} md={4} className="h-100 flex-column justify-content-center align-items-center unset-margins mt-2">
 							{/* Show the total raised across all charities, if the user hasn't selected one. */}
 							<TutorialComponent page={2} className="t4g-total">
-								<h5 className="text-center together-we-ve-raised" style={{ fontSize: '.8rem' }}>
+								<h5 className="text-center together-we-ve-raised" style={{ fontSize: ".8rem" }}>
 									Together we've raised <TickerTotal />
 								</h5>
 							</TutorialComponent>
-							<NormalTabCenter style={{transform:'translate(0,-30%)'}} customLogo={t4gLogo} />
-							<LinksDisplay bookmarksData={bookmarksData} style={{transform:'translate(0,-30%)'}} />
+							<NormalTabCenter style={{ transform: "translate(0,-30%)" }} customLogo={t4gLogo} />
+							<LinksDisplay bookmarksData={bookmarksData} style={{ transform: "translate(0,-30%)" }} />
 						</Col>
 					</Row>
 				</Container>
 				{/* Tutorial highlight to cover adverts */}
 			</BG>
-			<TutorialComponent
-				page={3}
-				className="position-absolute"
-				style={{ bottom: 0, left: 0, right: 0, height: 110, width: '100vw' }}
-			/>
-			<NewtabTutorialCard
-				tutorialPages={tutorialPages}
-				charityId={charityID}
-				onClose={() => setShowPopup(true)}
-			/>
+			<TutorialComponent page={3} className="position-absolute" style={{ bottom: 0, left: 0, right: 0, height: 110, width: "100vw" }} />
+			<NewtabTutorialCard tutorialPages={tutorialPages} charityId={charityID} onClose={() => setShowPopup(true)} />
 			{showPopup && <PopupWindow />}
 			<NewtabLoginWidget onRegister={() => checkIfOpened()} />
 			<ConnectionStatusPopup />
@@ -213,16 +178,11 @@ const WebtopPage = () => {
 	);
 }; // ./WebTopPage
 
-
 const PAGES = {
 	newtab: WebtopPage,
 };
 
-
-const NewTabMainDiv = () => (
-	<MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />
-);
-
+const NewTabMainDiv = () => <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
 
 /**
  *
@@ -230,49 +190,41 @@ const NewTabMainDiv = () => (
  * @returns
  */
 const UserControls = () => {
-	const logoutFn = () => window.top.location.href = `${ServerIO.MYLOOP_ENDPOINT}/logout`;
-	const logoutLink = <a href="#" role="button" className="LogoutLink" onClick={logoutFn}>Log out</a>;
-	const customLogin = (
-		<NewtabLoginLink className="login-menu btn btn-transparent fill">
-			Register / Log in
-		</NewtabLoginLink>
+	const logoutFn = () => (window.top.location.href = `${ServerIO.MYLOOP_ENDPOINT}/logout`);
+	const logoutLink = (
+		<a href="#" role="button" className="LogoutLink" onClick={logoutFn}>
+			Log out
+		</a>
 	);
+	const customLogin = <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>;
 
-	return <AccountMenu
-		accountMenuItems={accountMenuItems}
-		linkType="a"
-		small
-		customImg="/img/logo/my-loop-logo-round.svg"
-		customLogin={customLogin}
-		logoutLink={logoutLink}
-	/>;
+	return <AccountMenu accountMenuItems={accountMenuItems} linkType="a" small customImg="/img/logo/my-loop-logo-round.svg" customLogin={customLogin} logoutLink={logoutLink} />;
 };
-
 
 const ENGINES = {
 	google: {
-		title: 'Google',
-		logo: 'https://my.good-loop.com/img/TabsForGood/google.png',
+		title: "Google",
+		logo: "https://my.good-loop.com/img/TabsForGood/google.png",
 		size: { width: 30, height: 30 },
-		url: 'https://google.com/search?q=',
+		url: "https://google.com/search?q=",
 	},
 	ecosia: {
-		title: 'Ecosia',
-		logo: 'https://my.good-loop.com/img/TabsForGood/ecosia.png',
+		title: "Ecosia",
+		logo: "https://my.good-loop.com/img/TabsForGood/ecosia.png",
 		size: { width: 30, height: 30 },
-		url: 'https://ecosia.com/search?q=',
+		url: "https://ecosia.com/search?q=",
 	},
 	duckduckgo: {
-		title: 'DuckDuckGo',
-		logo: 'https://my.good-loop.com/img/TabsForGood/duckduckgo.png',
+		title: "DuckDuckGo",
+		logo: "https://my.good-loop.com/img/TabsForGood/duckduckgo.png",
 		size: { width: 30, height: 30 },
-		url: 'https://duckduckgo.com?q=',
+		url: "https://duckduckgo.com?q=",
 	},
 	bing: {
-		title: 'Bing',
-		logo: 'https://my.good-loop.com/img/TabsForGood/bing.png',
+		title: "Bing",
+		logo: "https://my.good-loop.com/img/TabsForGood/bing.png",
 		size: { width: 30, height: 30 },
-		url: 'https://bing.com/search?q=',
+		url: "https://bing.com/search?q=",
 	},
 };
 
@@ -281,47 +233,42 @@ const ENGINES = {
  * @param {Object} p
  * @returns
  */
-const NormalTabCenter = ({style, customLogo}) => {
-	let pvSE = getPVClaim({ xid: Login.getId(), key: 'searchEngine' });
-	console.log('**************** pvSE', pvSE, 'value', Claim.value(pvSE));
-	let searchEngine = Claim.value(pvSE) || 'google';
+const NormalTabCenter = ({ style, customLogo }) => {
+	let pvSE = getPVClaim({ xid: Login.getId(), key: "searchEngine" });
+	console.log("**************** pvSE", pvSE, "value", Claim.value(pvSE));
+	let searchEngine = Claim.value(pvSE) || "google";
 	const engineData = ENGINES[searchEngine];
 
 	return (
-			<div className="flex-column unset-margins align-items-center tab-center mb-1" style={style}>
-				<TutorialComponent page={5} className="py-3 t4g-logo">
-					<a href={ServerIO.MYLOOP_ENDPOINT}>
-						<img
-							className="tab-center-logo"
-							src={customLogo}
-							alt="logo"
-						/>
-					</a>
-				</TutorialComponent>
-				<div className="w-100">
-					<div className="tab-search-container mx-auto">
-						<Search
-							onSubmit={(e) => doSearch(e, searchEngine)}
-							placeholder={`Search with ${engineData?.title}`}
-							icon={
-								<C.A href="/?tab=tabsForGood" title="Click here to change search engine">
-									<img
-										src={engineData?.logo}
-										alt="search icon"
-										style={{
-											width: engineData?.size?.width,
-											height: engineData?.size?.height,
-										}}
-									/>
-								</C.A>
-							}
-						/>
-					</div>
+		<div className="flex-column unset-margins align-items-center tab-center mb-1" style={style}>
+			<TutorialComponent page={5} className="py-3 t4g-logo">
+				<a href={ServerIO.MYLOOP_ENDPOINT}>
+					<img className="tab-center-logo" src={customLogo} alt="logo" />
+				</a>
+			</TutorialComponent>
+			<div className="w-100">
+				<div className="tab-search-container mx-auto">
+					<Search
+						onSubmit={(e) => doSearch(e, searchEngine)}
+						placeholder={`Search with ${engineData?.title}`}
+						icon={
+							<C.A href="/?tab=tabsForGood" title="Click here to change search engine">
+								<img
+									src={engineData?.logo}
+									alt="search icon"
+									style={{
+										width: engineData?.size?.width,
+										height: engineData?.size?.height,
+									}}
+								/>
+							</C.A>
+						}
+					/>
 				</div>
 			</div>
+		</div>
 	);
 };
-
 
 const NewTabCharityCard = ({ cid, loading }) => {
 	const charity = cid ? fetchCharity(cid) : null;
@@ -331,32 +278,28 @@ const NewTabCharityCard = ({ cid, loading }) => {
 
 	return (
 		<TutorialComponent page={1} className="NewTabCharityCard">
-				<div className="text-center w-100">
-					<a href={charityLink} target="_blank" rel="noopener noreferrer" className="charity-cta">
-							{charity && <CharityLogo charity={charity} />}
-							{!charity && loading && <p className="my-auto">Loading...</p>}
-							{!charity && !loading && <p className="my-auto">Select a charity</p>}
-					</a>
-				</div>
+			<div className="text-center w-100">
+				<a href={charityLink} target="_blank" rel="noopener noreferrer" className="charity-cta">
+					{charity && <CharityLogo charity={charity} />}
+					{!charity && loading && <p className="my-auto">Loading...</p>}
+					{!charity && !loading && <p className="my-auto">Select a charity</p>}
+				</a>
+			</div>
 		</TutorialComponent>
 	);
 };
 
-
 const CircleLink = ({ domain, url, children, title }) => {
-	if (!url) url = '#';
+	if (!url) url = "#";
 	return (
 		<Col
-			onClick={() => { window.parent.location.href = url; }}
+			onClick={() => {
+				window.parent.location.href = url;
+			}}
 			title={title}
 			className="bookmark-item d-flex flex-column align-items-center"
 		>
-			<BG
-				src={`https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`}
-				className="bookmark-box shadow mb-1"
-				center
-				style={{ backgroundSize: '1.5rem', backgroundRepeat: 'no-repeat' }}
-			/>
+			<BG src={`https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`} className="bookmark-box shadow mb-1" center style={{ backgroundSize: "1.5rem", backgroundRepeat: "no-repeat" }} />
 			{/* <span className="text-white text-center" style={{userSelect:"none",padding:'0 .5rem',paddingTop:'.3rem',borderRadius:'10px',backgroundColor:'rgb(0 0 0 / 10%)'}}>
 				{children}
 			</span> */}
@@ -364,11 +307,9 @@ const CircleLink = ({ domain, url, children, title }) => {
 	);
 };
 
-
 // Usually strip subdomains to avoid 404 favicons - but some domains have subdomains with app-specific favicons
-const retainSubdomainKeywords = ['google'];
+const retainSubdomainKeywords = ["google"];
 const maxBookmarks = 5; // max number of bookmarks to display
-
 
 const LinksDisplay = ({ bookmarksData, style }) => {
 	if (bookmarksData.length < 1) return <Row className="bookmark-flexbox" />;
@@ -379,20 +320,15 @@ const LinksDisplay = ({ bookmarksData, style }) => {
 				if (!bookmark.url) return null;
 				// Catch bookmarks folder that do not have url
 				const url = bookmark.url;
-				let domain = url.match('(?<=://)(.*?)(?=/)')[0];
-				if (
-					domain.split('.').length >= 3 &&
-					!domain.includes(retainSubdomainKeywords)
-				) {
-					domain = domain.split('.').slice(1).join('.');
+				let domain = url.match("(?<=://)(.*?)(?=/)")[0];
+				if (domain.split(".").length >= 3 && !domain.includes(retainSubdomainKeywords)) {
+					domain = domain.split(".").slice(1).join(".");
 				}
 				return <CircleLink key={i} url={url} title={bookmark.title} domain={domain} />;
 			})}
 		</Row>
 	);
 };
-
-
 
 // Checks for internet connection and any adblock interference
 const ConnectionStatusPopup = () => {
@@ -408,18 +344,17 @@ const ConnectionStatusPopup = () => {
 	const pvHasAdBlock = detectAdBlock();
 	const hasAdBlock = pvHasAdBlock.value;
 	const isOffline = !navigator.onLine; // pvHasAdBlock.error;
-	const determining = // determining what? This pop up seems to be on only when it is clearly online
-		!(pvHasAdBlock.resolved || pvHasAdBlock.error) && timedout;
+	const determining = !(pvHasAdBlock.resolved || pvHasAdBlock.error) && timedout; // determining what? This pop up seems to be on only when it is clearly online
 	const showPopup = (hasAdBlock || isOffline) && popup;
 
 	return showPopup ? (
 		<div
 			style={{
-				background: 'white',
+				background: "white",
 				borderRadius: 10,
-				left: '50%',
-				top: '50%',
-				transform: 'translate(-50%, -50%)',
+				left: "50%",
+				top: "50%",
+				transform: "translate(-50%, -50%)",
 				width: 500,
 				zIndex: 99999,
 			}}
@@ -429,23 +364,15 @@ const ConnectionStatusPopup = () => {
 				<>
 					<h3 className="text-dark">It looks like you have AdBlock enabled</h3>
 					<p>
-						We can't raise money for charity without displaying ads. Please{' '}
-						<a href="https://my.good-loop.com/allowlist">
-							disable your adblocker
-						</a>{' '}
-						so Tabs for Good can work!
+						We can't raise money for charity without displaying ads. Please <a href="https://my.good-loop.com/allowlist">disable your adblocker</a> so Tabs for Good can work!
 					</p>
 				</>
 			)}
 			{isOffline && !determining && (
 				<>
 					<h3 className="text-dark">We can't find the internet :(</h3>
-					<p>
-						We couldn't load your Tabs for Good page. Check your connection.
-					</p>
-					<small>
-						If your internet is working, contact support@good-loop.com!
-					</small>
+					<p>We couldn't load your Tabs for Good page. Check your connection.</p>
+					<small>If your internet is working, contact support@good-loop.com!</small>
 				</>
 			)}
 			{/* {determining && (
@@ -454,28 +381,22 @@ const ConnectionStatusPopup = () => {
 					<p>One moment...</p>
 				</>
 			)} */}
-			<b
-				style={{ position: 'absolute', top: 10, right: 20, cursor: 'pointer' }}
-				onClick={() => setPopup(false)}
-				role="button"
-			>
+			<b style={{ position: "absolute", top: 10, right: 20, cursor: "pointer" }} onClick={() => setPopup(false)} role="button">
 				X
 			</b>
 		</div>
 	) : null;
 };
 
-
 /** Redirect to chosen search engine */
 const doSearch = (e, engine) => {
 	stopEvent(e);
 	// NB: use window.parent to break out of the newtab iframe, otherwise ecosia objects
-	const search = DataStore.getValue('widget', 'search', 'q');
+	const search = DataStore.getValue("widget", "search", "q");
 	// Cancel search if empty (NB don't mess with this condition - eg '0' is falsy but still counts)
-	if (search == null || search === '') return;
+	if (search == null || search === "") return;
 	window.parent.location = ENGINES[engine].url + encURI(search);
 };
-
 
 const tutorialPages = [
 	<>
@@ -488,10 +409,7 @@ const tutorialPages = [
 	</>,
 	<>
 		<h2>It's your choice</h2>
-		<p>
-			You can choose the charity you want to support. We will send them 50% of
-			the money from brands for their ads on Tabs for Good.
-		</p>
+		<p>You can choose the charity you want to support. We will send them 50% of the money from brands for their ads on Tabs for Good.</p>
 	</>,
 	<>
 		<h2>Check our progress</h2>
@@ -499,16 +417,12 @@ const tutorialPages = [
 	</>,
 	<>
 		<h2>Where the money comes from</h2>
-		<p>
-			We generate money by displaying ads at the bottom of each Tabs for Good
-			window. You don't need to click on them for it to work.
-		</p>
+		<p>We generate money by displaying ads at the bottom of each Tabs for Good window. You don't need to click on them for it to work.</p>
 	</>,
 	<>
 		<h2>Your account</h2>
 		<p>
-			Change your <b>charity</b> and <b>search engine</b> here, under Tabs for
-			Good. You can also see your account details.
+			Change your <b>charity</b> and <b>search engine</b> here, under Tabs for Good. You can also see your account details.
 		</p>
 	</>,
 	<>
@@ -520,6 +434,5 @@ const tutorialPages = [
 		<p>Make your Tabs For Good page yours! Change themes and layouts in here.</p>
 	</>,
 ];
-
 
 export default NewTabMainDiv;
