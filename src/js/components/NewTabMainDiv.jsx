@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Modal, Row } from "reactstrap";
 import BG from "../base/components/BG";
 import MainDivBase from "../base/components/MainDivBase";
@@ -147,25 +147,48 @@ const WebtopPage = () => {
 	 * @returns {JSX.Element}
 	 */
 	// eslint-disable-next-line react/no-unstable-nested-components
-	const SunsetPopUp = ({ isOpen, handleClose }) => (
-		<Modal className="rounded rounded-lg shadow" isOpen={isOpen} onRequestClose={handleClose} contentLabel="Sunset">
-			<div className="p-3 m-3">
-				<h2>Important Update</h2>
-				<p>Due to recent changes in Google Chrome's policies, Tabs for Good will be discontinued.</p>
-				<p>
-					Thank you for being a part of the Tabs for Good community. Stay connected through our website <a href="https://good-loop.com">https://good-loop.com</a>.
-				</p>
-				<p className="font-weight-light">
-					<a href="https://developer.chrome.com/blog/resuming-the-transition-to-mv3">Read more about Google's new policy</a>
-				</p>
-				<Button onClick={handleClose}>Close</Button>
-			</div>
-		</Modal>
-	);
+	const SunsetPopUp = ({ isOpen, handleClose }) => {
+		const dontShowAgainRef = useRef(false);
+		return (
+			<Modal className="rounded rounded-lg shadow" isOpen={isOpen} onRequestClose={handleClose} contentLabel="Sunset">
+				<div className="p-3 m-3">
+					<span className="text-muted">January 2024</span>
+					<h2>Important Update</h2>
+					<p>Due to recent changes in Google Chrome's policies, Tabs for Good will be discontinued.</p>
+					<p>
+						Thank you for being a part of the Tabs for Good community. Stay connected through our website{" "}
+						<a target="_blank" rel="noreferrer" href="https://good-loop.com">
+							https://good-loop.com
+						</a>
+						.
+					</p>
+					<p className="font-weight-light">
+						<a target="_blank" rel="noreferrer" href="https://developer.chrome.com/blog/resuming-the-transition-to-mv3">
+							Read more about Google's new policy.
+						</a>
+					</p>
+					<div>
+						<input ref={dontShowAgainRef} className="mr-1" type="checkbox" id="dont-show-again" />
+						<label htmlFor="dont-show-again">Don't show this again</label>
+					</div>
+					<Button onClick={() => handleClose(dontShowAgainRef)}>Close</Button>
+				</div>
+			</Modal>
+		);
+	};
+
+	const handleSunsetClose = (dontShowAgainRef) => {
+		const dontShowAgain = dontShowAgainRef.current.checked;
+		if (dontShowAgain) {
+			window.localStorage.setItem("dontShowSunsetPopup", true);
+		}
+		setShowSunsetPopup(false);
+	};
+
 	return (
 		<div className={space("t4g", "layout-" + layout)}>
 			{/* Sunset Notification */}
-			{true && <SunsetPopUp isOpen={showSunsetPopup} handleClose={() => setShowSunsetPopup(false)} />}
+			{window.localStorage.getItem("dontShowSunsetPopup") && <SunsetPopUp isOpen={showSunsetPopup} handleClose={handleSunsetClose} />}
 			{!Roles.isDev() && <style>{".MessageBar .alert {display: none;}"}</style>}
 			{/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
 			<BG bg src={customBG} fullscreen opacity={1} bottom={0} style={{ backgroundPosition: "center", backgroundColor: backdropImages && backdropImages.length ? null : backgroundColor }} alwaysDisplayChildren>
