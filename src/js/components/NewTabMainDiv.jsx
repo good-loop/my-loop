@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Col, Container, Row } from "reactstrap";
 import BG from "../base/components/BG";
 import MainDivBase from "../base/components/MainDivBase";
 import { nonce } from "../base/data/DataClass";
 // Plumbing
-import DataStore from "../base/plumbing/DataStore";
-import ServerIO from "../plumbing/ServerIO";
-import detectAdBlock from "../base/utils/DetectAdBlock";
-import { lg } from "../base/plumbing/log";
-import { encURI, stopEvent, space } from "../base/utils/miscutils";
-import Login from "../base/youagain";
 import C from "../C";
+import DataStore from "../base/plumbing/DataStore";
+import { lg } from "../base/plumbing/log";
+import detectAdBlock from "../base/utils/DetectAdBlock";
+import { encURI, space, stopEvent } from "../base/utils/miscutils";
+import Login from "../base/youagain";
+import ServerIO from "../plumbing/ServerIO";
 // Components
-import CharityLogo from "./CharityLogo";
 import AccountMenu from "../base/components/AccountMenu";
+import CharityLogo from "./CharityLogo";
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from "./NewtabLoginWidget";
 // import RedesignPage from './pages/RedesignPage';
-import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter, PopupWindow } from "./NewtabTutorialCard";
-import { fetchCharity } from "./pages/MyCharitiesPage";
-import { getPVSelectedCharityId, Search } from "./pages/TabsForGoodSettings";
-import TickerTotal from "./TickerTotal";
-import Person, { getProfile, getPVClaim } from "../base/data/Person";
 import Roles from "../base/Roles";
 import Claim from "../base/data/Claim";
-import { accountMenuItems } from "./pages/CommonComponents";
-import { getT4GLayout, getT4GTheme, getT4GThemeData } from "./NewTabLayouts";
+import Person, { getPVClaim, getProfile } from "../base/data/Person";
 import { NewTabCustomise } from "./NewTabCustomise";
+import { getT4GLayout, getT4GTheme, getT4GThemeData } from "./NewTabLayouts";
+import NewtabTutorialCard, { PopupWindow, TutorialComponent, TutorialHighlighter, openTutorial } from "./NewtabTutorialCard";
+import TickerTotal from "./TickerTotal";
+import { accountMenuItems } from "./pages/CommonComponents";
+import { fetchCharity } from "./pages/MyCharitiesPage";
+import { Search, getPVSelectedCharityId } from "./pages/TabsForGoodSettings";
 
 // DataStore
 C.setupDataStore();
