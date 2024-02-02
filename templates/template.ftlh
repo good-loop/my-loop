@@ -4,12 +4,12 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
-		<section src="meta.html" />
+		<#include "meta.ftlh">
 		<!-- Explicit Content-Security-Policy is required for the GoodLoop app why?? -->
 		<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src * 'self' data: https: http:; img-src * data: 'unsafe-inline'; connect-src * data: 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';" />  
 		<link rel="manifest" href="/manifest.webmanifest">
 		<meta name="theme-color" content="#770f00">
-		<title>$title</title>
+		<title>${title}</title>
 		<link rel="shortcut icon" href="/favicon.svg" />
 
 		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -56,6 +56,6 @@
 			d.parentNode.insertBefore(e,d);
 			})(document,window,cpm);
 		</script>
-		<section src="google-tag-manager.html" />
+		<#include "google-tag-manager.ftlh">
 	</body>
 </html>
