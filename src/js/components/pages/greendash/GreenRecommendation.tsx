@@ -38,7 +38,7 @@ function NotLoggedIn({}) {
 							<img className="stamp" src="/img/green/gl-carbon-neutral.svg" />
 						</Col>
 						<Col className="form" xs="12" sm="8">
-							<img className="gl-logo my-4" src="/img/gl-logo/rectangle/logo-name.svg" />
+						<img className="gl-logo my-4" alt="gl-logo" src="/img/logo/Good-Loop-lockup.svg" />
 							<p className="text-center my-4">
 								Understand the carbon footprint of your advertising and
 								<br />

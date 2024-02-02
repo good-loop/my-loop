@@ -9,6 +9,7 @@
 import React, { useState, useEffect } from 'react';
 import Money from '../base/data/Money';
 
+
 /**
  * Alternate version of Counter that ticks number up from the initial value at a steady rate
  * NB: Removed sigFigs - including sigFig rounding would heavily obscure the tick effect
@@ -23,13 +24,13 @@ import Money from '../base/data/Money';
  * @param {Boolean} p.centerText Centers the text when counting up in the animation.
  * @param {Date} p.startTime Calculates the start value based on a start time so the ticker updates on refreshes
  */
-const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, noPennies, centerText=false, startTime}) =>
+const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, noPennies, startTime, Tag = 'span', ...props}) =>
 {
 	if (amount) {
 		value = Money.value(amount);
 		currencySymbol = Money.currencySymbol(amount);
 	}
-	if ( ! value) {	// paranoia
+	if ( ! value) { // paranoia
 		console.warn("Ticker - No value or amount");
 		return null;
 	}
@@ -75,18 +76,13 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 		}
 	};
 
-	const offsetDispVal = dispVal + valOffset;
-	let disp = pretty? formatNum(offsetDispVal) : offsetDispVal.toString();
-	disp = currencySymbol + disp;
-
-	// slice the string to enforce fixed-width characters (to avoid the string wobbling as it updates)
-	let dispArr = disp.split("");
-	// TODO comment on what the css below is for
+	let offsetDispVal = dispVal + valOffset;
+	if (pretty) offsetDispVal = formatNum(offsetDispVal);
+	
 	return (
-		<span className="Ticker position-relative d-inline-flex flex-row justify-content-center align-items-center"
-			style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>
-			{dispArr.map((digit, i) => <span key={i} style={{width: (digit===','||digit==='.'? '0.3' : '0.6')+'em', marginRight:'.05em'}}>{digit}</span>)}
-		</span>
+		<Tag className="Ticker" {...props}>
+			{currencySymbol}{offsetDispVal}
+		</Tag>
 	);
 };
 

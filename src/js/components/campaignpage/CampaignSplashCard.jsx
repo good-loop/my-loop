@@ -1,10 +1,7 @@
-import React, {useState} from 'react';
-import { Modal, ModalHeader, ModalBody, Row, Col, Container } from 'reactstrap';
+import React from 'react';
 import Counter from '../../base/components/Counter';
 import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
-import { space, scrollTo } from '../../base/utils/miscutils';
-import ShareButton from '../ShareButton';
 import DevLink from './DevLink';
 import MDText from '../../base/components/MDText';
 import KStatus from '../../base/data/KStatus';
@@ -12,8 +9,6 @@ import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
 import Campaign from '../../base/data/Campaign';
 import DynImg from '../../base/components/DynImg';
-import ModalCTA from '../campaignpage/CampaignModalTFG';
-import { T4GSignUpButton, T4GSignUpModal, T4GPluginButton } from '../T4GSignUp';
 import C from '../../C';
 
 /**
@@ -33,10 +28,13 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	const donationDisplay = <b>{donationValue ? <Counter amount={donationValue} minimumFractionDigits={2} preserveSize /> : "money"}</b>;
 
 	let splashText = <>
-		<h3 className="text-uppercase splash-thanks">Thank you for watching {nvertiserName}'s advert and donating!</h3>
-		<p className="text-white raised splash-counter">{donationDisplay}</p>
-		<p className="text-white splash-gl">{ongoing ? "Raising" : "Raised"} for charity by using purpose lead online ads with Good-Loop</p>
+		<h3 className="splash-thanks">Thank you for watching {nvertiserName}'s advert and donating!</h3>
+		<p className="raised splash-counter">{donationDisplay}</p>
+		<p className="splash-gl">{ongoing ? "Raising" : "Raised"} for charity by using purpose-led online ads with Good-Loop</p>
 	</>;
+
+	let splashFallback = <><div id="splash-fallback-1"/><div id="splash-fallback-2"/></>;
+
 	// Change the splashText to show wider impact?
 	if (campaignPage.showWiderImpact && campaignPage.widerAnnualDntn) {
 		splashText = <div className="header text-white">
@@ -46,7 +44,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 				</LinkOut>
 				<br /><br />
 				<div>
-					{donationDisplay} of it is raised by<br />purpose led online ads
+					{donationDisplay} of it is raised by<br />purpose-led online ads
 				</div>
 			</div>
 		</div>;
@@ -54,10 +52,8 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	return (<>
 		<div className="impact-hub-splash position-relative">
 			<div className="splash-decoration">
-				<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={campaignPage.bg ? "w-100 splash-img" : "splash-curve"} alt="splash" />
-				<div className="dark-overlay" />
-				<img src="/img/redcurve.svg" className="splash-curve curve-border" alt="dark border to curve" />
-				<img src="/img/redcurve.svg" className="splash-curve" alt="curve" />
+				{campaignPage.bg ? <DynImg src={campaignPage.bg} className="w-100 splash-img" alt="background image" /> : splashFallback}
+				<div id="splash-bg" />
 			</div>
 			<div className="hero splash-card px-5">
 				<div className="splash-content">
@@ -71,12 +67,11 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 						</WhiteCircle>
 					</div>
 					<div className="splash-text mt-5 flex-column flex-center">
-					<img src="/img/curves/mobile-curve-white.svg" className="splash-text-top-curve" alt="white bottom border" />
 						<div className="splash-text-content" style={{color: "@gl-red"}}>
 							{splashText}
 							{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}
-							<button className="cta-splash-button btn btn-secondary text-uppercase" onClick={e => setCtaModalOpen(true)}>
-								want to raise even more?
+							<button className="cta-splash-button btn btn-secondary" onClick={e => setCtaModalOpen(true)}>
+								Want to raise even more?
 							</button>
 						</div>
 					</div>
@@ -116,6 +111,7 @@ const WiderImpactQuote = ({ campaign }) => {
 		</div>
 	</div>);
 };
+
 
 const DraftBanner = ({ status }) => {
 	if (status !== KStatus.DRAFT && status !== KStatus.MODIFIED) {

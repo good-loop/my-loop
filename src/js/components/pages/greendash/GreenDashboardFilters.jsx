@@ -234,7 +234,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 					<Form inline>
 						<Logo className='mr-2' style={{ width: 'auto', maxWidth: '8em' }} item={itemLogo}/>
 						{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
-						<UncontrolledDropdown className='filter-dropdown'>
+						<UncontrolledDropdown className="filter-dropdown ml-3">
 							<DropdownToggle className='pl-0' caret>
 								{periodLabel}
 							</DropdownToggle>
@@ -250,7 +250,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 							</DropdownMenu>
 						</UncontrolledDropdown>
 
-						{!pseudoUser && <UncontrolledDropdown className='filter-dropdown ml-2'>
+						{!pseudoUser && <UncontrolledDropdown className="filter-dropdown ml-3">
 							<DropdownToggle caret>Filter by: {urlParamForType(filterType) || ''}</DropdownToggle>
 							<DropdownMenu>
 								{'Agency Advertiser Campaign GreenTag'.split(" ").map((m, i) => (
@@ -262,7 +262,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 						</UncontrolledDropdown>}
 
 						{filterType && !pseudoUser && (
-							<UncontrolledDropdown className='filter-dropdown ml-2'>
+							<UncontrolledDropdown className="filter-dropdown ml-3">
 								<DropdownToggle caret>{filterItemLabel}</DropdownToggle>
 								<DropdownMenu style={longMenuStyle}>
 									{filterItems.map((item, i) => (

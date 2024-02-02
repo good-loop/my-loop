@@ -10,7 +10,7 @@
 		<link rel="manifest" href="/manifest.webmanifest">
 		<meta name="theme-color" content="#770f00">
 		<title>${title}</title>
-		<link rel="shortcut icon" href="/favicon-32.png" />
+		<link rel="shortcut icon" href="/favicon.svg" />
 
 		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -51,7 +51,7 @@
 			var cpm = {};
 			(function(h,u,b){
 			var d=h.getElementsByTagName("script")[0],e=h.createElement("script");
-			e.async=true;e.src='https://cookiehub.net/c2/1ac697d7.js';
+			e.async=true;e.src='https://cookiehub.net/c2/bb320ec5.js';
 			e.onload=function(){u.cookiehub.load(b);}
 			d.parentNode.insertBefore(e,d);
 			})(document,window,cpm);

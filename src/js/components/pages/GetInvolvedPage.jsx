@@ -54,7 +54,7 @@ const ProductsCard = () => {
 	const tabsForGood = {
 		bgColour: "bg-gl-light-pink",
 		title: "Tabs for Good",
-		subtitle: "Support A Charity Of Your Choice For Free",
+		subtitle: "Support a charity of your choice for free",
 		description:
 			"Convert your web browsing into a donations, simply by opening new tabs",
 		image: "img/homepage/tabs-for-good-card.png",
@@ -68,7 +68,7 @@ const ProductsCard = () => {
 	const myData = {
 		bgColour: "bg-gl-lighter-blue",
 		title: "My.Data",
-		subtitle: "How Many Cookies Have You Accepted Today?",
+		subtitle: "How many cookies have you accepted today?",
 		description: "Don't just give your data away - control your data and convert it into charity donations with My.Data",
 		image: "img/homepage/my-data-product.png",
 		button: <>
@@ -143,7 +143,7 @@ const RaiseMoneySection = () => {
 		<PageCard className="bg-gl-light-pink">
 			<div className="text-center position-relative" style={{ maxWidth: '500px', left: '50%', transform: 'translate(-50%, 0)' }}>
 				<h5 className="text-uppercase color-gl-red">Let's keep in touch!</h5>
-				<p className="text-capitalize color-gl-red mb-4">Join the ads for good movement</p>
+				<p className="text-capitalize color-gl-red mb-4">Join the Ads for Good movement</p>
 				<p className="text-capitalize color-gl-dark-blue">Sign up to our newsletter (And plant a tree!)</p>
 				<SubscriptionForm buttonText="SUBSCRIBE" buttomColor="primary" showTrees />
 			</div>

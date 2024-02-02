@@ -109,17 +109,18 @@ Login.dataspace = C.app.dataspace;
 
 const MainDiv = () => {
 	const navPageLabels = {
-		ourstory: "Our Story",
-		'our-impact': "Our Impact",
-		ourimpact: "Impact Overview",
-		charities: 'Charity Partners',
-		impactoverview: 'Our Ad Campaigns',
+		home: 'Home',
+		ourstory: 'Our story',
+		'our-impact': 'Our impact',
+		ourimpact: 'Impact Overview',
+		charities: 'Charity partners',
+		impactoverview: 'Our ad campaigns',
 		green: 'Green Media',
-		oldtabsforgood: C.T4G,
+		// oldtabsforgood: C.T4G,
 		//blog: "Blog",
 		//'get-involved': "Get Involved",
 		//getinvolved: "Our Products",
-		tabsforgood: "Tabs for Good",
+		//tabsforgood: "Tabs for Good",
 		//getmydata: "My.Data",
 		//"home#mydata-cta": "My.Data" // HACK until we get a landing page
 	};
@@ -133,7 +134,7 @@ const MainDiv = () => {
 				home: [],
 				"our-impact": ['ourimpact', 'impactoverview', 'charities', Roles.isTester() && 'green'],
 				ourstory: [],
-				tabsforgood: [],
+				// tabsforgood: [],
 				//'get-involved':['getinvolved', 'tabsforgood', 'getmydata'],
 				//"home#mydata-cta": [],
 				//"blog":Roles.isTester()
