@@ -43,7 +43,7 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing, setCtaModalOpen, cam
 						{charities.length > 1 ? (
 							" the user " + (ongoing ? "can" : "could") + " then choose which charity they " + (ongoing ? "want" : "wanted") + " to fund with 20% of the ad money. "
 						) : (
-							"20% of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + (charityName || "charity") + "."
+							" 20% of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + (charityName || "charity") + "."
 						)}
 						</span>
 					</div>
